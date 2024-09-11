@@ -1,13 +1,12 @@
+import cors from 'cors';
 import express, {
-  json,
-  urlencoded,
   Express,
+  json,
+  NextFunction,
   Request,
   Response,
-  NextFunction,
-  Router,
+  urlencoded,
 } from 'express';
-import cors from 'cors';
 import { PORT } from './config';
 import { SampleRouter } from './routers/sample.router';
 
@@ -42,7 +41,7 @@ export default class App {
       (err: Error, req: Request, res: Response, next: NextFunction) => {
         if (req.path.includes('/api/')) {
           console.error('Error : ', err.stack);
-          res.status(500).send('Error !');
+          res.status(500).send(err.message);
         } else {
           next();
         }
