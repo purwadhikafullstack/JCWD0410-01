@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     Credentials({
       async authorize(user) {
