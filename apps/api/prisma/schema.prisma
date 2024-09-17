@@ -23,11 +23,14 @@ model Sample {
 model User {
   id             Int      @id @default(autoincrement())
   email          String   @unique
-  name           String
-  password       String
-  phoneNumber    String   @unique
+  name           String?
+  password       String?
+  phoneNumber    String?  @unique
   profilePicture String?
-  role           Role
+  token          String?
+  lastEditBy     Int      @default(0)
+  provider       Provider @default(CREDENTIALS)
+  role           Role     @default(CUSTOMER)
   isVerified     Boolean  @default(false)
   isDeleted      Boolean  @default(false)
   createdAt      DateTime @default(now())
@@ -41,6 +44,11 @@ model User {
   employee          Employee?
 
   @@map("users")
+}
+
+enum Provider {
+  CREDENTIALS
+  GOOGLE
 }
 
 enum Role {
