@@ -25,9 +25,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextAuthProvider>
           <ReactQueryProvider>
-            {/* <Header /> */}
+            <Header />
             {children}
-            {/* <Footer /> */}
+            <Footer />
           </ReactQueryProvider>
           <ToastContainer />
         </NextAuthProvider>
