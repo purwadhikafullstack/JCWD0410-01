@@ -39,10 +39,10 @@ const RegisterPage = () => {
       </div>
 
       <div className="mx-auto flex min-h-[100vh] w-full flex-col p-6 text-sm md:w-[70%]">
-        <div className="relative h-24 w-full">
+        <div className="relative h-16 w-full">
           <Image
-            src="/image.png"
-            alt="Whoosh Laundry Logo"
+            src="/logo2.svg"
+            alt="FreshNest Laundry Logo"
             fill
             className="object-contain"
           />
