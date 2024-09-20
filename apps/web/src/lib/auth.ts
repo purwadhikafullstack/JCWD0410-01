@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import { axiosInstance } from "./axios";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
@@ -27,8 +28,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     error: "/error",
   },
   callbacks: {
-    async signIn() {
-      return true;
+    async signIn({ account, user }: any) {
+      if (account.provider === "google") {
+        const accessToken = account?.access_token;
+        console.log("Google Access Token:", accessToken);
+
+        const { data } = await axiosInstance.post("/auth/login/google", {
+          accessToken,
+        });
+
+        user.id = data.data.id;
+        user.name = data.data.name;
+        user.profilePicture = data.data.profilePicture;
+        user.role = data.data.role;
+        user.provider = data.data.provider;
+        user.token = data.token;
+      }
+      return true; // Do different verification for other providers that don't have `email_verified`
     },
     async jwt({ token, user }) {
       if (user) {

@@ -1,12 +1,31 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { Button } from "./ui/button";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { LuMenu } from "react-icons/lu";
+import { usePathname } from "next/navigation";
+import { LuLogOut, LuMenu } from "react-icons/lu";
+import { MdArrowForwardIos, MdClose } from "react-icons/md";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CiUser } from "react-icons/ci";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
+  const session = useSession();
   const pathname = usePathname();
 
   const isPathname = pathname === "/login" || pathname.includes("/register");
@@ -14,6 +33,7 @@ export const Header = () => {
   if (isPathname) {
     return null;
   }
+
   return (
     <div className="sticky top-0 z-10 border-b-[1px] bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
@@ -31,22 +51,122 @@ export const Header = () => {
           <Link href="/layanan-kami">Layanan & Harga</Link>
           <Link href="">Pesan Sekarang</Link>
         </div>
-        <div className="hidden gap-2 md:flex">
-          <Link href="/login">
-            <Button className="px-7">Login</Button>
-          </Link>
-          <Link href="/register">
-            <Button
-              className="border-[1px] border-[#37bae3] text-[#37bae3]"
-              variant="outline"
-            >
-              Register
-            </Button>
-          </Link>
-        </div>
 
-        <div className="flex text-neutral-600 md:hidden">
-          <LuMenu size={28} />
+        {session.data?.user.id ? (
+          <div className="hidden md:flex">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className="flex items-center gap-2">
+                  <Avatar>
+                    <AvatarImage
+                      src={session.data.user.profilePic}
+                      alt="@shadcn"
+                    />
+                    <AvatarFallback>
+                      <CiUser size={24} />
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="text-sm">{session.data.user.name}</div>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>
+                  <Link href="/profile">My Profile</Link>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Saved Address</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => signOut()}
+                  className="flex items-center gap-2 text-red-600"
+                >
+                  <div>Logout</div>
+                  <LuLogOut />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : (
+          <div className="hidden gap-2 md:flex">
+            <Link href="/login">
+              <Button className="px-7">Login</Button>
+            </Link>
+            <Link href="/register">
+              <Button
+                className="border-[1px] border-[#37bae3] text-[#37bae3]"
+                variant="outline"
+              >
+                Register
+              </Button>
+            </Link>
+          </div>
+        )}
+
+        <div className="flex md:hidden">
+          <Drawer>
+            <DrawerTrigger>
+              <LuMenu size={28} className="text-neutral-600" />
+            </DrawerTrigger>
+            <DrawerContent className="flex space-y-6 p-6">
+              <div className="flex justify-between">
+                <Link href="/" className="relative h-14 w-32">
+                  <Image
+                    src="/logo2.svg"
+                    alt="FreshNest Laundry Logo"
+                    fill
+                    className="object-contain"
+                  />
+                </Link>
+                <DrawerClose>
+                  <MdClose size={24} />
+                </DrawerClose>
+              </div>
+
+              {session.data && (
+                <>
+                  <div className="flex flex-col gap-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Avatar>
+                          <AvatarImage
+                            src={session.data.user.profilePic}
+                            alt="@shadcn"
+                          />
+                          <AvatarFallback>
+                            <CiUser size={24} />
+                          </AvatarFallback>
+                        </Avatar>
+
+                        <Link href="/profile">{session.data.user.name}</Link>
+                      </div>
+                      <MdArrowForwardIos size={18} />
+                    </div>
+                    <hr />
+                  </div>
+                </>
+              )}
+
+              <div className="flex flex-col gap-4 text-neutral-600">
+                <Link href="/outlet-kami">Outlet Kami</Link>
+                <Link href="/layanan-kami">Layanan & Harga</Link>
+                <Link href="">Pesan Sekarang</Link>
+              </div>
+
+              <hr />
+              {session.data ? (
+                <div className="flex items-center gap-2 text-red-600">
+                  <h3 onClick={() => signOut()}>Logout</h3>
+
+                  <LuLogOut />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4 text-neutral-600">
+                  <Link href="/login">Login</Link>
+                  <Link href="/register">Register</Link>
+                </div>
+              )}
+            </DrawerContent>
+          </Drawer>
         </div>
       </div>
     </div>

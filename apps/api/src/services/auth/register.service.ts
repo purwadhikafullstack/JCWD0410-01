@@ -45,7 +45,9 @@ export const registerService = async (body: User) => {
       });
     }
 
-    const link = BASE_URL_FE + `/register/complete-registration/${token}`;
+    // const link = BASE_URL_FE + `/register/complete-registration/${token}/?email=hbhbhb`;
+    const link =
+      BASE_URL_FE + `/register/complete-registration/${token}/?email=hbhbhb`;
 
     await transporter.sendMail({
       to: email,
