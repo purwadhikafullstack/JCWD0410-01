@@ -22,9 +22,9 @@ export const getEmailFromToken = (
   verify(token, JWT_SECRET!, (err, payload) => {
     if (err) {
       if (err instanceof TokenExpiredError) {
-        return res.status(200).send({ message: 'token expired' });
+        return res.status(403).send({ message: 'token expired' });
       } else {
-        return res.status(403).send({ message: 'unauthorized' });
+        return res.status(401).send({ message: 'unauthorized' });
       }
     }
 

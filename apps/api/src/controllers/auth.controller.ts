@@ -2,6 +2,8 @@
 // import { loginService } from '@/services/auth/login.service';
 import { completeRegistrationService } from '@/services/auth/complete-register.service';
 import { getEmailFromTokenService } from '@/services/auth/get-email-from-token.service';
+import { loginWithGoogleService } from '@/services/auth/google.service';
+import { loginService } from '@/services/auth/login.service';
 import { registerService } from '@/services/auth/register.service';
 // import { resetPasswordService } from '@/services/auth/reset-password.service';
 import { NextFunction, Request, Response } from 'express';
@@ -40,14 +42,30 @@ export class AuthController {
       next(error);
     }
   }
-  // async login(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const result = await loginService(req.body);
-  //     return res.status(200).send(result);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+
+  async login(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await loginService(req.body);
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async loginWithGoogleController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const { accessToken } = req.body;
+      const result = await loginWithGoogleService(accessToken);
+
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 
   // async forgotPassword(req: Request, res: Response, next: NextFunction) {
   //   try {

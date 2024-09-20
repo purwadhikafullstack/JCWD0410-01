@@ -24,7 +24,7 @@ export const verifyToken = (
       if (err instanceof TokenExpiredError) {
         return res.status(403).send({ message: 'token expired' });
       } else {
-        return res.status(403).send({ message: 'unauthorized' });
+        return res.status(401).send({ message: 'unauthorized' });
       }
     }
 

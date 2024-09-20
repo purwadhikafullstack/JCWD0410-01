@@ -25,7 +25,11 @@ export class AuthRouter {
       getEmailFromToken,
       this.authController.completeRegistration,
     );
-    // this.router.post('/login', this.authController.login);
+    this.router.post('/login', this.authController.login);
+    this.router.post(
+      '/login/google',
+      this.authController.loginWithGoogleController,
+    );
     // this.router.post('/forgot-password',this.authController.forgotPassword)
     // this.router.patch('/reset-password',verifyToken,this.authController.resetPassword)
   }
