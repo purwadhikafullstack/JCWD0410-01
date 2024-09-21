@@ -21,20 +21,21 @@ model Sample {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  name           String?
-  password       String?
-  phoneNumber    String?  @unique
-  profilePicture String?
-  token          String?
-  lastEditBy     Int      @default(0)
-  provider       Provider @default(CREDENTIALS)
-  role           Role     @default(CUSTOMER)
-  isVerified     Boolean  @default(false)
-  isDeleted      Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
+  name            String?
+  password        String?
+  phoneNumber     String?  @unique
+  profilePicture  String?
+  token           String?
+  lastEditBy      Int      @default(0)
+  provider        Provider @default(CREDENTIALS)
+  role            Role     @default(CUSTOMER)
+  isVerified      Boolean  @default(false)
+  isPasswordReset Boolean  @default(false)
+  isDeleted       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   addresses         Address[]
   orders            Order[]
@@ -224,7 +225,7 @@ model User_Notification {
 
 model Pickup_Order {
   id           Int          @id @default(autoincrement())
-  pickupNumber Int
+  pickupNumber String
   status       PickupStatus
   fee          Int
   latitude     String
@@ -302,7 +303,7 @@ model Employee_Station {
 
 model Delivery_Order {
   id             Int            @id @default(autoincrement())
-  deliveryNumber Int
+  deliveryNumber String
   status         DeliveryStatus
   fee            Int
   latitude       String
@@ -327,6 +328,7 @@ model Delivery_Order {
 enum DeliveryStatus {
   WAITING_FOR_DRIVER
   ON_THE_WAY_TO_OUTLET
+  PROCESSING_LAUNDRY
   ON_THE_WAY_TO_CUSTOMER
   RECEIVED_BY_CUSTOMER
   ONSITE

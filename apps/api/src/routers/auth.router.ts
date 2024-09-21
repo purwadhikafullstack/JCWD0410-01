@@ -30,8 +30,12 @@ export class AuthRouter {
       '/login/google',
       this.authController.loginWithGoogleController,
     );
-    // this.router.post('/forgot-password',this.authController.forgotPassword)
-    // this.router.patch('/reset-password',verifyToken,this.authController.resetPassword)
+    this.router.post('/forgot-password', this.authController.forgotPassword);
+    this.router.patch(
+      '/reset-password',
+      verifyToken,
+      this.authController.resetPassword,
+    );
   }
 
   getRouter(): Router {

@@ -1,25 +1,28 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import useRegister from "@/hooks/api/auth/useRegister";
 import { useFormik } from "formik";
-import { signIn } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
-import { FcGoogle } from "react-icons/fc";
-import { SpinnerCircularFixed } from "spinners-react";
-import { RegisterSchema } from "./schemas/RegisterSchema";
 
-const RegisterPage = () => {
-  const { mutateAsync: register, isPending } = useRegister();
+import { ForgotPasswordSchema } from "./schemas/ForgotPasswordSchema";
+import useForgotPassword from "@/hooks/api/auth/useForgotPassword";
+import Image from "next/image";
+import { SpinnerCircularFixed } from "spinners-react";
+
+const ForgotPasswordPage = () => {
+  const { forgotPassword, isLoading } = useForgotPassword();
+
   const formik = useFormik({
     initialValues: {
       email: "",
     },
-    validationSchema: RegisterSchema,
-    onSubmit: async (values) => {
-      await register(values);
+    validationSchema: ForgotPasswordSchema,
+    onSubmit: async (values, { resetForm }) => {
+      await forgotPassword(values.email);
+      //setelah di send formnya akan kosong lagi
+      resetForm();
     },
   });
 
@@ -45,12 +48,15 @@ const RegisterPage = () => {
         </div>
 
         <div className="my-10 flex flex-col gap-2 text-center">
-          <h1 className="text-2xl font-semibold md:text-3xl">Create Account</h1>
+          <h1 className="text-2xl font-semibold md:text-3xl">
+            Forgot Your Password?
+          </h1>
           <p className="text-neutral-500">
-            Register with your email or quickly sign up via Google and let us
-            handle your laundry needs.
+            Don’t worry! Just enter your email, and we’ll send instructions to
+            reset your password. FreshNest is just a step away!
           </p>
         </div>
+
         <div className="space-y-6">
           <form className="space-y-4" onSubmit={formik.handleSubmit}>
             <div className="flex flex-col space-y-1.5">
@@ -70,45 +76,23 @@ const RegisterPage = () => {
 
             <Button
               className="w-full bg-[#36bbe3]"
-              disabled={isPending}
+              disabled={isLoading}
               type="submit"
             >
-              {isPending ? (
+              {isLoading ? (
                 <div className="flex items-center gap-1">
                   <SpinnerCircularFixed size={20} />
                   <p className="text-sm">Loading</p>
                 </div>
               ) : (
-                "Register"
+                "Submit"
               )}
             </Button>
           </form>
-
-          <div className="grid grid-cols-5 items-center">
-            <hr className="col-span-2" />
-            <p className="text-center text-neutral-500">or</p>
-            <hr className="col-span-2" />
-          </div>
-
-          <Button
-            variant="outline"
-            className="items-cen flex w-full justify-center gap-2"
-            onClick={() => signIn("google")}
-          >
-            <FcGoogle size={24} />
-            <p>Sign Up with Google</p>
-          </Button>
-
-          <div className="flex items-center justify-center gap-1">
-            <p>Already have an account?</p>
-            <Link href="/login" className="font-semibold text-[#36bbe3]">
-              Login
-            </Link>
-          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default RegisterPage;
+export default ForgotPasswordPage;

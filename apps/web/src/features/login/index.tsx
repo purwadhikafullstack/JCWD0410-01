@@ -43,7 +43,7 @@ const LoginPage = () => {
         />
       </div>
 
-      <div className="mx-auto flex min-h-[100vh] w-full flex-col p-6 text-sm md:w-[70%]">
+      <div className="mx-auto flex h-screen w-full flex-col p-6 text-sm md:w-[70%]">
         <div className="relative h-16 w-full">
           <Image
             src="/logo2.svg"
@@ -53,15 +53,15 @@ const LoginPage = () => {
           />
         </div>
 
-        <div className="mt-10 space-y-10">
-          <div className="flex flex-col gap-2 text-center">
-            <h1 className="text-3xl font-semibold">Welcome Back!</h1>
-            <p className="text-neutral-500">
-              Ready to make laundry day easier? Log in with your details or
-              continue with Google.
-            </p>
-          </div>
+        <div className="my-10 flex flex-col gap-2 text-center">
+          <h1 className="text-2xl font-semibold md:text-3xl">Welcome Back!</h1>
+          <p className="text-neutral-500">
+            Ready to make laundry day easier? Log in with your details or
+            continue with Google.
+          </p>
+        </div>
 
+        <div className="space-y-6">
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="email">Email</Label>
