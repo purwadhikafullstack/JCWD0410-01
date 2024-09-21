@@ -24,7 +24,9 @@ export const completeRegistrationService = async (
     }
 
     if (token !== existingUser?.token) {
-      throw new Error('Invalid token');
+      throw new Error(
+        'Invalid token. Please use the latest link we sent to your email.',
+      );
     }
 
     const hashedPassword = await hashPassword(password!);
