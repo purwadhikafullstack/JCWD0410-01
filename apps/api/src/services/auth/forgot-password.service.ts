@@ -2,6 +2,9 @@ import { BASE_URL_FE, JWT_SECRET } from '@/config';
 import { transporter } from '@/lib/nodemailer';
 import prisma from '@/prisma';
 import { sign } from 'jsonwebtoken';
+import Handlebars from 'handlebars';
+import path from 'path';
+import fs from 'fs';
 
 export const forgotPasswordService = async (email: string) => {
   try {
@@ -19,10 +22,24 @@ export const forgotPasswordService = async (email: string) => {
 
     const link = BASE_URL_FE + `/reset-password/${token}`;
 
+    const emailTemplatePath = path.join(
+      __dirname,
+      '../../../templates/forgot-password.hbs',
+    );
+
+    const emailTemplateSource = fs.readFileSync(emailTemplatePath, 'utf-8');
+
+    const template = Handlebars.compile(emailTemplateSource);
+    const htmlToSend = template({
+      name: user.name,
+      link: link,
+      year: new Date().getFullYear(),
+    });
+
     await transporter.sendMail({
       to: email,
-      subject: 'Link Reset Password',
-      html: `<a href="${link}" target="_blank">Reset Password Here </a>`,
+      subject: 'Reset Password Request - FreshNest Laundry',
+      html: htmlToSend,
     });
 
     await prisma.user.update({
