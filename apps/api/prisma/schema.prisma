@@ -122,11 +122,11 @@ model Address {
 model Order {
   id             Int              @id @default(autoincrement())
   orderNumber    String
-  weight         Int
-  laundryFee     Int
-  total          Int
+  weight         Int              @default(0)
+  laundryFee     Int              @default(0)
+  total          Int              @default(0)
   isPaid         Boolean          @default(false)
-  orderStatus    OrderStatus
+  orderStatus    OrderStatus      @default(WAITING_FOR_PICKUP_DRIVER)
   isDeleted      Boolean          @default(false)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
@@ -145,8 +145,8 @@ model Order {
 
 enum OrderStatus {
   WAITING_FOR_PICKUP_DRIVER
-  ON_THE_WAY_TO_CUSTOMER
-  ON_THE_WAY_TO_OUTLET
+  PICKUP_ON_THE_WAY_TO_CUSTOMER
+  PICKUP_ON_THE_WAY_TO_OUTLET
   ARRIVED_AT_OUTLET
   READY_FOR_WASHING
   BEING_WASHED
@@ -226,7 +226,7 @@ model User_Notification {
 model Pickup_Order {
   id           Int          @id @default(autoincrement())
   pickupNumber String
-  status       PickupStatus
+  status       PickupStatus @default(WAITING_FOR_DRIVER)
   fee          Int
   latitude     String
   longitude    String
@@ -242,7 +242,7 @@ model Pickup_Order {
   outlet       Outlet       @relation(fields: [outletId], references: [id])
   outletId     Int
   employee     Employee     @relation(fields: [employeeId], references: [id])
-  employeeId   Int
+  employeeId   Int          @default(1)
 
   @@map("pickup_orders")
 }
@@ -304,7 +304,7 @@ model Employee_Station {
 model Delivery_Order {
   id             Int            @id @default(autoincrement())
   deliveryNumber String
-  status         DeliveryStatus
+  status         DeliveryStatus @default(PROCESSING_LAUNDRY)
   fee            Int
   latitude       String
   longitude      String
@@ -320,15 +320,15 @@ model Delivery_Order {
   outlet         Outlet         @relation(fields: [outletId], references: [id])
   outletId       Int
   employee       Employee       @relation(fields: [employeeId], references: [id])
-  employeeId     Int
+  employeeId     Int            @default(1)
 
   @@map("delivery_orders")
 }
 
 enum DeliveryStatus {
+  PROCESSING_LAUNDRY
   WAITING_FOR_DRIVER
   ON_THE_WAY_TO_OUTLET
-  PROCESSING_LAUNDRY
   ON_THE_WAY_TO_CUSTOMER
   RECEIVED_BY_CUSTOMER
   ONSITE
