@@ -6,30 +6,32 @@ import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-interface ResetPasswordPayload {
-  password: string;
-  confirmPassword: string;
+interface ChangeEmailPayload {
+  email: string;
+  token: string;
 }
 
-const useResetPassword = (token: string) => {
+const useVerifyEmail = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: async (payload: ResetPasswordPayload) => {
+    mutationFn: async (payload: ChangeEmailPayload) => {
       const { data } = await axiosInstance.patch(
-        "/auth/reset-password",
-        payload,
+        `/users/verify-email`,
+        { email: payload.email },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${payload.token}`,
           },
         },
       );
       return data;
     },
-    onSuccess: () => {
-      toast.success("Reset password success");
-      router.replace("/login");
+    onSuccess: async () => {
+      toast.success(
+        "Please check your inbox to verify your new email address.",
+      );
+      router.push(`/`);
     },
     onError: (error: AxiosError<any>) => {
       toast.error(error.response?.data);
@@ -37,4 +39,4 @@ const useResetPassword = (token: string) => {
   });
 };
 
-export default useResetPassword;
+export default useVerifyEmail;

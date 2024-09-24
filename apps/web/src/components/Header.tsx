@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
-  const session = useSession();
+  const { data: session } = useSession();
   const pathname = usePathname();
 
   const isPathname = pathname === "/login" || pathname.includes("/register");
@@ -52,36 +52,38 @@ export const Header = () => {
           <Link href="">Pesan Sekarang</Link>
         </div>
 
-        {session.data?.user.id ? (
+        {session?.user.id ? (
           <div className="hidden md:flex">
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="flex items-center gap-2">
                   <Avatar>
                     <AvatarImage
-                      src={session.data.user.profilePic}
+                      src={session.user.profilePicture}
                       alt="@shadcn"
+                      className="object-cover"
                     />
                     <AvatarFallback>
                       <CiUser size={24} />
                     </AvatarFallback>
                   </Avatar>
 
-                  <div className="text-sm">{session.data.user.name}</div>
+                  <div className="text-sm">{session.user.name}</div>
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>
-                  <Link href="/profile">My Profile</Link>
+                  <Link href={`/profile/${session.user.id}`}>Profile Saya</Link>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Saved Address</DropdownMenuItem>
+                <DropdownMenuItem>Daftar Alamat</DropdownMenuItem>
+                <DropdownMenuItem>Daftar Pesanan</DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => signOut()}
                   className="flex items-center gap-2 text-red-600"
                 >
-                  <div>Logout</div>
                   <LuLogOut />
+                  <div>Logout</div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -122,25 +124,32 @@ export const Header = () => {
                 </DrawerClose>
               </div>
 
-              {session.data && (
+              {session && (
                 <>
-                  <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Avatar>
                           <AvatarImage
-                            src={session.data.user.profilePic}
+                            src={session.user.profilePicture}
                             alt="@shadcn"
+                            className="object-cover"
                           />
                           <AvatarFallback>
                             <CiUser size={24} />
                           </AvatarFallback>
                         </Avatar>
 
-                        <Link href="/profile">{session.data.user.name}</Link>
+                        <Link href={`/profile/${session.user.id}`}>
+                          {session.user.name}
+                        </Link>
                       </div>
                       <MdArrowForwardIos size={18} />
                     </div>
+                    <hr />
+                    <Link href="">Daftar Alamat</Link>
+                    <Link href="">Daftar Pesanan</Link>
+
                     <hr />
                   </div>
                 </>
@@ -153,7 +162,7 @@ export const Header = () => {
               </div>
 
               <hr />
-              {session.data ? (
+              {session ? (
                 <div className="flex items-center gap-2 text-red-600">
                   <h3 onClick={() => signOut()}>Logout</h3>
 
