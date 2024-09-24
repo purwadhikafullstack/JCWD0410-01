@@ -12,7 +12,7 @@ import Image from "next/image";
 import { SpinnerCircularFixed } from "spinners-react";
 
 const ForgotPasswordPage = () => {
-  const { forgotPassword, isLoading } = useForgotPassword();
+  const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
 
   const formik = useFormik({
     initialValues: {
@@ -20,7 +20,7 @@ const ForgotPasswordPage = () => {
     },
     validationSchema: ForgotPasswordSchema,
     onSubmit: async (values, { resetForm }) => {
-      await forgotPassword(values.email);
+      await forgotPassword(values);
       //setelah di send formnya akan kosong lagi
       resetForm();
     },
@@ -76,10 +76,10 @@ const ForgotPasswordPage = () => {
 
             <Button
               className="w-full bg-[#36bbe3]"
-              disabled={isLoading}
+              disabled={isPending}
               type="submit"
             >
-              {isLoading ? (
+              {isPending ? (
                 <div className="flex items-center gap-1">
                   <SpinnerCircularFixed size={20} />
                   <p className="text-sm">Loading</p>

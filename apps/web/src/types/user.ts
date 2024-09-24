@@ -3,9 +3,10 @@ export interface User {
   name: string;
   email: string;
   phoneNumber?: string;
-  profilePic?: string;
+  profilePicture?: string;
   role: Role;
   provider: Provider;
+  createdAt: string;
 }
 
 export enum Role {

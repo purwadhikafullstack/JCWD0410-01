@@ -1,5 +1,6 @@
 import { AuthController } from '@/controllers/auth.controller';
 import { getEmailFromToken } from '@/lib/getEmailFromToken';
+import { uploader } from '@/lib/multer';
 import { verifyToken } from '@/lib/verifyToken';
 import { Router } from 'express';
 

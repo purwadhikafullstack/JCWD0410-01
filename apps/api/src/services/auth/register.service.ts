@@ -17,7 +17,7 @@ export const registerService = async (body: User) => {
     });
 
     if (existingUser && existingUser.isVerified === true) {
-      throw new Error('Email already exist');
+      throw new Error('User already exist');
     }
 
     const newUser = existingUser

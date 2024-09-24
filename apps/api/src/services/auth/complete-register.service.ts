@@ -17,7 +17,6 @@ export const completeRegistrationService = async (
     const existingUser = await prisma.user.findFirst({
       where: { email },
     });
-    console.log(existingUser);
 
     if (existingUser && existingUser.isVerified === true) {
       throw new Error('User already exist');

@@ -16,7 +16,7 @@ interface ResetPasswordPageProps {
 }
 
 const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
-  const { resetPassword, isLoading } = useResetPassword();
+  const { mutateAsync: resetPassword, isPending } = useResetPassword(token);
 
   const formik = useFormik({
     initialValues: {
@@ -25,7 +25,7 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
     },
     validationSchema: ResetPasswordSchema,
     onSubmit: async (values) => {
-      await resetPassword(values.password, token);
+      await resetPassword(values);
     },
   });
 
@@ -96,10 +96,10 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
 
             <Button
               className="w-full bg-[#36bbe3]"
-              disabled={isLoading}
+              disabled={isPending}
               type="submit"
             >
-              {isLoading ? (
+              {isPending ? (
                 <div className="flex items-center gap-1">
                   <SpinnerCircularFixed size={20} />
                   <p className="text-sm">Loading</p>
