@@ -18,18 +18,20 @@ export const resetPasswordService = async (
       throw new Error('This password reset token has already been used.');
     }
 
-    const hashedPassword = await hashPassword(password);
-
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        password: hashedPassword,
-        isPasswordReset: true,
-      },
-    });
-    return {
-      message: 'Reset password success',
-    };
+    return await prisma.$transaction(async (prisma) => {
+      const hashedPassword = await hashPassword(password);
+  
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          password: hashedPassword,
+          isPasswordReset: true,
+        },
+      });
+      return {
+        message: 'Reset password success',
+      };
+    })
   } catch (error) {
     throw error;
   }

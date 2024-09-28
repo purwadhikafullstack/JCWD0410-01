@@ -9,38 +9,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import EventCard from "@/components/EventCard";
-import Pagination from "@/components/Pagination";
-import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { Pickup_Order_Extension, PickupOrdersDriversPaginationQueries } from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
+import { IPageableResponse } from "@/types/pagination";
+import { UseQueryResult } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import Link from "next/link";
-// import useGetCategories from "@/hooks/api/category/useGetCategories";
-import EventCardSkeleton from "@/components/EventCardSkeleton";
-import useGetCustomers from "@/hooks/api/admin/useGetCustomers";
+import { useSearchParams } from "next/navigation";
+import { FC, useMemo, useState } from "react";
+import Pagination from "./Pagination";
 
-const DashboardUsersPage = () => {
+interface TestPageInterface {
+  status: 'ONGOING' | 'REQUEST' | 'HISTORY',
+  callback: (queries: PickupOrdersDriversPaginationQueries) => UseQueryResult<IPageableResponse<Pickup_Order_Extension>, Error>
+}
+
+const TestPage: FC<TestPageInterface>  = ({status, callback}) => {
   const searchParams = useSearchParams();
 
-  // const category = searchParams.get("category");
+  const category = searchParams.get("category");
 
   const [searchValue, setSearchValue] = useState("");
-  // const [selectedCategory, setSelectedCategory] = useState(category || "");
-  // const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(category || "");
+  const [selectedLocation, setSelectedLocation] = useState("");
   const [page, setPage] = useState(1);
 
-  const { data, isPending } = useGetCustomers({
+  const { data, isPending } = callback({
     page,
     take: 8,
-    sortBy: "name",
+    sortBy: "createdAt",
     sortOrder: "desc",
     search: searchValue,
+    status,
+    // category: selectedCategory,
+    // location: selectedLocation,
   });
+
+  // const { data: item } = useGetCategories();
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
   };
 
+  // Debounce function to delay the search input
   const debouncedSearch = useMemo(
     () =>
       debounce((value) => {
@@ -49,55 +59,28 @@ const DashboardUsersPage = () => {
     [setSearchValue],
   );
 
-  const handleInputChange = (user: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(user.target.value);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedSearch(event.target.value);
   };
 
-  // const handleSelectCategory = (value: string) => {
-  //   if (value === "all") {
-  //     return setSelectedCategory("");
-  //   }
-  //   setSelectedCategory(value);
-  // };
+  const handleSelectCategory = (value: string) => {
+    if (value === "all") {
+      return setSelectedCategory("");
+    }
+    setSelectedCategory(value);
+  };
 
-  // const handleSelectLocation = (value: string) => {
-  //   if (value === "all") {
-  //     return setSelectedLocation("");
-  //   }
-  //   setSelectedLocation(value);
-  // };
+  const handleSelectLocation = (value: string) => {
+    if (value === "all") {
+      return setSelectedLocation("");
+    }
+    setSelectedLocation(value);
+  };
 
   return (
-    // <div>
-    //   {data?.data.length}
-    //   {data?.data?.map((customer, index: number) => {
-    //     return (
-    //       <div key={customer.id}>
-    //         key={customer.id}
-    //         name={customer.name}
-    //         email={customer.email}
-    //         profilePic={customer.profilePic}
-    //       </div>
-    //     );
-    //   })}
-    // </div>
-
-    <div>
-      <div className="text-md mx-auto max-w-7xl p-4 md:">
-        <div>
-          {data?.data.length}
-          {data?.data?.map((customer, index: number) => {
-            return (
-              <div key={customer.id} className="">
-                key={customer.id}
-                name={customer.name}
-                email={customer.email}
-                profilePic=""
-              </div>
-            );
-          })}
-        </div>
-        {/* <div className="flex flex-col gap-2 sm:flex-row">
+    <div className="bg-[#fbfbfb]">
+      <div className="mx-auto max-w-7xl p-4 sm:gap-8">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <div className="text-sm">
             <input
               className="block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:border-color1 focus:bg-white focus:outline-none sm:w-[200px] sm:text-sm"
@@ -109,7 +92,7 @@ const DashboardUsersPage = () => {
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <Select
+            {/* <Select
               onValueChange={handleSelectCategory}
               defaultValue={category || ""}
             >
@@ -130,7 +113,7 @@ const DashboardUsersPage = () => {
                   })}
                 </SelectGroup>
               </SelectContent>
-            </Select>
+            </Select> */}
             <Select onValueChange={handleSelectLocation}>
               <SelectTrigger className="sm:w-[200px]">
                 <SelectValue placeholder="Location" />
@@ -154,30 +137,33 @@ const DashboardUsersPage = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-          {isPending && (
+          {/* {isPending && (
             <>
               <EventCardSkeleton />
               <EventCardSkeleton />
               <EventCardSkeleton />
               <EventCardSkeleton />
             </>
-          )}
-          {data?.data?.map((customer, index: number) => {
+          )} */}
+          {data?.data?.map((isi, index: number) => {
             return (
-              <Link href={`/dashboard/users/${customer.id}`} key={customer.id}>
-                <EventCard
+              <Link href={`/events/$`} key={index}>
+                {/* <EventCard
                   key={index}
-                  name={customer.name}
-                  email={customer.email}
-                  profilePic={customer.profilePic}
-                />
+                  name={event.name}
+                  thumbnail={event.thumbnail}
+                  location={event.location}
+                  startDate={event.startDate}
+                  endDate={event.endDate}
+                  price={event.price}
+                  organizer={event.user.name}
+                  profilePic={event.user.profilePic}
+                  profileOrganizer={`/organizer/${event.user.id}`}
+                /> */}
+                {isi.pickupNumber}
               </Link>
             );
           })}
-        </div>
-
-        <div>
-          TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
         </div>
 
         <div className="flex justify-center">
@@ -187,10 +173,10 @@ const DashboardUsersPage = () => {
             onChangePage={onChangePage}
             page={page}
           />
-        </div> */}
+        </div>
       </div>
     </div>
   );
 };
 
-export default DashboardUsersPage;
+export default TestPage;

@@ -1,7 +1,7 @@
 import prisma from '@/prisma';
 import { Prisma, Role } from '@prisma/client';
 
-interface GetEmployeesService {
+interface GetEmployeesInterface {
   page: number;
   take: number;
   sortBy: string;
@@ -13,7 +13,7 @@ interface GetEmployeesService {
   // outletId?: number;
 }
 
-export const getEmployeesService = async (query: GetEmployeesService) => {
+export const getEmployeesService = async (query: GetEmployeesInterface) => {
   try {
     const { page, take, sortBy, sortOrder, email, name, phone, role } = query;
 
