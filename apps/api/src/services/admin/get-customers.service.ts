@@ -1,7 +1,7 @@
 import prisma from '@/prisma';
 import { Prisma, Role, User } from '@prisma/client';
 
-interface GetCustomersService {
+interface GetCustomersInterface {
   page: number;
   take: number;
   sortBy: string;
@@ -12,7 +12,7 @@ interface GetCustomersService {
   // phone?: string;
 }
 
-export const getCustomersService = async (query: GetCustomersService) => {
+export const getCustomersService = async (query: GetCustomersInterface) => {
   try {
     const { page, take, sortBy, sortOrder, search } = query;
 
@@ -56,7 +56,7 @@ export const getCustomersService = async (query: GetCustomersService) => {
     });
 
     const usersWithoutPassword = users.filter((user) => {
-      const { password, ...userWithoutPassword } = user;
+      const { password, token, ...userWithoutPassword } = user;
       return userWithoutPassword;
     });
 

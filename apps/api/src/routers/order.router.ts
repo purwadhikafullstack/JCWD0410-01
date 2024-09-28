@@ -13,7 +13,7 @@ export class OrderRouter {
   }
 
   private initializeRoutes() {
-    this.router.post('/create-pickup', verifyToken, this.orderController.createPickupOrder);
+    this.router.post('/create-user-order', verifyToken, this.orderController.createUserOrder);
   }
 
   getRouter(): Router {

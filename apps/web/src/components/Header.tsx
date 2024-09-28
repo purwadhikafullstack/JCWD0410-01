@@ -28,7 +28,7 @@ export const Header = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
 
-  const isPathname = pathname === "/login" || pathname.includes("/register");
+  const isPathname = pathname === "/login" || pathname.includes("/register") || pathname.includes("/dashboard");
 
   if (isPathname) {
     return null;

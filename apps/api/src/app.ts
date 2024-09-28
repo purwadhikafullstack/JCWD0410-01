@@ -13,6 +13,7 @@ import { AdminRouter } from './routers/admin.router';
 import { AuthRouter } from './routers/auth.router';
 import { UserRouter } from './routers/user.router';
 import { OrderRouter } from './routers/order.router';
+import { PickupRouter } from './routers/pickup.router';
 
 export default class App {
   private app: Express;
@@ -59,6 +60,7 @@ export default class App {
     const authRouter = new AuthRouter();
     const userRouter = new UserRouter();
     const orderRouter = new OrderRouter();
+    const pickupRouter = new PickupRouter();
 
     this.app.get('/api', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student API!`);
@@ -69,6 +71,7 @@ export default class App {
     this.app.use('/api/auth', authRouter.getRouter());
     this.app.use('/api/users', userRouter.getRouter());
     this.app.use('/api/order', orderRouter.getRouter());
+    this.app.use('/api/pickup-orders', pickupRouter.getRouter());
   }
 
   public start(): void {
