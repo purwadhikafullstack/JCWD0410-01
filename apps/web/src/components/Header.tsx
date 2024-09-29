@@ -37,7 +37,13 @@ export const Header = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
 
-  const paths = ["/login", "/register", "/forgot-password", "/reset-password"];
+  const paths = [
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/reset-password",
+    "/dashboard",
+  ];
   const isPathname = paths.some((path) => pathname.startsWith(path));
 
   if (isPathname) {
