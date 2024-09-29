@@ -9,6 +9,7 @@ import Image from "next/image";
 import { FC } from "react";
 import { SpinnerCircularFixed } from "spinners-react";
 import { CompleteRegisterSchema } from "./schemas/CompleteRegisterSchema";
+import FormInput from "@/components/FormInput";
 
 interface CompleteRegisterPageProps {
   email: string;
@@ -57,46 +58,40 @@ const CompleteRegisterPage: FC<CompleteRegisterPageProps> = ({
             <p className="text-neutral-500">complete your registration</p>
           </div>
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                name="name"
-                type="text"
-                placeholder="Your name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {!!formik.touched.name && !!formik.errors.name ? (
-                <p className="text-xs text-red-500">{formik.errors.name}</p>
-              ) : null}
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                name="email"
-                type="email"
-                value={email}
-                disabled
-                className="bg-neutral-100"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                name="password"
-                type="password"
-                placeholder="your password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {!!formik.touched.password && !!formik.errors.password ? (
-                <p className="text-xs text-red-500">{formik.errors.password}</p>
-              ) : null}
-            </div>
+            <FormInput
+              name="name"
+              label="Nama"
+              type="text"
+              placeholder="Masukkan nama anda"
+              value={formik.values.name}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isError={!!formik.touched.name && !!formik.errors.name}
+              error={formik.errors.name}
+            />
+            <FormInput
+              name="email"
+              label="Email"
+              type="email"
+              placeholder=""
+              value={email}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isError={false}
+              error={""}
+            />
+
+            <FormInput
+              name="password"
+              label="Password"
+              type="password"
+              placeholder="Masukkan password anda"
+              value={formik.values.password}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isError={!!formik.touched.password && !!formik.errors.password}
+              error={formik.errors.password}
+            />
 
             <Button
               className="w-full bg-[#36bbe3]"

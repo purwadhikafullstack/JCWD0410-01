@@ -1,4 +1,28 @@
-import Image from "next/image";
+import ReasonItem from "./ReasonItem";
+
+const reasonData = [
+  {
+    src: "/pesan.svg",
+    alt: "Pesan Mudah",
+    title: "Kemudahan Pesan & Akses Cepat",
+    description:
+      "Dengan kemudahan akses, Anda bisa datang langsung ke outlet laundry terdekat atau memesan layanan secara online melalui website, kapan saja sesuai kebutuhan Anda.",
+  },
+  {
+    src: "/pickup.svg",
+    alt: "Jemput Pakaian",
+    title: "Jemput Pakaian Sesuai Jadwal Anda",
+    description:
+      "Hemat waktu dan tenaga. Kami siap menjemput pakaian Anda sesuai waktu yang Anda pilih, memberi Anda kebebasan untuk tetap produktif tanpa repot.",
+  },
+  {
+    src: "/delivery.svg",
+    alt: "Pengantaran",
+    title: "Pengantaran Langsung ke Rumah",
+    description:
+      "Kami tak hanya mencuci dengan teliti, tapi juga memastikan pakaian Anda diantar langsung ke depan pintu rumah Anda. Pilih layanan Express untuk pengiriman lebih cepat saat Anda membutuhkannya.",
+  },
+];
 
 const Reason = () => {
   return (
@@ -8,63 +32,15 @@ const Reason = () => {
           Mengapa Memilih Kami
         </h1>
         <div className="grid grid-cols-1 gap-20 md:grid-cols-3">
-          <div className="flex flex-col items-center gap-6">
-            <div className="relative h-40 w-40 overflow-hidden">
-              <Image
-                src="/pesan.svg"
-                alt="Whoosh Laundry Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
-
-            <h2 className="text-xl text-[#37bae3]">
-              Kemudahan Pesan & Akses Cepat
-            </h2>
-            <p className="text-center text-sm text-neutral-500">
-              Dengan kemudahan akses, Anda bisa datang langsung ke outlet
-              laundry terdekat atau memesan layanan secara online melalui
-              website, kapan saja sesuai kebutuhan Anda.
-            </p>
-          </div>
-          <div className="flex flex-col items-center gap-6">
-            <div className="relative h-40 w-40 overflow-hidden">
-              <Image
-                src="/pickup.svg"
-                alt="Whoosh Laundry Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
-
-            <h2 className="text-xl text-[#37bae3]">
-              Jemput Pakaian Sesuai Jadwal Anda
-            </h2>
-            <p className="text-center text-sm text-neutral-500">
-              Hemat waktu dan tenaga. Kami siap menjemput pakaian Anda sesuai
-              waktu yang Anda pilih, memberi Anda kebebasan untuk tetap
-              produktif tanpa repot.
-            </p>
-          </div>
-          <div className="flex flex-col items-center gap-6">
-            <div className="relative h-40 w-40 overflow-hidden">
-              <Image
-                src="/delivery.svg"
-                alt="Whoosh Laundry Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
-
-            <h2 className="text-xl text-[#37bae3]">
-              Pengantaran Langsung ke Rumah
-            </h2>
-            <p className="text-center text-sm text-neutral-500">
-              Kami tak hanya mencuci dengan teliti, tapi juga memastikan pakaian
-              Anda diantar langsung ke depan pintu rumah Anda. Pilih layanan
-              Express untuk pengiriman lebih cepat saat Anda membutuhkannya.
-            </p>
-          </div>
+          {reasonData.map((item, index) => (
+            <ReasonItem
+              key={index}
+              src={item.src}
+              alt={item.alt}
+              title={item.title}
+              description={item.description}
+            />
+          ))}
         </div>
       </div>
     </div>

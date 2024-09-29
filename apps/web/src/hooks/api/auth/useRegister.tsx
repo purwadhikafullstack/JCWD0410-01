@@ -20,7 +20,7 @@ const useRegister = () => {
       return data;
     },
     onSuccess: () => {
-      toast.success("Register email success");
+      toast.success("Register email berhasil");
       router.replace("/register/thanks");
     },
     onError: (error: AxiosError<any>) => {

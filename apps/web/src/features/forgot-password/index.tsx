@@ -10,6 +10,7 @@ import { ForgotPasswordSchema } from "./schemas/ForgotPasswordSchema";
 import useForgotPassword from "@/hooks/api/auth/useForgotPassword";
 import Image from "next/image";
 import { SpinnerCircularFixed } from "spinners-react";
+import FormInput from "@/components/FormInput";
 
 const ForgotPasswordPage = () => {
   const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
@@ -59,20 +60,17 @@ const ForgotPasswordPage = () => {
 
         <div className="space-y-6">
           <form className="space-y-4" onSubmit={formik.handleSubmit}>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                name="email"
-                type="email"
-                placeholder="your email"
-                value={formik.values.email}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-              />
-              {!!formik.touched.email && !!formik.errors.email ? (
-                <p className="text-xs text-red-500">{formik.errors.email}</p>
-              ) : null}
-            </div>
+            <FormInput
+              name="email"
+              label="Email"
+              type="email"
+              placeholder="Masukkan email anda"
+              value={formik.values.email}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isError={!!formik.touched.email && !!formik.errors.email}
+              error={formik.errors.email}
+            />
 
             <Button
               className="w-full bg-[#36bbe3]"

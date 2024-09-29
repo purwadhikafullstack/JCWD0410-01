@@ -8,7 +8,8 @@ import { FaInstagram, FaRegCopyright, FaTwitter } from "react-icons/fa6";
 export const Footer = () => {
   const pathname = usePathname();
 
-  const isPathname = pathname === "/login" || pathname.includes("/register");
+  const paths = ["/login", "/register"];
+  const isPathname = paths.some((path) => pathname.startsWith(path));
 
   if (isPathname) {
     return null;
