@@ -35,8 +35,8 @@ const useUpdateProfile = () => {
       return data;
     },
     onSuccess: async (data) => {
-      // await signIn("credentials", { ...data, redirect: false });
-      // await getSession();
+      await signIn("credentials", { ...data.data, redirect: false });
+
       toast.success("Update Profile Success");
       queryClient.invalidateQueries({ queryKey: ["users"] });
       // router.push(`/profile/${userId}`);

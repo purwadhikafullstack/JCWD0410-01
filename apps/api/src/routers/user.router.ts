@@ -14,7 +14,7 @@ export class UserRouter {
   }
 
   private initializeRoutes() {
-    this.router.get('/:id', verifyToken, this.userController.getUser);
+    this.router.get('/', verifyToken, this.userController.getUser);
     this.router.patch(
       '/update-profile',
       verifyToken,

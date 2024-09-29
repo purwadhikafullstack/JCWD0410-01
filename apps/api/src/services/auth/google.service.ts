@@ -1,4 +1,5 @@
 import { JWT_SECRET } from '@/config';
+import { cloudinaryUpload } from '@/lib/cloudinary';
 import { getUserInfo } from '@/lib/getUserInfo';
 // import { transporter } from '@/libs/nodemailer';
 import prisma from '@/prisma';
@@ -42,6 +43,7 @@ export const loginWithGoogleService = async (accessToken: string) => {
           name: userInfo.name,
           isVerified: true,
           provider: 'GOOGLE',
+          profilePicture: userInfo.picture,
         },
       });
 

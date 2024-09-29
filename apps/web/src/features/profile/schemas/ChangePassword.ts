@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import YupPassword from "yup-password";
 YupPassword(Yup);
 
-export const UpdatePasswordSchema = Yup.object().shape({
+export const ChangePasswordSchema = Yup.object().shape({
   //penamaannya harus sama kayak di initialValues
   oldPassword: Yup.string().required("Old Password is required"),
 

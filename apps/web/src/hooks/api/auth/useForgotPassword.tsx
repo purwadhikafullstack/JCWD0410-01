@@ -48,7 +48,9 @@ const useForgotPassword = () => {
       return data;
     },
     onSuccess: async (data) => {
-      toast.success("Send email success, please check your inbox");
+      toast.success(
+        "Email berhasil dikirim, silakan periksa kotak masuk Anda.",
+      );
       //
     },
     onError: (error: AxiosError<any>) => {

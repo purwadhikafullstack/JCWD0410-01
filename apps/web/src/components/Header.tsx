@@ -1,20 +1,12 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { LuLogOut, LuMenu } from "react-icons/lu";
-import { MdArrowForwardIos, MdClose } from "react-icons/md";
-import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CiUser } from "react-icons/ci";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,12 +15,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { CiUser } from "react-icons/ci";
+import { FaCartShopping, FaRegUser } from "react-icons/fa6";
+import { IoCartOutline } from "react-icons/io5";
+import {
+  LuHome,
+  LuLogOut,
+  LuMenu,
+  LuShoppingCart,
+  LuUser,
+  LuUser2,
+} from "react-icons/lu";
+import { MdArrowForwardIos, MdClose, MdVerified } from "react-icons/md";
+import { Button } from "./ui/button";
 
 export const Header = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
 
-  const isPathname = pathname === "/login" || pathname.includes("/register") || pathname.includes("/dashboard");
+  const paths = [
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/reset-password",
+    "/dashboard",
+  ];
+  const isPathname = paths.some((path) => pathname.startsWith(path));
 
   if (isPathname) {
     return null;
@@ -71,16 +87,31 @@ export const Header = () => {
                   <div className="text-sm">{session.user.name}</div>
                 </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>
-                  <Link href={`/profile/${session.user.id}`}>Profile Saya</Link>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="flex flex-col gap-1 font-normal">
+                  <div className="flex items-center gap-1">
+                    <p className="font-semibold">{session.user.name}</p>{" "}
+                    <MdVerified color="#37bae3" />
+                  </div>
+                  <p className="text-neutral-500">{session.user.email}</p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Daftar Alamat</DropdownMenuItem>
-                <DropdownMenuItem>Daftar Pesanan</DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-2">
+                  <LuUser2 />
+                  <Link href={`/profile`}>Profile Saya</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-2">
+                  <LuHome />
+                  <Link href={`/address`}>Alamat Saya</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-2">
+                  <LuShoppingCart />
+                  <Link href="/address">Pesanan Saya</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => signOut()}
-                  className="flex items-center gap-2 text-red-600"
+                  className="flex items-center gap-2"
                 >
                   <LuLogOut />
                   <div>Logout</div>
@@ -127,7 +158,10 @@ export const Header = () => {
               {session && (
                 <>
                   <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between">
+                    <Link
+                      className="flex items-center justify-between"
+                      href={`/profile`}
+                    >
                       <div className="flex items-center gap-2">
                         <Avatar>
                           <AvatarImage
@@ -140,15 +174,14 @@ export const Header = () => {
                           </AvatarFallback>
                         </Avatar>
 
-                        <Link href={`/profile/${session.user.id}`}>
-                          {session.user.name}
-                        </Link>
+                        {session.user.name}
                       </div>
                       <MdArrowForwardIos size={18} />
-                    </div>
+                    </Link>
+
                     <hr />
-                    <Link href="">Daftar Alamat</Link>
-                    <Link href="">Daftar Pesanan</Link>
+                    <Link href="/address">Alamat Saya</Link>
+                    <Link href="">Pesanan Saya</Link>
 
                     <hr />
                   </div>

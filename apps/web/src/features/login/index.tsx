@@ -12,6 +12,7 @@ import { SpinnerCircularFixed } from "spinners-react";
 import { LoginSchema } from "./schemas/LoginSchema";
 import useLogin from "@/hooks/api/auth/useLogin";
 import { useRouter } from "next/navigation";
+import FormInput from "@/components/FormInput";
 
 const LoginPage = () => {
   const session = useSession();
@@ -63,34 +64,28 @@ const LoginPage = () => {
 
         <div className="space-y-6">
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                name="email"
-                type="email"
-                placeholder="your email"
-                value={formik.values.email}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-              />
-              {!!formik.touched.email && !!formik.errors.email ? (
-                <p className="text-xs text-red-500">{formik.errors.email}</p>
-              ) : null}
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                name="password"
-                type="password"
-                placeholder="your password"
-                value={formik.values.password}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-              />
-              {!!formik.touched.password && !!formik.errors.password ? (
-                <p className="text-xs text-red-500">{formik.errors.password}</p>
-              ) : null}
-            </div>
+            <FormInput
+              name="email"
+              label="Email"
+              type="email"
+              placeholder="Masukkan email anda"
+              value={formik.values.email}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isError={!!formik.touched.email && !!formik.errors.email}
+              error={formik.errors.email}
+            />
+            <FormInput
+              name="password"
+              label="Password"
+              type="password"
+              placeholder="Masukkan password anda"
+              value={formik.values.password}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isError={!!formik.touched.password && !!formik.errors.password}
+              error={formik.errors.password}
+            />
             <Link
               href="/forgot-password"
               className="flex justify-end text-xs text-neutral-700"

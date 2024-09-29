@@ -102,7 +102,7 @@ enum Type {
 model Address {
   id             Int              @id @default(autoincrement())
   name           String
-  address        String           @unique
+  address        String
   district       String
   city           String
   latitude       String

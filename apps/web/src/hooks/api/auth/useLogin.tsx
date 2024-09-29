@@ -24,7 +24,7 @@ const useLogin = () => {
     },
     onSuccess: async (data) => {
       await signIn("credentials", { ...data, redirect: false });
-      toast.success("Login success");
+      toast.success("Login berhasil");
       router.replace("/");
     },
     onError: (error: AxiosError<any>) => {

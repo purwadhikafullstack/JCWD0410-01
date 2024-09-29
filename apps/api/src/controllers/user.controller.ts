@@ -9,7 +9,7 @@ import { NextFunction, Request, Response } from 'express';
 export class UserController {
   async getUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await getUserService(Number(req.params.id));
+      const result = await getUserService(Number(res.locals.user.id));
       return res.status(200).send(result);
     } catch (error) {
       next(error);

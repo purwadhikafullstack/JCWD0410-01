@@ -1,27 +1,18 @@
 "use client";
+import NotFound from "@/app/not-found";
 import useGetUser from "@/hooks/api/user/useGetUser";
 import Image from "next/image";
-import { FC } from "react";
 import { CiUser } from "react-icons/ci";
 import { FaClock } from "react-icons/fa6";
-import UbahEmail from "./components/UbahEmail";
-import UbahPassword from "./components/UbahPassword";
-import UbahProfile from "./components/UbahProfile";
-import { useSession } from "next-auth/react";
-import NotFound from "@/app/not-found";
+import ChangeEmail from "./components/ChangeEmail";
+import ChangePassword from "./components/ChangePassword";
+import UpdateProfile from "./components/UpdateProfile";
 
-interface ProfileDetailProps {
-  userId: number;
-}
+const ProfileDetailPage = () => {
+  const { data } = useGetUser();
 
-const ProfileDetailPage: FC<ProfileDetailProps> = ({ userId }) => {
-  const { data: session } = useSession();
-  const { data } = useGetUser(userId);
-
-  if (session?.user) {
-    if (data?.id != session.user.id) {
-      return NotFound();
-    }
+  if (!data) {
+    return NotFound();
   }
 
   return (
@@ -57,12 +48,12 @@ const ProfileDetailPage: FC<ProfileDetailProps> = ({ userId }) => {
       </div>
 
       <div className="col-span-1 space-y-10 md:col-span-2">
-        <UbahProfile
-          name={data?.name ? data.name : ""}
+        <UpdateProfile
+          name={data.name}
           phoneNumber={data?.phoneNumber ? data.phoneNumber : ""}
         />
-        <UbahEmail />
-        <UbahPassword />
+        <ChangeEmail />
+        <ChangePassword />
       </div>
     </div>
   );

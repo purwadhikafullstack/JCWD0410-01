@@ -11,6 +11,7 @@ import { FcGoogle } from "react-icons/fc";
 import { SpinnerCircularFixed } from "spinners-react";
 import { ResetPasswordSchema } from "./schemas/ResetPasswordSchema";
 import { FC } from "react";
+import FormInput from "@/components/FormInput";
 interface ResetPasswordPageProps {
   token: string;
 }
@@ -62,37 +63,32 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
 
         <div className="space-y-6">
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                name="password"
-                type="password"
-                placeholder="Your Password"
-                value={formik.values.password}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-              />
-              {!!formik.touched.password && !!formik.errors.password ? (
-                <p className="text-xs text-red-500">{formik.errors.password}</p>
-              ) : null}
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">Confirm Password</Label>
-              <Input
-                name="confirmPassword"
-                type="password"
-                placeholder="Your Confirm Password"
-                value={formik.values.confirmPassword}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-              />
-              {!!formik.touched.confirmPassword &&
-              !!formik.errors.confirmPassword ? (
-                <p className="text-xs text-red-500">
-                  {formik.errors.confirmPassword}
-                </p>
-              ) : null}
-            </div>
+            <FormInput
+              name="password"
+              label="Password"
+              type="password"
+              placeholder="Masukkan password anda"
+              value={formik.values.password}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isError={!!formik.touched.password && !!formik.errors.password}
+              error={formik.errors.password}
+            />
+
+            <FormInput
+              name="confirmPassword"
+              label="Konfirmasi Password"
+              type="password"
+              placeholder="Konfirmasi password anda"
+              value={formik.values.confirmPassword}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isError={
+                !!formik.touched.confirmPassword &&
+                !!formik.errors.confirmPassword
+              }
+              error={formik.errors.confirmPassword}
+            />
 
             <Button
               className="w-full bg-[#36bbe3]"

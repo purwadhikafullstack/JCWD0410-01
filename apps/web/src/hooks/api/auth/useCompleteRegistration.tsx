@@ -28,7 +28,7 @@ const useCompleteRegistration = (token: string) => {
       return data;
     },
     onSuccess: () => {
-      toast.success("Registration done");
+      toast.success("Registrasi selesai, silahkan lanjut login ke akun anda ");
       router.replace("/login");
     },
     onError: (error: AxiosError<any>) => {

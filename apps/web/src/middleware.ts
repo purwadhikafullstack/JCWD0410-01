@@ -7,7 +7,7 @@ const loggedOutRoutes = [
   "/forgot-password",
 ];
 
-const loggedInRoutes = ["/profile"];
+const loggedInRoutes = ["/profile", "/address"];
 
 // const privateRoutes = ["/dashboard"];
 
