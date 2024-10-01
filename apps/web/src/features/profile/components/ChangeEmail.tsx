@@ -1,4 +1,5 @@
 "use client";
+import FormInput from "@/components/FormInput";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,13 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import useUpdateEmail from "@/hooks/api/user/useChangeEmail";
 import { useFormik } from "formik";
 import { SpinnerCircularFixed } from "spinners-react";
 import { ChangeEmailSchema } from "../schemas/ChangeEmailSchema";
-import FormInput from "@/components/FormInput";
 
 const ChangeEmail = () => {
   const { mutateAsync: updateEmail, isPending } = useUpdateEmail();

@@ -9,11 +9,12 @@ import ChangePassword from "./components/ChangePassword";
 import UpdateProfile from "./components/UpdateProfile";
 
 const ProfileDetailPage = () => {
-  const { data } = useGetUser();
+  const { data, isPending } = useGetUser();
 
-  if (!data) {
-    return NotFound();
-  }
+  // if (isPending) {
+  //   // return NotFound();
+  //   return <div>fetching</div>;
+  // }
 
   return (
     <div className="mx-auto my-10 grid max-w-7xl grid-cols-1 gap-10 rounded-md p-6 text-neutral-600 md:grid-cols-3">
@@ -48,10 +49,13 @@ const ProfileDetailPage = () => {
       </div>
 
       <div className="col-span-1 space-y-10 md:col-span-2">
-        <UpdateProfile
-          name={data.name}
-          phoneNumber={data?.phoneNumber ? data.phoneNumber : ""}
-        />
+        {!isPending && (
+          <UpdateProfile
+            name={data?.name!}
+            phoneNumber={data?.phoneNumber ? data.phoneNumber : ""}
+          />
+        )}
+
         <ChangeEmail />
         <ChangePassword />
       </div>

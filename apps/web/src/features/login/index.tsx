@@ -1,18 +1,15 @@
 "use client";
+import FormInput from "@/components/FormInput";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import useRegister from "@/hooks/api/auth/useRegister";
+import useLogin from "@/hooks/api/auth/useLogin";
 import { useFormik } from "formik";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { SpinnerCircularFixed } from "spinners-react";
 import { LoginSchema } from "./schemas/LoginSchema";
-import useLogin from "@/hooks/api/auth/useLogin";
-import { useRouter } from "next/navigation";
-import FormInput from "@/components/FormInput";
 
 const LoginPage = () => {
   const session = useSession();

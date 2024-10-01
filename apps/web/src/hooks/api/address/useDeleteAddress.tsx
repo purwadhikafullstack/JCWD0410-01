@@ -11,7 +11,7 @@ const useDeleteAddress = () => {
   const { axiosInstance } = useAxios();
 
   return useMutation({
-    mutationFn: async (addressId: string) => {
+    mutationFn: async (addressId: number) => {
       const { data } = await axiosInstance.patch(
         `/addresses/delete-address/${addressId}`,
       );

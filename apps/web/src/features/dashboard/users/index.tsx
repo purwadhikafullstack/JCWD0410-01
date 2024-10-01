@@ -83,7 +83,7 @@ const DashboardUsersPage = () => {
     // </div>
 
     <div>
-      <div className="text-md mx-auto max-w-7xl p-4 md:">
+      <div className="text-md md: mx-auto max-w-7xl p-4">
         <div>
           {data?.data.length}
           {data?.data?.map((customer, index: number) => {
@@ -92,7 +92,7 @@ const DashboardUsersPage = () => {
                 key={customer.id}
                 name={customer.name}
                 email={customer.email}
-                profilePic=""
+                profilePic=
               </div>
             );
           })}

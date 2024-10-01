@@ -9,7 +9,7 @@ const useSetPrimaryAddress = () => {
   const { axiosInstance } = useAxios();
 
   return useMutation({
-    mutationFn: async (addressId: string) => {
+    mutationFn: async (addressId: number) => {
       const { data } = await axiosInstance.patch(
         `/addresses/set-primary-address/${addressId}`,
       );

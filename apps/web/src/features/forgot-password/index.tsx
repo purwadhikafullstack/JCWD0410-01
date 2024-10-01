@@ -1,16 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
 
-import { ForgotPasswordSchema } from "./schemas/ForgotPasswordSchema";
+import FormInput from "@/components/FormInput";
 import useForgotPassword from "@/hooks/api/auth/useForgotPassword";
 import Image from "next/image";
 import { SpinnerCircularFixed } from "spinners-react";
-import FormInput from "@/components/FormInput";
+import { ForgotPasswordSchema } from "./schemas/ForgotPasswordSchema";
 
 const ForgotPasswordPage = () => {
   const { mutateAsync: forgotPassword, isPending } = useForgotPassword();

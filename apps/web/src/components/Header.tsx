@@ -20,14 +20,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CiUser } from "react-icons/ci";
-import { FaCartShopping, FaRegUser } from "react-icons/fa6";
-import { IoCartOutline } from "react-icons/io5";
 import {
   LuHome,
   LuLogOut,
   LuMenu,
   LuShoppingCart,
-  LuUser,
   LuUser2,
 } from "react-icons/lu";
 import { MdArrowForwardIos, MdClose, MdVerified } from "react-icons/md";
@@ -53,26 +50,26 @@ export const Header = () => {
   return (
     <div className="sticky top-0 z-10 border-b-[1px] bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
-        <Link href="/" className="relative h-14 w-32">
-          <Image
-            src="/logo2.svg"
-            alt="FreshNest Laundry Logo"
-            fill
-            className="object-contain"
-          />
-        </Link>
-
-        <div className="hidden gap-8 text-sm text-neutral-600 md:flex">
+        <div className="hidden items-center gap-8 text-sm text-neutral-600 md:flex">
+          <Link href="/" className="relative h-14 w-32">
+            <Image
+              src="/logo2.svg"
+              alt="FreshNest Laundry Logo"
+              fill
+              className="object-contain"
+            />
+          </Link>
           <Link href="/outlet-kami">Outlet Kami</Link>
           <Link href="/layanan-kami">Layanan & Harga</Link>
-          <Link href="">Pesan Sekarang</Link>
+          <Link href="/request">Buat Pesanan</Link>
         </div>
 
         {session?.user.id ? (
           <div className="hidden md:flex">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
+                  <div className="text-sm">{session.user.name}</div>
                   <Avatar>
                     <AvatarImage
                       src={session.user.profilePicture}
@@ -83,8 +80,6 @@ export const Header = () => {
                       <CiUser size={24} />
                     </AvatarFallback>
                   </Avatar>
-
-                  <div className="text-sm">{session.user.name}</div>
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -96,18 +91,24 @@ export const Header = () => {
                   <p className="text-neutral-500">{session.user.email}</p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="flex items-center gap-2">
-                  <LuUser2 />
-                  <Link href={`/profile`}>Profile Saya</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2">
-                  <LuHome />
-                  <Link href={`/address`}>Alamat Saya</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2">
-                  <LuShoppingCart />
-                  <Link href="/address">Pesanan Saya</Link>
-                </DropdownMenuItem>
+                <Link href={`/profile`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuUser2 />
+                    <p>Profile Saya</p>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/address`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuHome />
+                    <Link href={`/address`}>Alamat Saya</Link>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/request`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuShoppingCart />
+                    <Link href="/request">Buat Pesanan</Link>
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => signOut()}
@@ -135,7 +136,16 @@ export const Header = () => {
           </div>
         )}
 
-        <div className="flex md:hidden">
+        <div className="flex w-full items-center justify-between md:hidden">
+          <Link href="/" className="relative h-14 w-32">
+            <Image
+              src="/logo2.svg"
+              alt="FreshNest Laundry Logo"
+              fill
+              className="object-contain"
+            />
+          </Link>
+
           <Drawer>
             <DrawerTrigger>
               <LuMenu size={28} className="text-neutral-600" />
@@ -191,7 +201,7 @@ export const Header = () => {
               <div className="flex flex-col gap-4 text-neutral-600">
                 <Link href="/outlet-kami">Outlet Kami</Link>
                 <Link href="/layanan-kami">Layanan & Harga</Link>
-                <Link href="">Pesan Sekarang</Link>
+                <Link href="/request">Buat Pesanan</Link>
               </div>
 
               <hr />
