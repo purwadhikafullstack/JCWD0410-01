@@ -1,17 +1,12 @@
 "use client";
+import FormInput from "@/components/FormInput";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import useResetPassword from "@/hooks/api/auth/useResetPassword";
 import { useFormik } from "formik";
-import { signIn } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
-import { FcGoogle } from "react-icons/fc";
+import { FC } from "react";
 import { SpinnerCircularFixed } from "spinners-react";
 import { ResetPasswordSchema } from "./schemas/ResetPasswordSchema";
-import { FC } from "react";
-import FormInput from "@/components/FormInput";
 interface ResetPasswordPageProps {
   token: string;
 }

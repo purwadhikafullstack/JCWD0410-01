@@ -76,7 +76,7 @@ const DashboardEmployeesPage = () => {
             key={employee.id}
             name={employee.name}
             email={employee.email}
-            profilePic={employee.profilePic}
+            profilePic={employee.profilePicture}
           </div>
         );
       })}

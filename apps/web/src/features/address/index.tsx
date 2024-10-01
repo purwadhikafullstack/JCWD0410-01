@@ -14,12 +14,12 @@ const AddressPage = () => {
   const { mutateAsync: setPrimaryAddress, isPending: isLoading } =
     useSetPrimaryAddress();
 
-  const handleDeleteAddress = async (addressId: string) => {
+  const handleDeleteAddress = async (addressId: number) => {
     await deleteAddress(addressId);
     refetch();
   };
 
-  const handleSetPrimary = async (addressId: string) => {
+  const handleSetPrimary = async (addressId: number) => {
     await setPrimaryAddress(addressId);
     refetch();
   };
@@ -35,7 +35,16 @@ const AddressPage = () => {
         </Link>
       </div>
       {data?.length === 0 ? (
-        "Belum Ada Alamat"
+        <div className="flex min-h-[350px] flex-col justify-center gap-8 rounded-md border-[1px] text-center md:min-h-[500px]">
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">
+              Belum ada alamat yang terdaftar
+            </h2>
+            <p className="text-neutral-600">
+              Tambahkan alamat Anda untuk mulai membuat pesanan.
+            </p>
+          </div>
+        </div>
       ) : (
         <div className="space-y-6 text-sm">
           {data?.map((address, index: number) => {
@@ -56,7 +65,7 @@ const AddressPage = () => {
                     <p>{`${address.district.toUpperCase()}, ${address.city.toUpperCase()}, DI YOGYAKARTA, 13720`}</p>
                   </div>
                   <div className="flex flex-row justify-between gap-2 md:flex-col md:justify-normal">
-                    <div className="flex justify-end gap-4 text-[#37bae3]">
+                    <div className="flex items-center justify-end gap-4 text-[#37bae3]">
                       <Link
                         href={`/address/update-address/${address.id}`}
                         className="text-sm text-[#37bae3]"

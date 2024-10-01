@@ -15,7 +15,7 @@ interface updateAddressPayload {
   longitude: string;
 }
 
-const useUpdateAddress = (addressId: string) => {
+const useUpdateAddress = (addressId: number) => {
   const router = useRouter();
   const { axiosInstance } = useAxios();
 

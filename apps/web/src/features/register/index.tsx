@@ -1,7 +1,6 @@
 "use client";
+import FormInput from "@/components/FormInput";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import useRegister from "@/hooks/api/auth/useRegister";
 import { useFormik } from "formik";
 import { signIn } from "next-auth/react";
@@ -10,7 +9,6 @@ import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { SpinnerCircularFixed } from "spinners-react";
 import { RegisterSchema } from "./schemas/RegisterSchema";
-import FormInput from "@/components/FormInput";
 
 const RegisterPage = () => {
   const { mutateAsync: register, isPending } = useRegister();

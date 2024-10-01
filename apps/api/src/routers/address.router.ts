@@ -1,7 +1,5 @@
 import { AddressController } from '@/controllers/address.controller';
-import { AdminController } from '@/controllers/admin.controller';
 import { verifyToken } from '@/lib/verifyToken';
-// import { verifyToken } from '@/lib/verifyToken';
 import { Router } from 'express';
 
 export class AddressRouter {

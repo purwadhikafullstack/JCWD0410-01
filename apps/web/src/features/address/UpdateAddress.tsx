@@ -66,16 +66,16 @@ const UpdateAddressPage: FC<UpdateAddressPageProps> = ({ addressId }) => {
     fetchAddress(lat, lng);
   };
 
-  const { mutateAsync: updateAddress, isPending } = useUpdateAddress(data?.id);
+  const { mutateAsync: updateAddress, isPending } = useUpdateAddress(data?.id!);
 
   const formik = useFormik({
     initialValues: {
-      name: data?.name,
-      address: data?.address,
-      city: data?.city,
-      district: data?.district,
-      latitude: data?.latitude,
-      longitude: data?.longitude,
+      name: data?.name!,
+      address: data?.address!,
+      city: data?.city!,
+      district: data?.district!,
+      latitude: data?.latitude!,
+      longitude: data?.longitude!,
     },
     onSubmit: async (values, { resetForm }) => {
       await updateAddress(values);
