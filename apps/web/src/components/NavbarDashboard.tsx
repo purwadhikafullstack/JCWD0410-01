@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
@@ -7,7 +8,7 @@ const NavbarDashboard = () => {
       <div>Create Event</div>
       <div className='flex items-center justify-start space-x-2'>
         <span>
-          <img
+          <Image
               src="/tixLogo300.png"
               alt="Description"
               className="w-40 object-cover"

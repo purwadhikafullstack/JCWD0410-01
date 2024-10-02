@@ -2,18 +2,23 @@ import useAxios from "@/hooks/useAxios";
 import { User } from "@/types/user";
 import { IPageableResponse, IPaginationQueries,  } from "@/types/pagination";
 import { useQuery } from "@tanstack/react-query";
+import { Address } from "@/types/address";
 
-interface GetEmployeesQuery extends IPaginationQueries {
+export interface GetUsersQuery extends IPaginationQueries {
   search?: string;
 }
 
-const useGetEmployees = (queries: GetEmployeesQuery) => {
+export interface UserWithAddress extends User {
+  address: Address[];
+}
+
+const useGetEmployees = (queries: GetUsersQuery) => {
   const { axiosInstance } = useAxios();
 
   return useQuery({
-    queryKey: ["employees", queries],
+    queryKey: ["users", queries],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<IPageableResponse<User>>(
+      const { data } = await axiosInstance.get<IPageableResponse<UserWithAddress>>(
         "/admin/employees",
         {
           params: queries,

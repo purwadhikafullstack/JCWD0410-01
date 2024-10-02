@@ -17,7 +17,11 @@ import { debounce } from "lodash";
 import Link from "next/link";
 // import useGetCategories from "@/hooks/api/category/useGetCategories";
 import EventCardSkeleton from "@/components/EventCardSkeleton";
-import useGetCustomers from "@/hooks/api/admin/useGetCustomers";
+import useGetCustomers, { UserWithAddress } from "@/hooks/api/admin/useGetCustomers";
+import Image from "next/image";
+import UsersHeader from "./components/UsersHeader";
+import { DataTable } from "@/components/DataTable";
+import { userColumns } from "./components/UserColumns";
 
 const DashboardUsersPage = () => {
   const searchParams = useSearchParams();
@@ -83,12 +87,26 @@ const DashboardUsersPage = () => {
     // </div>
 
     <div>
-      <div className="text-md md: mx-auto max-w-7xl p-4">
+      <UsersHeader />
+      <div className="text-md md: mx-auto h-[2400px] bg-white p-4 pt-24">
         <div>
           {data?.data.length}
           {data?.data?.map((customer, index: number) => {
             return (
-              <div key={customer.id} className="">
+              <div
+                key={customer.id}
+                className="my-2 flex h-16 items-center gap-2 rounded-lg bg-sky-500 px-2 shadow"
+              >
+                <div className="relative h-10 w-10 overflow-hidden rounded-full border-[1px] border-neutral-200">
+                  {customer.profilePicture && (
+                    <Image
+                      src={customer.profilePicture}
+                      alt="concert"
+                      fill
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  )}
+                </div>
                 key={customer.id}
                 name={customer.name}
                 email={customer.email}
@@ -97,6 +115,7 @@ const DashboardUsersPage = () => {
             );
           })}
         </div>
+        {isPending ? null : <DataTable columns={userColumns} data={data?.data!}/>}
         {/* <div className="flex flex-col gap-2 sm:flex-row">
           <div className="text-sm">
             <input

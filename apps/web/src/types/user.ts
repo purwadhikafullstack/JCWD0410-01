@@ -1,10 +1,11 @@
 export interface User {
   id: number;
-  name: string;
+  name?: string;
   email: string;
   phoneNumber?: string;
   profilePicture?: string;
   role: Role;
+  isVerified: boolean;
   provider: Provider;
   createdAt: string;
 }

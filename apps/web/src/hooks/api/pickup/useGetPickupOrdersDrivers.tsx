@@ -1,3 +1,5 @@
+'use client'
+
 import useAxios from "@/hooks/useAxios";
 import { IPageableResponse, IPaginationQueries } from "@/types/pagination";
 import { Pickup_Order } from "@/types/pickup-order";
@@ -19,6 +21,10 @@ export interface Pickup_Order_Extension extends Pickup_Order {
     longitude: string;
     name: string;
   };
+  user: {
+    name: string;
+    phoneNumber: string;
+  }
 }
 
 const useGetPickupOrdersDrivers = (queries: PickupOrdersDriversPaginationQueries) => {

@@ -16,6 +16,7 @@ import { OrderRouter } from './routers/order.router';
 import { AddressRouter } from './routers/address.router';
 import { PickupRouter } from './routers/pickup.router';
 import { OutletRouter } from './routers/outlet.router';
+import { NotificationRouter } from './routers/notification.router';
 
 export default class App {
   private app: Express;
@@ -65,6 +66,7 @@ export default class App {
     const addressRouter = new AddressRouter();
     const pickupRouter = new PickupRouter();
     const outletRouter = new OutletRouter();
+    const notificationRouter = new NotificationRouter();
 
     this.app.get('/api', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student API!`);
@@ -78,6 +80,7 @@ export default class App {
     this.app.use('/api/addresses', addressRouter.getRouter());
     this.app.use('/api/pickup-orders', pickupRouter.getRouter());
     this.app.use('/api/outlets', outletRouter.getRouter());
+    this.app.use('/api/notifications', notificationRouter.getRouter());
   }
 
   public start(): void {

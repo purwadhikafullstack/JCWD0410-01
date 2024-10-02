@@ -1,9 +1,11 @@
 import { JWT_SECRET } from '@/config';
+import { Role } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import { TokenExpiredError, verify } from 'jsonwebtoken';
 
 interface PayloadToken {
   id: number;
+  role: Role;
 }
 
 export const verifyToken = (

@@ -1,14 +1,20 @@
 "use client";
 
-import React from "react";
-import DashboardPickupOrdersPage from "..";
 import TestPage from "@/components/TestPage";
 import useGetPickupOrdersDrivers from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
+import PickupOrdersHeader from "../components/PickupOrdersHeader";
+import PickupOrderTable from "../components/PickupOrderTable";
 
 const DashboardPickupOrdersRequestPage = () => {
   return (
     <>
-      <DashboardPickupOrdersPage />
+      <PickupOrdersHeader />
+      <div className="text-md md: mx-auto h-[2400px] bg-white p-4 pt-24">
+        <PickupOrderTable
+          status={"REQUEST"}
+          callback={useGetPickupOrdersDrivers}
+        />
+      </div>
       <TestPage status={"REQUEST"} callback={useGetPickupOrdersDrivers} />
     </>
   );
