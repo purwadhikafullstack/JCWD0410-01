@@ -14,6 +14,7 @@ export class PickupRouter {
 
   private initializeRoutes() {
     this.router.get('/drivers', verifyToken, this.pickupController.getPickupOrdersDrivers);
+    this.router.patch('/drivers', verifyToken, this.pickupController.updatePickupDriver);
   }
 
   getRouter(): Router {

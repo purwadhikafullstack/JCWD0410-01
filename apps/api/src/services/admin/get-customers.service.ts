@@ -43,7 +43,7 @@ export const getCustomersService = async (query: GetCustomersInterface) => {
 
     const users = await prisma.user.findMany({
       where: whereClause,
-      include: { addresses: true, orders: true },
+      include: { addresses: {where: {isPrimary: true}}},
       take: take,
       skip: (page - 1) * take,
       orderBy: {

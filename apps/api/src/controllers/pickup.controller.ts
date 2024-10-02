@@ -2,6 +2,7 @@ import { createUserService } from '@/services/admin/create-user.service';
 import { getCustomersService } from '@/services/admin/get-customers.service';
 import { getEmployeesService } from '@/services/admin/get-employees.service';
 import { getPickupDriverService } from '@/services/pickup/get-pickup-driver.service';
+import { updatePickupOrderDriverService } from '@/services/pickup/update-pickup-driver.service';
 import { Role } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 
@@ -25,9 +26,13 @@ export class PickupController {
     }
   }
 
-  async createUserAdmin(req: Request, res: Response, next: NextFunction) {
+  async updatePickupDriver(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
-      const result = await createUserService(req.body);
+      const result = await updatePickupOrderDriverService(req.body, res.locals.user.id);
       return res.status(200).send(result);
     } catch (error) {
       next(error);

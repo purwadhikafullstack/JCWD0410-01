@@ -19,12 +19,12 @@ export const getPickupDriverService = async (
 
     const employee = await prisma.user.findFirst({
       where: { id: userId },
-      include: { employee: { select: { id: true } } },
+      include: { employee: { select: { id: true, outletId: true } } },
     });
 
     if (!employee || !employee.employee) {
       throw new Error(
-        'Wajib ada pickupOutletId, ini placeholder, pindah ke validator',
+        'Employee not found, ini placeholder, pindah ke validator',
       );
     }
 
@@ -42,6 +42,8 @@ export const getPickupDriverService = async (
 
     if (status === 'REQUEST') {
       whereClause.status = 'WAITING_FOR_DRIVER';
+      whereClause.employeeId = undefined;
+      whereClause.outletId = employee.employee.outletId;
     }
 
     if (status === 'HISTORY') {
@@ -50,11 +52,12 @@ export const getPickupDriverService = async (
 
     if (search) {
       whereClause.pickupNumber = { contains: search };
-    }    
+    }
 
     const pickupOrders = await prisma.pickup_Order.findMany({
       where: whereClause,
       include: {
+        user: { select: { name: true, phoneNumber: true } },
         address: { select: { address: true, latitude: true, longitude: true } },
         outlet: { select: { name: true, latitude: true, longitude: true } },
       },
@@ -77,7 +80,7 @@ export const getPickupDriverService = async (
     return {
       data: pickupOrders,
       meta: { total, take, page },
-      whereClause
+      whereClause,
     };
   } catch (error) {
     throw error;
