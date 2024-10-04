@@ -13,7 +13,7 @@ export const createUserService = async (body: CreateUserInterface) => {
 
     const existingUser = await prisma.user.findFirst({
       where: {
-        email,
+        OR: [{email, phoneNumber}]
       },
     });
 
