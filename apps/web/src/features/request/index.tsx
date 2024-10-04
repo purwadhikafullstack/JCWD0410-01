@@ -174,7 +174,7 @@ const RequestOrderPage = () => {
                     <SelectContent>
                       <SelectGroup>
                         {outlets
-                          ?.sort(
+                          ?.data.sort(
                             (a, b) =>
                               haversine(selectedPickupAddressCoord, {
                                 lat: Number(a.latitude),

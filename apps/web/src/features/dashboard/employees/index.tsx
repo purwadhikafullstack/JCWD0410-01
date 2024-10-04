@@ -29,7 +29,7 @@ const DashboardEmployeesPage = () => {
   // const [selectedLocation, setSelectedLocation] = useState("");
   const [page, setPage] = useState(1);
 
-  const { data, isPending } = useGetEmployees({
+  const { data, isPending, refetch } = useGetEmployees({
     page,
     take: 8,
     sortBy: "name",

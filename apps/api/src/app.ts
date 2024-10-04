@@ -78,7 +78,7 @@ export default class App {
     this.app.use('/api/admin', adminRouter.getRouter());
     this.app.use('/api/auth', authRouter.getRouter());
     this.app.use('/api/users', userRouter.getRouter());
-    this.app.use('/api/order', orderRouter.getRouter());
+    this.app.use('/api/orders', orderRouter.getRouter());
     this.app.use('/api/addresses', addressRouter.getRouter());
     this.app.use('/api/pickup-orders', pickupRouter.getRouter());
     this.app.use('/api/outlets', outletRouter.getRouter());

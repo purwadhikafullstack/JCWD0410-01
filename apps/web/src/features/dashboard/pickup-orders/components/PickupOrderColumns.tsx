@@ -104,7 +104,7 @@ export const pickupOrderColumns: ColumnDef<Pickup_Order_Extension>[] = [
     cell: ({ row }) => {
       const address = String(row.original.address.address);
       return (
-        <div className="line-clamp-3 max-w-[20ch] break-words">{address}</div>
+        <div className="line-clamp-2 max-w-[20ch] break-words">{address}</div>
       );
     },
   },

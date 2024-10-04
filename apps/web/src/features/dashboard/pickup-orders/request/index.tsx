@@ -9,7 +9,7 @@ const DashboardPickupOrdersRequestPage = () => {
   return (
     <>
       <PickupOrdersHeader />
-      <div className="text-md md: mx-auto h-[2400px] bg-white p-4 pt-24">
+      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
         <PickupOrderTable
           status={"REQUEST"}
           callback={useGetPickupOrdersDrivers}

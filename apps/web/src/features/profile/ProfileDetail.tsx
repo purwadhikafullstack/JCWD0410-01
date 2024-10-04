@@ -9,7 +9,7 @@ import ChangePassword from "./components/ChangePassword";
 import UpdateProfile from "./components/UpdateProfile";
 
 const ProfileDetailPage = () => {
-  const { data, isPending } = useGetUser();
+  const { data, isPending, refetch } = useGetUser();
 
   // if (isPending) {
   //   // return NotFound();

@@ -16,7 +16,7 @@ const useGetOutlets = (queries: GetOutletsQuery) => {
     queryKey: ["outlets", queries],
     queryFn: async () => {
       const { data } = await axiosInstance.get<IPageableResponse<Outlet>>(
-        `/outlets`,
+        "/outlets",
         {
           params: queries,
         },

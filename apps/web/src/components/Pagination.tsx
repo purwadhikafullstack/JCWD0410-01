@@ -19,8 +19,8 @@ const Pagination: FC<PaginationProps> = ({
   return (
     <ReactPaginate
       breakLabel={<span></span>}
-      nextLabel={<ChevronRight className="text-color2" />}
-      previousLabel={<ChevronLeft className="text-color2" />}
+      nextLabel={<ChevronRight className="" />}
+      previousLabel={<ChevronLeft className="" />}
       pageCount={Math.ceil(total / limit)}
       renderOnZeroPageCount={null}
       containerClassName="flex gap-4 w-fit"
