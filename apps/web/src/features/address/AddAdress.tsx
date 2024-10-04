@@ -28,7 +28,7 @@ const AddAddressPage = () => {
   const fetchAddress = async (lat: string, lng: string) => {
     try {
       const { data } = await axios.get(
-        `https://api.opencagedata.com/geocode/v1/json?q=${lat},${lng}&key=${process.env.NEXT_PUBLIC_OPENCAGE_API_KEY}&language=id&pretty=1`,
+        `https://api.opencagedata.com/geocode/v1/json?q=${lat},${lng}&key=${process.env.NEXT_PUBLIC_OPENCAGE_API_KEY!}&language=id&pretty=1`,
       );
       const results = data.results[0]?.components || {};
       formik.setValues((prevValues) => ({
