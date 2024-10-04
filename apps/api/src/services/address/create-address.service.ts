@@ -1,4 +1,3 @@
-import { hashPassword } from '@/lib/bcrypt';
 import prisma from '@/prisma';
 
 interface CreateAddressBody {

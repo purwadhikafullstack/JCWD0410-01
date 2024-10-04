@@ -1,4 +1,3 @@
-import { AddressController } from '@/controllers/address.controller';
 import { OutletController } from '@/controllers/outlet.controller';
 import { verifyToken } from '@/lib/verifyToken';
 import { Router } from 'express';
@@ -15,23 +14,18 @@ export class OutletRouter {
 
   private initializeRoutes() {
     this.router.get('/', verifyToken, this.outletController.getOutlets);
-    // this.router.get('/:id', verifyToken, this.addressController.getAddress);
-    // this.router.post('/', verifyToken, this.addressController.createAddress);
-    // this.router.patch(
-    //   '/update-address/:id',
-    //   verifyToken,
-    //   this.addressController.updateAddress,
-    // );
-    // this.router.patch(
-    //   '/delete-address/:id',
-    //   verifyToken,
-    //   this.addressController.deleteAddress,
-    // );
-    // this.router.patch(
-    //   '/set-primary-address/:id',
-    //   verifyToken,
-    //   this.addressController.setPrimaryAddress,
-    // );
+    this.router.get('/:id', verifyToken, this.outletController.getOutlet);
+    this.router.post('/', verifyToken, this.outletController.createOutlet);
+    this.router.patch(
+      '/update-outlet/:id',
+      verifyToken,
+      this.outletController.updateOutlet,
+    );
+    this.router.patch(
+      '/delete-outlet/:id',
+      verifyToken,
+      this.outletController.deleteOutlet,
+    );
   }
 
   getRouter(): Router {

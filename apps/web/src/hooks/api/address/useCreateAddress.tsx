@@ -1,7 +1,7 @@
 "use client";
 
 import useAxios from "@/hooks/useAxios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -18,6 +18,7 @@ interface CreateAddressPayload {
 const useCreateAddress = () => {
   const router = useRouter();
   const { axiosInstance } = useAxios();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (payload: CreateAddressPayload) => {
@@ -25,7 +26,8 @@ const useCreateAddress = () => {
       return data;
     },
     onSuccess: () => {
-      toast.success("Create Address success");
+      queryClient.invalidateQueries({ queryKey: ["addresses"] });
+      toast.success("Alamat telah berhasil ditambahkan");
       router.push("/address");
     },
     onError: (error: AxiosError<any>) => {

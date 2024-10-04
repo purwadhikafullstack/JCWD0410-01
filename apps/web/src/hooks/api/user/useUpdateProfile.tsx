@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import useAxios from "@/hooks/useAxios";
-import { getSession, signIn } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 
 interface UpdateProfilePayload {
   profilePicture: File | string;
@@ -14,7 +14,6 @@ interface UpdateProfilePayload {
 }
 
 const useUpdateProfile = () => {
-  const router = useRouter();
   const { axiosInstance } = useAxios();
   const queryClient = useQueryClient();
 
@@ -35,10 +34,13 @@ const useUpdateProfile = () => {
       return data;
     },
     onSuccess: async (data) => {
-      await signIn("credentials", { ...data.data, redirect: false });
+      await signIn("credentials", {
+        ...data.data,
+        redirect: false,
+      });
 
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       toast.success("Update Profile Success");
-      queryClient.invalidateQueries({ queryKey: ["users"] });
       // router.push(`/profile/${userId}`);
     },
     onError: (error: AxiosError<any>) => {

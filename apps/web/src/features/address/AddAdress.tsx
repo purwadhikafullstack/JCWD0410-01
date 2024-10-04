@@ -13,7 +13,6 @@ import FormInput from "@/components/FormInput";
 import { AddAddressSchema } from "./schemas/AddAddressSchema";
 import { SpinnerCircularFixed } from "spinners-react";
 
-// Load MapComponent dynamically without SSR
 const DynamicMapComponent = dynamic(
   () => import("../../components/MapComponent"),
   { ssr: false },
@@ -35,8 +34,9 @@ const AddAddressPage = () => {
       formik.setValues((prevValues) => ({
         ...prevValues,
         address: data.results[0].formatted,
-        city: results.county || results.city_district,
-        district: results.municipality || results.suburb,
+        city: results.county || results.city,
+        district:
+          results.city_district || results.municipality || results.suburb,
       }));
     } catch (err) {
       console.error("Error fetching address:", err);
@@ -116,7 +116,7 @@ const AddAddressPage = () => {
               name="address"
               label="Alamat"
               type="text"
-              placeholder="Contoh: Kosan"
+              placeholder="Contoh: Jalan Contoh"
               value={formik.values.address}
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
@@ -130,7 +130,7 @@ const AddAddressPage = () => {
                 label="Kota / Kabupaten"
                 type="text"
                 placeholder=""
-                value={formik.values.city}
+                value={formik.values.city || "-"}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 isError={!!formik.touched.city && !!formik.errors.city}
@@ -138,10 +138,10 @@ const AddAddressPage = () => {
               />
               <FormInput
                 name="district"
-                label="Kota / Kabupaten"
+                label="Kecamatan"
                 type="text"
                 placeholder=""
-                value={formik.values.district}
+                value={formik.values.district || "-"}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 isError={!!formik.touched.district && !!formik.errors.district}

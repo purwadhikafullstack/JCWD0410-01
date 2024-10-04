@@ -1,4 +1,4 @@
-import prisma from '../../prisma';
+import prisma from '@/prisma';
 
 export const getAddressesService = async (userId: number) => {
   const address = await prisma.address.findMany({

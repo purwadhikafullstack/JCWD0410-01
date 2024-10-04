@@ -7,6 +7,6 @@ export const AddAddressSchema = Yup.object().shape({
   address: Yup.string().required("Address is required"),
   city: Yup.string().required("City is required"),
   district: Yup.string().required("District is required"),
-  latitude: Yup.string().required("Latitude is required"),
-  longitude: Yup.string().required("Longitude is required"),
+  latitude: Yup.number().required("Latitude is required"),
+  longitude: Yup.number().required("Longitude is required"),
 });

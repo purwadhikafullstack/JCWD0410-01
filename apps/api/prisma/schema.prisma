@@ -162,16 +162,29 @@ enum OrderStatus {
 }
 
 model Order_Item {
-  id           Int      @id @default(autoincrement())
-  name         String
-  itemQuantity Int
-  isDeleted    Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  order        Order    @relation(fields: [orderId], references: [id])
-  orderId      Int
+  id            Int         @id @default(autoincrement())
+  name          String
+  itemQuantity  Int
+  isDeleted     Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  order         Order       @relation(fields: [orderId], references: [id])
+  orderId       Int
+  laundryItemId Int
+  laundryItem   LaundryItem @relation(fields: [laundryItemId], references: [id])
 
   @@map("order_items")
+}
+
+model LaundryItem {
+  id         Int          @id @default(autoincrement())
+  name       String
+  isDeleted  Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  updateAt   DateTime     @updatedAt
+  OrderItems Order_Item[]
+
+  @@map("laundry_items")
 }
 
 model Payment {

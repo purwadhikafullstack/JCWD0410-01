@@ -25,7 +25,7 @@ const Pagination: FC<PaginationProps> = ({
       renderOnZeroPageCount={null}
       containerClassName="flex gap-4 w-fit"
       pageLinkClassName="py-2 px-3 rounded-md"
-      activeLinkClassName="bg-color2 text-white"
+      activeLinkClassName="border-[1px] border-neutral-300"
       onPageChange={onChangePage}
       forcePage={Number(page) - 1}
     />

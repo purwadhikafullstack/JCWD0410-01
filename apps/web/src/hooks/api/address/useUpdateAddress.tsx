@@ -1,7 +1,7 @@
 "use client";
 
 import useAxios from "@/hooks/useAxios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -18,7 +18,7 @@ interface updateAddressPayload {
 const useUpdateAddress = (addressId: number) => {
   const router = useRouter();
   const { axiosInstance } = useAxios();
-
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: updateAddressPayload) => {
       const { data } = await axiosInstance.patch(
@@ -28,6 +28,7 @@ const useUpdateAddress = (addressId: number) => {
       return data;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["addresses"] });
       router.push("/address");
       toast.success("Alamat telah diperbaharui");
     },

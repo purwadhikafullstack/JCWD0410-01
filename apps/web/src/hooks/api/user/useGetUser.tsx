@@ -6,7 +6,7 @@ const useGetCustomers = () => {
   const { axiosInstance } = useAxios();
 
   return useQuery({
-    queryKey: ["users"],
+    queryKey: ["user"],
     queryFn: async () => {
       const { data } = await axiosInstance.get<User>(`/users`);
       return data;

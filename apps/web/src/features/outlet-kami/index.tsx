@@ -1,12 +1,39 @@
+"use client";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
 import Image from "next/image";
+import CardSkeleton from "./components/CardSkeleton";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import Pagination from "@/components/Pagination";
 
 const OutletPage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentQueryPage = searchParams.get("page") || "1";
+  const [page, setPage] = useState(Number(currentQueryPage));
+
+  const { data, isPending } = useGetOutlets({ page: page });
+  const onPageChange = ({ selected }: { selected: number }) => {
+    const newPage = selected + 1;
+    setPage(newPage);
+    router.push(`?page=${newPage}`); // Update URL dengan query page
+  };
+
+  // Skeleton loading
+  if (isPending) {
+    return <CardSkeleton />;
+  }
+
+  // Handle jika data tidak ditemukan
+  if (!data) {
+    return <h1>Outlet tidak ditemukan</h1>;
+  }
   return (
     <div>
       <div className="bg-[#e5f3f6]">
@@ -27,101 +54,34 @@ const OutletPage = () => {
       </div>
       <div className="mx-auto max-w-7xl space-y-10 bg-white px-6 py-10 md:py-20">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
-          <Card>
-            <div className="relative h-48 w-full overflow-hidden">
-              <Image
-                src="/laundry2.png"
-                alt="Whoosh Laundry Logo"
-                fill
-                className="rounded-t-md object-cover"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-neutral-600">
-                Senayan - Pusat
-              </CardTitle>
-              <CardDescription>
-                No.41 Blok S, Jl. Senayan, RT.8/RW.5, Rw. Bar., Kec. Kby. Baru,
-                Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12180
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card>
-            <div className="relative h-48 w-full overflow-hidden">
-              <Image
-                src="/laundry2.png"
-                alt="Whoosh Laundry Logo"
-                fill
-                className="rounded-t-md object-cover"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-neutral-600">
-                Senayan - Pusat
-              </CardTitle>
-              <CardDescription>
-                No.41 Blok S, Jl. Senayan, RT.8/RW.5, Rw. Bar., Kec. Kby. Baru,
-                Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12180
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card>
-            <div className="relative h-48 w-full overflow-hidden">
-              <Image
-                src="/laundry2.png"
-                alt="Whoosh Laundry Logo"
-                fill
-                className="rounded-t-md object-cover"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-neutral-600">
-                Senayan - Pusat
-              </CardTitle>
-              <CardDescription>
-                No.41 Blok S, Jl. Senayan, RT.8/RW.5, Rw. Bar., Kec. Kby. Baru,
-                Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12180
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card>
-            <div className="relative h-48 w-full overflow-hidden">
-              <Image
-                src="/laundry2.png"
-                alt="Whoosh Laundry Logo"
-                fill
-                className="rounded-t-md object-cover"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-neutral-600">
-                Senayan - Pusat
-              </CardTitle>
-              <CardDescription>
-                No.41 Blok S, Jl. Senayan, RT.8/RW.5, Rw. Bar., Kec. Kby. Baru,
-                Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12180
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card>
-            <div className="relative h-48 w-full overflow-hidden">
-              <Image
-                src="/laundry2.png"
-                alt="Whoosh Laundry Logo"
-                fill
-                className="rounded-t-md object-cover"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-neutral-600">
-                Senayan - Pusat
-              </CardTitle>
-              <CardDescription>
-                No.41 Blok S, Jl. Senayan, RT.8/RW.5, Rw. Bar., Kec. Kby. Baru,
-                Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12180
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          {data?.data.map((outlet) => {
+            return (
+              <Card key={outlet.id}>
+                <div className="relative h-48 w-full overflow-hidden">
+                  <Image
+                    src="/laundry2.png"
+                    alt="Whoosh Laundry Logo"
+                    fill
+                    className="rounded-t-md object-cover"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-neutral-600">
+                    {outlet.name}
+                  </CardTitle>
+                  <CardDescription>{outlet.latitude}</CardDescription>
+                </CardHeader>
+              </Card>
+            );
+          })}
+        </div>
+        <div className="flex justify-center">
+          <Pagination
+            total={data.meta.total}
+            limit={data.meta.take}
+            onChangePage={onPageChange}
+            page={page}
+          />
         </div>
       </div>
     </div>

@@ -34,7 +34,7 @@ const AddressPage = () => {
           </Button>
         </Link>
       </div>
-      {data?.length === 0 ? (
+      {!data?.length ? (
         <div className="flex min-h-[350px] flex-col justify-center gap-8 rounded-md border-[1px] text-center md:min-h-[500px]">
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">
@@ -62,7 +62,7 @@ const AddressPage = () => {
                 <div className="flex flex-col justify-between gap-2 p-4 md:flex-row">
                   <div className="space-y-1">
                     <p>{address.address}</p>
-                    <p>{`${address.district.toUpperCase()}, ${address.city.toUpperCase()}, DI YOGYAKARTA, 13720`}</p>
+                    <p>{`${address.district.toUpperCase()}, ${address.city.toUpperCase()}, DI YOGYAKARTA`}</p>
                   </div>
                   <div className="flex flex-row justify-between gap-2 md:flex-col md:justify-normal">
                     <div className="flex items-center justify-end gap-4 text-[#37bae3]">

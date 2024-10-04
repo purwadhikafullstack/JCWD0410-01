@@ -1,4 +1,4 @@
-import prisma from '../../prisma';
+import prisma from '@/prisma';
 
 export const getAddressService = async (userId: number, addressId: number) => {
   const address = await prisma.address.findFirst({
