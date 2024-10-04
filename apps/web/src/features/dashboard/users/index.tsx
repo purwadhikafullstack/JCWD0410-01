@@ -19,7 +19,7 @@ const DashboardUserPage:FC<DashboardUserInterface> = ({id}) => {
     <>
       <DashboardHeader />
       <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
-        {isPending ? (
+        {/* {isPending ? (
           <Loader2 className="mx-auto animate-spin" />
         ) : data?.data ? (
           <>
@@ -43,7 +43,7 @@ const DashboardUserPage:FC<DashboardUserInterface> = ({id}) => {
             data={[]}
             meta={{ page: 1, take: 8, total: 0 }}
           />
-        )}
+        )} */}
       </div>
     </>
   ) : (

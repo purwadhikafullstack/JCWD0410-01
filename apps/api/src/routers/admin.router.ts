@@ -18,7 +18,7 @@ export class AdminRouter {
     this.router.get('/customers', verifyToken, adminsGuard, this.adminController.getCustomersAdmin);
     this.router.get('/employees', verifyToken, adminsGuard, this.adminController.getEmployeesAdmin);
     this.router.get('/:id', verifyToken, adminGuard, this.adminController.getUserAdmin)  
-    this.router.post('/', this.adminController.createUserAdmin);
+    this.router.post('/', verifyToken, adminGuard, this.adminController.createUserAdmin);
     // this.router.post(
     //   '/',
     //   verifyToken,
