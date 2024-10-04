@@ -11,49 +11,36 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Pickup_Order_Extension } from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
+import { GetNotifications } from "@/hooks/api/notifications/useGetNotifications";
 import useUpdatePickupDriver from "@/hooks/api/pickup/useUpdatePickupDriver";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 
-export const notificationsColumns: ColumnDef<Pickup_Order_Extension>[] = [
+export const notificationsColumns: ColumnDef<GetNotifications>[] = [
   {
-    accessorKey: "pickupNumber",
-    header: "Pickup Number",
-  },
-  {
-    accessorKey: "user.name",
-    header: "Customer",
-  },
-  {
-    accessorKey: "address.address",
-    header: "Customer Address",
+    accessorKey: "notification.title",
+    header: "Title",
     cell: ({ row }) => {
-      const address = String(row.original.address.address);
+      const title = String(row.original.notification.title);
       return (
-        <div className="line-clamp-3 max-w-[20ch] break-words">{address}</div>
+        <div className="line-clamp-2 max-w-[25ch] break-words">{title}</div>
       );
     },
   },
   {
-    accessorKey: "outlet.name",
-    header: "Outlet",
+    accessorKey: "notification.message",
+    header: "Message",
+    cell: ({ row }) => {
+      const message = String(row.original.notification.message);
+      return (
+        <div className="line-clamp-2 max-w-[30ch] break-words">{message}</div>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
-    header: "Time of order",
+    header: "Notification time",
     cell: ({ row }) => {
       const createdAt = format(
         new Date(row.getValue("createdAt")),
@@ -62,6 +49,39 @@ export const notificationsColumns: ColumnDef<Pickup_Order_Extension>[] = [
       return <div>{createdAt}</div>;
     },
   },
+  // {
+  //   accessorKey: "pickupNumber",
+  //   header: "Pickup Number",
+  // },
+  // {
+  //   accessorKey: "user.name",
+  //   header: "Customer",
+  // },
+  // {
+  //   accessorKey: "address.address",
+  //   header: "Customer Address",
+  //   cell: ({ row }) => {
+  //     const address = String(row.original.address.address);
+  //     return (
+  //       <div className="line-clamp-2 max-w-[20ch] break-words">{address}</div>
+  //     );
+  //   },
+  // },
+  // {
+  //   accessorKey: "outlet.name",
+  //   header: "Outlet",
+  // },
+  // {
+  //   accessorKey: "createdAt",
+  //   header: "Time of order",
+  //   cell: ({ row }) => {
+  //     const createdAt = format(
+  //       new Date(row.getValue("createdAt")),
+  //       "dd MMMM yyyy, HH:mm:ss",
+  //     );
+  //     return <div>{createdAt}</div>;
+  //   },
+  // },
   {
     accessorKey: "requestAction",
     header: "Confirm",
@@ -78,14 +98,25 @@ export const notificationsColumns: ColumnDef<Pickup_Order_Extension>[] = [
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Do you want to accept this request?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  Do you want to accept this request?
+                </AlertDialogTitle>
                 <AlertDialogDescription>
                   Once confirmed, you can see the order in Ongoing tab.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={()=>{mutateAsync({id: Number(row.original.id), status: "ACCEPT"})}}>Continue</AlertDialogAction>
+                <AlertDialogAction
+                  onClick={() => {
+                    mutateAsync({
+                      id: Number(row.original.id),
+                      status: "ACCEPT",
+                    });
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -100,10 +131,7 @@ export const notificationsColumns: ColumnDef<Pickup_Order_Extension>[] = [
 
       return (
         <>
-          {/* <Dialog.Root bind:open={myOpen}>
-	<!-- ... dialog stuff here -->
-</Dialog.Root> */}
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -158,7 +186,7 @@ export const notificationsColumns: ColumnDef<Pickup_Order_Extension>[] = [
               </DropdownMenuItem>
               <DropdownMenuItem>View payment details</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </>
       );
     },

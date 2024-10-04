@@ -1,15 +1,17 @@
 import useAxios from "@/hooks/useAxios";
-import { User } from "@/types/user";
-import { IPageableResponse, IPaginationQueries,  } from "@/types/pagination";
-import { useQuery } from "@tanstack/react-query";
 import { Address } from "@/types/address";
+import { IPageableResponse, IPaginationQueries, } from "@/types/pagination";
+import { Role, User } from "@/types/user";
+import { useQuery } from "@tanstack/react-query";
 
 export interface GetUsersQuery extends IPaginationQueries {
   search?: string;
+  isVerified?: string;
+  role?: Role;
 }
 
 export interface UserWithAddress extends User {
-  address: Address[];
+  addresses: Address[];
 }
 
 const useGetCustomers = (queries: GetUsersQuery) => {

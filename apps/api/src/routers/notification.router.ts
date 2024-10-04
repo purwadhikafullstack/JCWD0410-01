@@ -15,6 +15,7 @@ export class NotificationRouter {
 
   private initializeRoutes() {
     this.router.get('/count', verifyToken, this.notificationController.getUnreadNotificationsCount);
+    this.router.get('/', verifyToken, this.notificationController.getNotifications);
   }
 
   getRouter(): Router {

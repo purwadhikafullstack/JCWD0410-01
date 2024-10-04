@@ -33,7 +33,7 @@ const TestPage: FC<TestPageInterface>  = ({status, callback}) => {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [page, setPage] = useState(1);
 
-  const { data, isPending } = callback({
+  const { data, isPending, refetch } = callback({
     page,
     take: 8,
     sortBy: "createdAt",

@@ -7,6 +7,7 @@ interface GetCustomersInterface {
   sortBy: string;
   sortOrder: string;
   search: string;
+  isVerified?: string;
   // email?: string;
   // name?: string;
   // phone?: string;
@@ -14,7 +15,7 @@ interface GetCustomersInterface {
 
 export const getCustomersService = async (query: GetCustomersInterface) => {
   try {
-    const { page, take, sortBy, sortOrder, search } = query;
+    const { page, take, sortBy, sortOrder, search, isVerified } = query;
 
     const whereClause: Prisma.UserWhereInput = {
       isDeleted: false,
@@ -26,20 +27,17 @@ export const getCustomersService = async (query: GetCustomersInterface) => {
         { email: { contains: search } },
         { name: { contains: search } },
         { phoneNumber: { contains: search } },
+        {addresses: {some: {AND: {isPrimary: true, address: {contains: search}}}}}
       ];
     }
 
-    // if (email) {
-    //   whereClause.email = { contains: email };
-    // }
+    if (isVerified === "VERIFIED") {
+      whereClause.isVerified = true;
+    }
 
-    // if (name) {
-    //   whereClause.name = { contains: name };
-    // }
-
-    // if (phone) {
-    //   whereClause.phoneNumber = { contains: phone };
-    // }
+    if (isVerified === "UNVERIFIED") {
+      whereClause.isVerified = false;
+    }
 
     const users = await prisma.user.findMany({
       where: whereClause,

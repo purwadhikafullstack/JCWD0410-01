@@ -1,9 +1,15 @@
-import React from 'react'
+import DashboardHeader from "@/components/DashboardHeader";
+import React from "react";
 
 const DashboardPage = () => {
   return (
-    <div>DashboardPage</div>
-  )
-}
+    <>
+      <DashboardHeader />
+      <div className="md: mx-auto h-full bg-white p-4 pt-24 text-xl font-bold">
+        DashboardPage
+      </div>
+    </>
+  );
+};
 
-export default DashboardPage
+export default DashboardPage;

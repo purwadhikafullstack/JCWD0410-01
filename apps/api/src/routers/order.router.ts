@@ -13,7 +13,17 @@ export class OrderRouter {
   }
 
   private initializeRoutes() {
-    this.router.post('/create-user-order', verifyToken, this.orderController.createUserOrder);
+    this.router.post(
+      '/create-user-order',
+      verifyToken,
+      this.orderController.createUserOrder,
+    );
+    this.router.get('/', verifyToken, this.orderController.getOrders);
+    this.router.get(
+      '/outlet',
+      verifyToken,
+      this.orderController.getOrdersOutlet,
+    );
   }
 
   getRouter(): Router {

@@ -7,7 +7,7 @@ interface GetNotificationsInterface {
   sortBy: string;
   sortOrder: string;
   search: string;
-  unRead: boolean;
+  unRead: string;
 }
 
 export const getNotificationsService = async (
@@ -22,9 +22,7 @@ export const getNotificationsService = async (
     });
 
     if (!user) {
-      throw new Error(
-        'User not found, ini placeholder, pindah ke validator',
-      );
+      throw new Error('User not found, ini placeholder, pindah ke validator');
     }
 
     let whereClause: Prisma.User_NotificationWhereInput = {
@@ -36,18 +34,39 @@ export const getNotificationsService = async (
       whereClause.isRead = false;
     }
 
-    const pickupOrders = await prisma.user_Notification.findMany({
-      where: whereClause,
-      include: {
-        notification: {}
-      },
-      take: take,
-      skip: (page - 1) * take,
-      orderBy: {
-        [sortBy]: sortOrder,
-      },
-    });
+    const userNotifications = search
+      ? await prisma.user_Notification.findMany({
+          where: {
+            notification: {
+              OR: [
+                { message: { contains: search } },
+                { title: { contains: search } },
+              ],
+            },
+            ...whereClause,
+          },
+          include: {
+            notification: true,
+          },
+          take: take,
+          skip: (page - 1) * take,
+          orderBy: {
+            [sortBy]: sortOrder,
+          },
+        })
+      : await prisma.user_Notification.findMany({
+          where: whereClause,
+          include: {
+            notification: true,
+          },
+          take: take,
+          skip: (page - 1) * take,
+          orderBy: {
+            [sortBy]: sortOrder,
+          },
+        });
 
+    const total = userNotifications.length
 
     // const usersWithoutPassword = deliveryOrders.filter((deliveryOrder) => {
     //   const { password, ...userWithoutPassword } = user;
@@ -55,8 +74,8 @@ export const getNotificationsService = async (
     // });
 
     return {
-      data: pickupOrders,
-      meta: { take, page },
+      data: userNotifications,
+      meta: { take, page, total },
       whereClause,
     };
   } catch (error) {

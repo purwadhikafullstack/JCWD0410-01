@@ -19,7 +19,7 @@ const PickupOrderTable: FC<PickupOrderTableInterface> = ({status, callback}) => 
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
 
-  const { data, isPending } = callback({
+  const { data, isPending, refetch } = callback({
     page,
     take: 8,
     sortBy: "pickupNumber",
@@ -46,7 +46,7 @@ const PickupOrderTable: FC<PickupOrderTableInterface> = ({status, callback}) => 
     <>
       {isPending ? <div>Data fetching</div> : (
         // data?.data ?
-        <DataTable columns={columns} data={data?.data!} />
+        <DataTable columns={columns} data={data?.data!} meta={data?.meta!}/>
         //  : <DataTable columns={pickupOrderColumns} data={[]} />
       )}
     </>

@@ -1,8 +1,9 @@
+import DashboardUserPage from '@/features/dashboard/users'
 import React from 'react'
 
 const DashboardUserDetail = ({ params }: { params: { id: number } }) => {
   return (
-    <div>DashboardUserDetail {params.id}</div>
+    <DashboardUserPage id={params.id}/>
   )
 }
 
