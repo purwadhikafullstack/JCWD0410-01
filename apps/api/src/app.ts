@@ -9,6 +9,15 @@ import express, {
 } from 'express';
 import { PORT } from './config';
 import { SampleRouter } from './routers/sample.router';
+import { AdminRouter } from './routers/admin.router';
+import { AuthRouter } from './routers/auth.router';
+import { UserRouter } from './routers/user.router';
+import { OrderRouter } from './routers/order.router';
+import { AddressRouter } from './routers/address.router';
+import { PickupRouter } from './routers/pickup.router';
+import { OutletRouter } from './routers/outlet.router';
+import { NotificationRouter } from './routers/notification.router';
+import { LaundryItemRouter } from './routers/laundry-item.router';
 
 export default class App {
   private app: Express;
@@ -51,12 +60,30 @@ export default class App {
 
   private routes(): void {
     const sampleRouter = new SampleRouter();
+    const adminRouter = new AdminRouter();
+    const authRouter = new AuthRouter();
+    const userRouter = new UserRouter();
+    const orderRouter = new OrderRouter();
+    const addressRouter = new AddressRouter();
+    const pickupRouter = new PickupRouter();
+    const outletRouter = new OutletRouter();
+    const notificationRouter = new NotificationRouter();
+    const laundryItemRouter = new LaundryItemRouter();
 
     this.app.get('/api', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student API!`);
     });
 
     this.app.use('/api/samples', sampleRouter.getRouter());
+    this.app.use('/api/admin', adminRouter.getRouter());
+    this.app.use('/api/auth', authRouter.getRouter());
+    this.app.use('/api/users', userRouter.getRouter());
+    this.app.use('/api/orders', orderRouter.getRouter());
+    this.app.use('/api/addresses', addressRouter.getRouter());
+    this.app.use('/api/pickup-orders', pickupRouter.getRouter());
+    this.app.use('/api/outlets', outletRouter.getRouter());
+    this.app.use('/api/notifications', notificationRouter.getRouter());
+    this.app.use('/api/laundry-items', laundryItemRouter.getRouter());
   }
 
   public start(): void {

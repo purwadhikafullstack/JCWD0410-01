@@ -1,0 +1,194 @@
+"use client";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { GetNotifications } from "@/hooks/api/notifications/useGetNotifications";
+import useUpdatePickupDriver from "@/hooks/api/pickup/useUpdatePickupDriver";
+import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { IoMdCheckmarkCircle } from "react-icons/io";
+
+export const notificationsColumns: ColumnDef<GetNotifications>[] = [
+  {
+    accessorKey: "notification.title",
+    header: "Title",
+    cell: ({ row }) => {
+      const title = String(row.original.notification.title);
+      return (
+        <div className="line-clamp-2 max-w-[25ch] break-words">{title}</div>
+      );
+    },
+  },
+  {
+    accessorKey: "notification.message",
+    header: "Message",
+    cell: ({ row }) => {
+      const message = String(row.original.notification.message);
+      return (
+        <div className="line-clamp-2 max-w-[30ch] break-words">{message}</div>
+      );
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Notification time",
+    cell: ({ row }) => {
+      const createdAt = format(
+        new Date(row.getValue("createdAt")),
+        "dd MMMM yyyy, HH:mm:ss",
+      );
+      return <div>{createdAt}</div>;
+    },
+  },
+  // {
+  //   accessorKey: "pickupNumber",
+  //   header: "Pickup Number",
+  // },
+  // {
+  //   accessorKey: "user.name",
+  //   header: "Customer",
+  // },
+  // {
+  //   accessorKey: "address.address",
+  //   header: "Customer Address",
+  //   cell: ({ row }) => {
+  //     const address = String(row.original.address.address);
+  //     return (
+  //       <div className="line-clamp-2 max-w-[20ch] break-words">{address}</div>
+  //     );
+  //   },
+  // },
+  // {
+  //   accessorKey: "outlet.name",
+  //   header: "Outlet",
+  // },
+  // {
+  //   accessorKey: "createdAt",
+  //   header: "Time of order",
+  //   cell: ({ row }) => {
+  //     const createdAt = format(
+  //       new Date(row.getValue("createdAt")),
+  //       "dd MMMM yyyy, HH:mm:ss",
+  //     );
+  //     return <div>{createdAt}</div>;
+  //   },
+  // },
+  {
+    accessorKey: "requestAction",
+    header: "Confirm",
+    cell: ({ row }) => {
+      const { mutateAsync } = useUpdatePickupDriver();
+
+      return (
+        <div>
+          <AlertDialog>
+            <AlertDialogTrigger>
+              <span className="flex cursor-pointer items-center hover:text-blue-500">
+                <IoMdCheckmarkCircle className="mr-1" /> Accept Request
+              </span>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Do you want to accept this request?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Once confirmed, you can see the order in Ongoing tab.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    mutateAsync({
+                      id: Number(row.original.id),
+                      status: "ACCEPT",
+                    });
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const pickupOrder = row.original;
+
+      return (
+        <>
+          {/* <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              {pickupOrder.status === "WAITING_FOR_DRIVER" ? (
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigator.clipboard.writeText(pickupOrder.address.address)
+                  }
+                >
+                  <AlertDialog>
+                    <AlertDialogTrigger>
+                      <span className="flex cursor-pointer items-center text-blue-400">
+                        Accept Request
+                      </span>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete your account and remove your data from our
+                          servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction>Continue</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </DropdownMenuItem>
+              ) : null}
+              <DropdownMenuItem
+                onClick={() =>
+                  navigator.clipboard.writeText(pickupOrder.address.address)
+                }
+              >
+                Copy payment ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={`/dashboard/users/${pickupOrder.id}`}>
+                  View user
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>View payment details</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu> */}
+        </>
+      );
+    },
+  },
+];

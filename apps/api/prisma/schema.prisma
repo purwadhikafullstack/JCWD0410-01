@@ -19,3 +19,330 @@ model Sample {
 
   @@map("samples") // if you want to use snake_case format
 }
+
+model User {
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
+  name            String?
+  password        String?
+  phoneNumber     String?  @unique
+  profilePicture  String?
+  token           String?
+  lastEditBy      Int      @default(0)
+  provider        Provider @default(CREDENTIALS)
+  role            Role     @default(CUSTOMER)
+  isVerified      Boolean  @default(false)
+  isPasswordReset Boolean  @default(false)
+  isDeleted       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  addresses         Address[]
+  orders            Order[]
+  userNotifications User_Notification[]
+  pickupOrders      Pickup_Order[]
+  deliveryOrders    Delivery_Order[]
+  employee          Employee?
+
+  @@map("users")
+}
+
+enum Provider {
+  CREDENTIALS
+  GOOGLE
+}
+
+enum Role {
+  ADMIN
+  OUTLET_ADMIN
+  WORKER
+  DRIVER
+  CUSTOMER
+}
+
+model Employee {
+  id               Int                @id @default(autoincrement())
+  isDeleted        Boolean            @default(false)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  user             User               @relation(fields: [userId], references: [id])
+  userId           Int                @unique
+  outlet           Outlet             @relation(fields: [outletId], references: [id])
+  outletId         Int
+  pickupOrders     Pickup_Order[]
+  deliveryOrders   Delivery_Order[]
+  workOrders       Work_Order[]
+  employeeStations Employee_Station[]
+
+  @@map("employees")
+}
+
+model Outlet {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique
+  type           Type
+  latitude       String
+  longitude      String
+  isDeleted      Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  employees      Employee[]
+  orders         Order[]
+  pickupOrders   Pickup_Order[]
+  deliveryOrders Delivery_Order[]
+
+  @@map("outlets")
+}
+
+enum Type {
+  MAIN
+  BRANCH
+}
+
+model Address {
+  id             Int              @id @default(autoincrement())
+  name           String
+  address        String
+  district       String
+  city           String
+  latitude       String
+  longitude      String
+  isPrimary      Boolean
+  isDeleted      Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  user           User             @relation(fields: [userId], references: [id])
+  userId         Int
+  pickupOrders   Pickup_Order[]
+  deliveryOrders Delivery_Order[]
+
+  @@map("addresses")
+}
+
+model Order {
+  id             Int              @id @default(autoincrement())
+  orderNumber    String
+  weight         Int              @default(0)
+  laundryFee     Int              @default(0)
+  total          Int              @default(0)
+  isPaid         Boolean          @default(false)
+  orderStatus    OrderStatus      @default(WAITING_FOR_PICKUP_DRIVER)
+  isDeleted      Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  outlet         Outlet           @relation(fields: [outletId], references: [id])
+  outletId       Int
+  user           User             @relation(fields: [userId], references: [id])
+  userId         Int
+  orderItems     Order_Item[]
+  payments       Payment[]
+  pickupOrders   Pickup_Order[]
+  deliveryOrders Delivery_Order[]
+  workOrders     Work_Order[]
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  WAITING_FOR_PICKUP_DRIVER
+  PICKUP_ON_THE_WAY_TO_CUSTOMER
+  PICKUP_ON_THE_WAY_TO_OUTLET
+  ARRIVED_AT_OUTLET
+  READY_FOR_WASHING
+  BEING_WASHED
+  WASHING_COMPLETED
+  BEING_IRONED
+  IRONING_COMPLETED
+  BEING_PACKED
+  AWAITING_PAYMENT
+  READY_FOR_DELIVERY
+  WAITING_FOR_DELIVERY_DRIVER
+  BEING_DELIVERED_TO_CUSTOMER
+  RECEIVED_BY_CUSTOMER
+}
+
+model Order_Item {
+  id            Int         @id @default(autoincrement())
+  name          String
+  itemQuantity  Int
+  isDeleted     Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  order         Order       @relation(fields: [orderId], references: [id])
+  orderId       Int
+  laundryItemId Int
+  laundryItem   LaundryItem @relation(fields: [laundryItemId], references: [id])
+
+  @@map("order_items")
+}
+
+model LaundryItem {
+  id         Int          @id @default(autoincrement())
+  name       String
+  isDeleted  Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  updateAt   DateTime     @updatedAt
+  OrderItems Order_Item[]
+
+  @@map("laundry_items")
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement())
+  invoiceNumber Int           @unique
+  paymentMethod String
+  paymentProof  String
+  status        PaymentStatus
+  isDeleted     Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  order         Order         @relation(fields: [orderId], references: [id])
+  orderId       Int
+
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  SUCCESS
+  CANCELLED
+  DENIED
+  EXPIRED
+  PENDING
+}
+
+model Notification {
+  id                Int                 @id @default(autoincrement())
+  title             String
+  message           String
+  isDeleted         Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  userNotifications User_Notification[]
+
+  @@map("notifications")
+}
+
+model User_Notification {
+  id             Int          @id @default(autoincrement())
+  isRead         Boolean      @default(false)
+  isDeleted      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  user           User         @relation(fields: [userId], references: [id])
+  userId         Int
+  notification   Notification @relation(fields: [notificationId], references: [id])
+  notificationId Int
+
+  @@map("user_notifications")
+}
+
+model Pickup_Order {
+  id           Int          @id @default(autoincrement())
+  pickupNumber String
+  status       PickupStatus @default(WAITING_FOR_DRIVER)
+  fee          Int
+  latitude     String
+  longitude    String
+  isDeleted    Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  order        Order        @relation(fields: [orderId], references: [id])
+  orderId      Int
+  user         User         @relation(fields: [userId], references: [id])
+  userId       Int
+  address      Address      @relation(fields: [addressId], references: [id])
+  addressId    Int
+  outlet       Outlet       @relation(fields: [outletId], references: [id])
+  outletId     Int
+  employee     Employee     @relation(fields: [employeeId], references: [id])
+  employeeId   Int          @default(1)
+
+  @@map("pickup_orders")
+}
+
+enum PickupStatus {
+  WAITING_FOR_DRIVER
+  ON_THE_WAY_TO_CUSTOMER
+  ON_THE_WAY_TO_OUTLET
+  RECEIVED_BY_OUTLET
+  ONSITE
+}
+
+model Work_Order {
+  id            Int        @id @default(autoincrement())
+  status        WorkStatus
+  byPassedAdmin Int
+  isDeleted     Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  order         Order      @relation(fields: [orderId], references: [id])
+  orderId       Int
+  employee      Employee   @relation(fields: [employeeId], references: [id])
+  employeeId    Int
+  station       Station    @relation(fields: [stationId], references: [id])
+  stationId     Int
+
+  @@map("work_orders")
+}
+
+enum WorkStatus {
+  m
+}
+
+model Station {
+  id              Int                @id @default(autoincrement())
+  name            String
+  isDeleted       Boolean            @default(false)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  workOrders      Work_Order[]
+  employeeStation Employee_Station[]
+
+  @@map("stations")
+}
+
+model Employee_Station {
+  id         Int      @id @default(autoincrement())
+  isDeleted  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  station    Station  @relation(fields: [stationId], references: [id])
+  stationId  Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  employeeId Int
+
+  @@map("employee_stations")
+}
+
+model Delivery_Order {
+  id             Int            @id @default(autoincrement())
+  deliveryNumber String
+  status         DeliveryStatus @default(PROCESSING_LAUNDRY)
+  fee            Int
+  latitude       String
+  longitude      String
+  isDeleted      Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  order          Order          @relation(fields: [orderId], references: [id])
+  orderId        Int
+  user           User           @relation(fields: [userId], references: [id])
+  userId         Int
+  address        Address        @relation(fields: [addressId], references: [id])
+  addressId      Int
+  outlet         Outlet         @relation(fields: [outletId], references: [id])
+  outletId       Int
+  employee       Employee       @relation(fields: [employeeId], references: [id])
+  employeeId     Int            @default(1)
+
+  @@map("delivery_orders")
+}
+
+enum DeliveryStatus {
+  PROCESSING_LAUNDRY
+  WAITING_FOR_DRIVER
+  ON_THE_WAY_TO_OUTLET
+  ON_THE_WAY_TO_CUSTOMER
+  RECEIVED_BY_CUSTOMER
+  ONSITE
+}
