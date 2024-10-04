@@ -64,7 +64,7 @@ const ChangePassword = () => {
                 name="password"
                 label="Password Baru"
                 type="password"
-                placeholder="Masukkan Password Bary"
+                placeholder="Masukkan Password Baru"
                 value={formik.values.password}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}

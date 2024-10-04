@@ -1,6 +1,8 @@
+import { JWT_SECRET } from '@/config';
 import { cloudinaryUpload } from '@/lib/cloudinary';
 import prisma from '@/prisma';
 import { User } from '@prisma/client';
+import { sign } from 'jsonwebtoken';
 
 export const updateProfileService = async (
   userId: number,
@@ -30,9 +32,13 @@ export const updateProfileService = async (
       },
     });
 
+    const token = sign({ id: user.id }, JWT_SECRET!, {
+      expiresIn: '2h',
+    });
+
     return {
       message: 'Update profile success',
-      data: profileUpdate,
+      data: { ...profileUpdate, token },
     };
   } catch (error) {
     throw error;

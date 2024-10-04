@@ -96,7 +96,7 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
                   <p className="text-sm">Loading</p>
                 </div>
               ) : (
-                "Sign In"
+                "Submit"
               )}
             </Button>
           </form>

@@ -10,7 +10,6 @@ import { useFormik } from "formik";
 import dynamic from "next/dynamic";
 import { FC, useEffect, useState } from "react";
 
-// Load MapComponent dynamically without SSR
 const DynamicMapComponent = dynamic(
   () => import("../../components/MapComponent"),
   { ssr: false },

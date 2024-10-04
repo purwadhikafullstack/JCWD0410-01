@@ -63,7 +63,6 @@ const RequestOrderPage = () => {
       lon: Number(value.split(" ")[2]),
     });
     setSelectedPickupAddress(value.split(" ")[3]);
-    
   };
 
   const handleSelectDeliveryAddress = (value: string) => {
@@ -85,7 +84,8 @@ const RequestOrderPage = () => {
   };
 
   const { data: addresses } = useGetAddresses();
-  const { data: outlets } = useGetOutlets();
+
+  const { data: outlets } = useGetOutlets({ take: 5 });
 
   useEffect(() => {
     setDistance(haversine(selectedPickupAddressCoord, selectedOutletCoord));
@@ -99,7 +99,7 @@ const RequestOrderPage = () => {
           Pesan penjemputan laundry dengan mudah. Pilih lokasi dan outlet
           terdekat, kami akan menjemput pakaian Anda tepat waktu.
         </p>
-        {addresses?.length === 0 ? (
+        {!addresses?.length ? (
           <div className="flex min-h-[350px] flex-col justify-center gap-8 rounded-md border-[1px] text-center md:min-h-[500px]">
             <div className="space-y-2">
               <h2 className="text-xl font-semibold">
