@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { employeesColumns } from "../components/EmployeesColumns";
 import UsersHeader from "../components/UsersHeader";
+import { employeesOutletAdminColumns } from "../components/EmployeesOutletAdminColumns";
 
 const DashboardUsersEmployeesPage = () => {
   const session = useSession();
@@ -161,28 +162,16 @@ const DashboardUsersEmployeesPage = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          {/* <Select onValueChange={handleSelectIsVerified}>
-              <SelectTrigger className="sm:w-[200px]">
-                <SelectValue placeholder="Verification" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Status</SelectLabel>
-                  <SelectItem value="ALL">All Status</SelectItem>
-                  <SelectItem value="VERIFIED">Verified</SelectItem>
-                  <SelectItem value="UNVERIFIED">Unverified</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select> */}
         </div>
         {isPending ? (
           <Loader2 className="mx-auto animate-spin" />
-        ) : data?.data ? (
+        ) : data?.data ? session.data.user.role === "ADMIN" ? (
           <>
             <DataTable
               columns={employeesColumns}
               data={data?.data!}
               meta={data.meta}
+              
             />
             <div className="my-4 flex justify-center">
               <Pagination
@@ -193,7 +182,22 @@ const DashboardUsersEmployeesPage = () => {
               />
             </div>
           </>
-        ) : (
+        ) : (<>
+          <DataTable
+            columns={employeesOutletAdminColumns}
+            data={data?.data!}
+            meta={data.meta}
+            
+          />
+          <div className="my-4 flex justify-center">
+            <Pagination
+              total={data?.meta?.total || 0}
+              limit={data?.meta?.take || 0}
+              onChangePage={onChangePage}
+              page={page}
+            />
+          </div>
+        </>) : (
           <DataTable
             columns={employeesColumns}
             data={[]}

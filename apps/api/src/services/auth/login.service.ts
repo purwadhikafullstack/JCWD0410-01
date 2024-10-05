@@ -11,7 +11,7 @@ export const loginService = async (body: Pick<User, 'email' | 'password'>) => {
     //mencari email di db
     const user = await prisma.user.findFirst({
       //koma maksudnya dan(&)
-      where: { email, provider: 'CREDENTIALS' },
+      where: { email, provider: 'CREDENTIALS', isDeleted:false },
     });
 
     if (!user) {

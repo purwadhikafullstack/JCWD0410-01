@@ -1,4 +1,5 @@
 import { createUserService } from '@/services/admin/create-user.service';
+import { deleteUserService } from '@/services/admin/delete-user.service';
 import { getCustomersService } from '@/services/admin/get-customers.service';
 import { getEmployeesService } from '@/services/admin/get-employees.service';
 import { getUserAdminService } from '@/services/admin/get-user-admin.service';
@@ -51,7 +52,16 @@ export class AdminController {
 
   async createUserAdmin(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await createUserService(req.body);
+      const result = await createUserService(req.body, req.file!);
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteUserAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await deleteUserService(req.body);
       return res.status(200).send(result);
     } catch (error) {
       next(error);
