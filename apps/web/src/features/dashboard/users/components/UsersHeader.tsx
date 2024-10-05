@@ -7,9 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 const UsersHeader = () => {
   const session = useSession();
   const router = useRouter();
-  const authorized =
-    session.data?.user.role === "ADMIN" ||
-    session.data?.user.role === "OUTLET_ADMIN";
+  const authorized = session.data?.user.role === "ADMIN";
   const pathname = usePathname();
   const unclicked =
     "rounded-2xl px-3 py-2 hover:bg-blue2 w-28 text-center font-semibold";
@@ -21,8 +19,6 @@ const UsersHeader = () => {
       {/* <div className="text-sm text-gray-500 mb-2">{pathname}</div> */}
       <div className="flex justify-between">
         <div className="flex justify-evenly gap-2 md:justify-normal">
-          {session.data?.user.role === "ADMIN" ||
-            session.data?.user.role === "OUTLET_ADMIN"}
           {pathname === "/dashboard/users/customers" ? (
             <button
               onClick={() => router.push("/dashboard/users/customers")}
@@ -44,7 +40,6 @@ const UsersHeader = () => {
             <button
               onClick={() => router.push("/dashboard/users/employees")}
               className={clicked}
-              hidden={!session.data}
             >
               Employees
             </button>
@@ -52,16 +47,15 @@ const UsersHeader = () => {
             <button
               onClick={() => router.push("/dashboard/users/employees")}
               className={unclicked}
-              hidden={!session.data}
             >
               Employees
             </button>
           )}
         </div>
         <button
-          onClick={() => router.push("/dashboard/users/employees")}
+          onClick={() => router.push("/dashboard/users/employees/create")}
           className="rounded-2xl bg-white px-3 py-2 text-center font-semibold"
-          hidden={!session.data}
+          hidden={!authorized}
         >
           Create Employee
         </button>

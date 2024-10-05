@@ -13,7 +13,7 @@ export class OutletRouter {
   }
 
   private initializeRoutes() {
-    this.router.get('/', verifyToken, this.outletController.getOutlets);
+    this.router.get('/', this.outletController.getOutlets);
     this.router.get('/:id', verifyToken, this.outletController.getOutlet);
     this.router.post('/', verifyToken, this.outletController.createOutlet);
     this.router.patch(

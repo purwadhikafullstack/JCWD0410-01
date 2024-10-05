@@ -1,13 +1,23 @@
 "use client";
 
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useDeleteUser from "@/hooks/api/admin/useDeleteUser";
 import { UserWithEmployee } from "@/hooks/api/admin/useGetEmployees";
@@ -16,7 +26,7 @@ import { MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { IoWarningOutline } from "react-icons/io5";
 
-export const employeesColumns: ColumnDef<UserWithEmployee>[] = [
+export const employeesOutletAdminColumns: ColumnDef<UserWithEmployee>[] = [
   {
     accessorKey: "employee.outlet.name",
     header: "Outlet",
@@ -69,39 +79,6 @@ export const employeesColumns: ColumnDef<UserWithEmployee>[] = [
       }
       return (
         <div className="line-clamp-2 max-w-[20ch] break-words">{phone}</div>
-      );
-    },
-  },
-  {
-
-    accessorKey: "deleteAction",
-    header: "Delete",
-    cell: ({ row }) => {
-      const { mutateAsync } = useDeleteUser();
-      const router = useRouter();
-
-      return (
-        <div>
-          <AlertDialog>
-            <AlertDialogTrigger>
-              <span className="flex cursor-pointer items-center hover:text-red-500">
-                <IoWarningOutline className="mr-1 text-red-500" /> Delete User
-              </span>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure you want to delete this user?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={()=>{mutateAsync(Number(row.original.id)); router.refresh()}}>Continue</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
       );
     },
   },
