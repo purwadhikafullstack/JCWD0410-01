@@ -44,7 +44,7 @@ export const notificationsColumns: ColumnDef<GetNotifications>[] = [
     cell: ({ row }) => {
       const createdAt = format(
         new Date(row.getValue("createdAt")),
-        "dd MMMM yyyy, HH:mm:ss",
+        "dd MMM yyyy, HH:mm:ss",
       );
       return <div>{createdAt}</div>;
     },
@@ -77,7 +77,7 @@ export const notificationsColumns: ColumnDef<GetNotifications>[] = [
   //   cell: ({ row }) => {
   //     const createdAt = format(
   //       new Date(row.getValue("createdAt")),
-  //       "dd MMMM yyyy, HH:mm:ss",
+  //       "dd MMM yyyy, HH:mm:ss",
   //     );
   //     return <div>{createdAt}</div>;
   //   },

@@ -91,13 +91,13 @@ export const createUserOrderService = async (
         tx,
       );
 
-      const notification = await createNotificationService(
-        {
-          title: `New Pickup request`,
-          message: `Requesting Pickup from ${pickupAddress} to ${outletName}`,
-        },
-        tx,
-      );
+      // const notification = await createNotificationService(
+      //   {
+      //     title: `New Pickup request`,
+      //     message: `Requesting Pickup from ${pickupAddress} to ${outletName}`,
+      //   },
+      //   tx,
+      // );
 
       const drivers = await tx.user.findMany({
         where: {
@@ -117,7 +117,7 @@ export const createUserOrderService = async (
       // }).filter((driverFilter) => driverFilter.id === 0 ? false : true);
 
       const pickupNotification = await createUserNotificationService(
-        { users: drivers, notificationId: notification.data.id },
+        { users: drivers, notificationId: 1 },
         tx,
       );
 

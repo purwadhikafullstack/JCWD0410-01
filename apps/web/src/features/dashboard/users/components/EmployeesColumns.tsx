@@ -18,31 +18,6 @@ import { IoWarningOutline } from "react-icons/io5";
 
 export const employeesColumns: ColumnDef<UserWithEmployee>[] = [
   {
-    accessorKey: "employee.outlet.name",
-    header: "Outlet",
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-  },
-  {
-    accessorKey: "employee.employeeStations",
-    header: "Stations",
-    cell: ({ row }) => {
-      let employeeStation = "";
-      if (row.original.employee.employeeStations.length !== 0) {
-        row.original.employee.employeeStations.forEach((station) => {
-          employeeStation += station.station.name + " ";
-        });
-      }
-      return (
-        <div className="line-clamp-2 max-w-[20ch] break-words">
-          {employeeStation}
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => {
@@ -73,18 +48,42 @@ export const employeesColumns: ColumnDef<UserWithEmployee>[] = [
     },
   },
   {
+    accessorKey: "role",
+    header: "Role",
+  },
+  {
+    accessorKey: "employee.employeeStations",
+    header: "Stations",
+    cell: ({ row }) => {
+      let employeeStation = "";
+      if (row.original.employee.employeeStations.length !== 0) {
+        row.original.employee.employeeStations.forEach((station) => {
+          employeeStation += station.station.name + " ";
+        });
+      }
+      return (
+        <div className="line-clamp-2 max-w-[20ch] break-words">
+          {employeeStation}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "employee.outlet.name",
+    header: "Outlet",
+  },
+  {
 
     accessorKey: "deleteAction",
     header: "Delete",
     cell: ({ row }) => {
       const { mutateAsync } = useDeleteUser();
-      const router = useRouter();
 
       return (
         <div>
           <AlertDialog>
             <AlertDialogTrigger>
-              <span className="flex cursor-pointer items-center hover:text-red-500">
+              <span className="flex cursor-pointer items-center text-red-500">
                 <IoWarningOutline className="mr-1 text-red-500" /> Delete User
               </span>
             </AlertDialogTrigger>
@@ -97,7 +96,7 @@ export const employeesColumns: ColumnDef<UserWithEmployee>[] = [
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={()=>{mutateAsync(Number(row.original.id)); router.refresh()}}>Continue</AlertDialogAction>
+                <AlertDialogAction onClick={()=>{mutateAsync(Number(row.original.id)); window.location.reload()}}>Continue</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

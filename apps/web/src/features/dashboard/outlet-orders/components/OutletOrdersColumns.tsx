@@ -37,7 +37,7 @@ export const outletOrdersColumns: ColumnDef<GetOrders>[] = [
     cell: ({ row }) => {
       const createdAt = format(
         new Date(row.getValue("createdAt")),
-        "dd MMMM yyyy, HH:mm:ss",
+        "dd MMM yyyy, HH:mm:ss",
       );
       return <div>{createdAt}</div>;
     },

@@ -1,3 +1,5 @@
+'use client'
+
 import DashboardHeader from '@/components/DashboardHeader';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
