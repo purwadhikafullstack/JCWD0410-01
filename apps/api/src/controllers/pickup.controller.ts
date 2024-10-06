@@ -1,6 +1,7 @@
 import { createUserService } from '@/services/admin/create-user.service';
 import { getCustomersService } from '@/services/admin/get-customers.service';
 import { getEmployeesService } from '@/services/admin/get-employees.service';
+import { getPickupAdminsService } from '@/services/pickup/get-pickup-admins.service';
 import { getPickupDriverService } from '@/services/pickup/get-pickup-driver.service';
 import { updatePickupOrderDriverService } from '@/services/pickup/update-pickup-driver.service';
 import { Role } from '@prisma/client';
@@ -20,6 +21,25 @@ export class PickupController {
       };
 
       const result = await getPickupDriverService(query, res.locals.user.id);
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getPickupOrdersAdmins(req: Request, res: Response, next: NextFunction) {
+    try {
+      const query = {
+        page: parseInt(req.query.page as string) || 1,
+        take: parseInt(req.query.take as string) || 5,
+        sortOrder: (req.query.sortOrder as string) || 'asc',
+        sortBy: (req.query.sortBy as string) || 'createdAt',
+        search: (req.query.search as string) || '',
+        status: (req.query.status as 'ONGOING' | 'REQUEST' | 'HISTORY' | 'ALL') || 'ALL',
+        outletId: (req.query.outletId as string) || '',
+      };
+
+      const result = await getPickupAdminsService(query, res.locals.user.id);
       return res.status(200).send(result);
     } catch (error) {
       next(error);

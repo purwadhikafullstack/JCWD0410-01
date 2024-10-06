@@ -43,7 +43,7 @@ export class OrderController {
         sortOrder: (req.query.sortOrder as string) || 'asc',
         sortBy: (req.query.sortBy as string) || 'createdAt',
         search: (req.query.search as string) || '',
-        status: (req.query.status as OrderStatus) || "",
+        status: (req.query.status as OrderStatus) || "ALL",
         outletId: Number(req.query.outletId as string) || 0, 
       };
 

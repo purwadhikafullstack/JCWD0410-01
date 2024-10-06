@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 interface StatusPayload {
   id: number;
-  status: 'ACCEPT' | 'CANCEL';
+  status: 'ACCEPT' | 'CANCEL' | 'FINISH' | 'PICKUP';
 }
 
 const useUpdatePickupDriver = () => {

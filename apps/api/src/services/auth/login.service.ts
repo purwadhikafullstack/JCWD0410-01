@@ -11,11 +11,15 @@ export const loginService = async (body: Pick<User, 'email' | 'password'>) => {
     //mencari email di db
     const user = await prisma.user.findFirst({
       //koma maksudnya dan(&)
-      where: { email, provider: 'CREDENTIALS', isDeleted:false },
+      where: { email, provider: 'CREDENTIALS' },
     });
 
     if (!user) {
       throw new Error('Invalid email address');
+    }
+
+    if (user.isDeleted) {
+      throw new Error('Account has been deleted, contact Master Admin if this was a mistake')
     }
 
     const isPasswordValid = await comparePassword(password!, user.password!);
