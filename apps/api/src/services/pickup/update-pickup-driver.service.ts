@@ -26,11 +26,11 @@ export const updatePickupOrderDriverService = async (
     }
 
     const pickupOrder = await prisma.pickup_Order.findFirst({
-      where: { id },
+      where: { id, isDeleted: false },
     });
 
     const employee = await prisma.user.findFirst({
-      where: { id: userId },
+      where: { id: userId, isDeleted: false },
       include: { employee: { select: { id: true } } },
     });
 
@@ -38,12 +38,16 @@ export const updatePickupOrderDriverService = async (
       throw new Error('Pickup Order not found');
     }
 
+    if (!employee) {
+      throw new Error('Employee not found');
+    }
+
     return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       if (status === 'ACCEPT') {
         await tx.pickup_Order.update({
           where: { id },
           data: {
-            employeeId: employee?.employee?.id,
+            employeeId: employee.employee?.id,
             status: 'ON_THE_WAY_TO_CUSTOMER',
           },
         });

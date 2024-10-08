@@ -12,42 +12,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetPickupOrdersDrivers from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
+import useGetEmployees from "@/hooks/api/admin/useGetEmployees";
+import { Role } from "@/types/user";
 import { debounce } from "lodash";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { pickupOrdersAdminsColumns } from "./components/PickupOrdersAdminsColumns";
-import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
-import useGetPickupOrdersAdmins from "@/hooks/api/pickup/useGetPickupOrdersAdmins";
+import useGetWorkOrdersWorker from "@/hooks/api/work/useGetWorkOrdersWorker";
+import { workOrderWorkerColumns } from "../components/WorkOrdersWorkerColumns";
 
-const DashboardPickupOrdersAdminsPage = () => {
+const DashboardWorkOrdersWorkerPage = () => {
   const session = useSession();
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
-  const [status, setStatus] = useState<
-    "ONGOING" | "REQUEST" | "HISTORY" | "ALL"
-  >("ALL");
+  const [isVerified, setIsVerified] = useState("");
+  const [status, setStatus] = useState<"ONGOING" | "REQUEST" | "HISTORY">(
+    "REQUEST",
+  );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [sortBy, setSortBy] = useState("createdAt");
-  const [outletId, setOutletId] = useState("");
-
-  const { data: outlets } = useGetOutlets({ take: 10 });
+  const [outletId, setOutletId] = useState(0);
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
   };
 
-  const { data, isPending, refetch } = useGetPickupOrdersAdmins({
+  const { data, isPending, refetch } = useGetWorkOrdersWorker({
     page,
     take: 8,
     sortBy: sortBy,
     sortOrder: sortOrder,
     search: searchValue,
     status,
-    outletId,
   });
 
   const debouncedSearch = useMemo(
@@ -62,7 +60,7 @@ const DashboardPickupOrdersAdminsPage = () => {
     debouncedSearch(event.target.value);
   };
 
-  const handleSelectStatus = (value: "ONGOING" | "REQUEST" | "HISTORY" | "ALL") => {
+  const handleSelectStatus = (value: "ONGOING" | "REQUEST" | "HISTORY") => {
     setStatus(value);
   };
 
@@ -72,13 +70,6 @@ const DashboardPickupOrdersAdminsPage = () => {
 
   const handleSortBy = (value: string) => {
     setSortBy(value);
-  };
-
-  const handleOutletId = (value: string) => {
-    setOutletId(value);
-    if (value === "0") {
-      setOutletId("");
-    }
   };
 
   return (
@@ -103,9 +94,9 @@ const DashboardPickupOrdersAdminsPage = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Sort by</SelectLabel>
-                <SelectItem value="pickupNumber">Pickup Number</SelectItem>
                 <SelectItem value="createdAt">Time of order</SelectItem>
-                <SelectItem value="updatedAt">Last Updated</SelectItem>
+                <SelectItem value="status">Status</SelectItem>
+                <SelectItem value="stationId">Station</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -121,47 +112,26 @@ const DashboardPickupOrdersAdminsPage = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Select onValueChange={handleSelectStatus} defaultValue="ALL">
+          <Select onValueChange={handleSelectStatus} defaultValue="REQUEST">
             <SelectTrigger className="md:w-[200px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Status</SelectLabel>
-                <SelectItem value="ALL">ALL</SelectItem>
-                <SelectItem value="REQUEST">Requesting Pickup</SelectItem>
-                <SelectItem value="ONGOING">Ongoing Pickup</SelectItem>
+                <SelectItem value="REQUEST">Ready for work</SelectItem>
+                <SelectItem value="ONGOING">Ongoing work</SelectItem>
                 <SelectItem value="HISTORY">History</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
-          {session.data?.user.role === "ADMIN" ? (
-            <Select onValueChange={handleOutletId}>
-              <SelectTrigger className="md:w-[200px]">
-                <SelectValue placeholder="Outlet" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Outlet</SelectLabel>
-                  <SelectItem value="0">ALL</SelectItem>
-                  {outlets?.data.map((outlet) => {
-                    return (
-                      <SelectItem value={String(outlet.id)}>
-                        {outlet.name}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          ) : null}
         </div>
         {isPending ? (
           <Loader2 className="mx-auto animate-spin" />
         ) : data?.data ? (
           <>
             <DataTable
-              columns={pickupOrdersAdminsColumns}
+              columns={workOrderWorkerColumns}
               data={data?.data!}
               meta={data.meta}
             />
@@ -176,7 +146,7 @@ const DashboardPickupOrdersAdminsPage = () => {
           </>
         ) : (
           <DataTable
-            columns={pickupOrdersAdminsColumns}
+            columns={workOrderWorkerColumns}
             data={[]}
             meta={{ page: 1, take: 8, total: 0 }}
           />
@@ -185,4 +155,4 @@ const DashboardPickupOrdersAdminsPage = () => {
     </>
   );
 };
-export default DashboardPickupOrdersAdminsPage;
+export default DashboardWorkOrdersWorkerPage;

@@ -18,13 +18,13 @@ export const getPickupDriverService = async (
     const { page, take, sortBy, sortOrder, search, status } = query;
 
     const employee = await prisma.user.findFirst({
-      where: { id: userId },
+      where: { id: userId, isDeleted: false },
       include: { employee: { select: { id: true, outletId: true } } },
     });
 
     if (!employee || !employee.employee) {
       throw new Error(
-        'Employee not found, ini placeholder, pindah ke validator',
+        'Employee not found',
       );
     }
 
@@ -72,15 +72,9 @@ export const getPickupDriverService = async (
       where: whereClause,
     });
 
-    // const usersWithoutPassword = deliveryOrders.filter((deliveryOrder) => {
-    //   const { password, ...userWithoutPassword } = user;
-    //   return userWithoutPassword;
-    // });
-
     return {
       data: pickupOrders,
       meta: { total, take, page },
-      whereClause,
     };
   } catch (error) {
     throw error;

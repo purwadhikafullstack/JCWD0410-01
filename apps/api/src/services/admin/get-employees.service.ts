@@ -19,7 +19,7 @@ export const getEmployeesService = async (query: GetEmployeesInterface, userId: 
     const { page, take, sortBy, sortOrder, email, name, phone, role, isVerified, outletId } = query;
 
     const user = await prisma.user.findFirst({
-      where: {id: userId},
+      where: {id: userId, isDeleted: false},
       include: {employee: {select: {outletId: true}}}
     })
 

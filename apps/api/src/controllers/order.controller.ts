@@ -1,6 +1,7 @@
 import { createUserOrderService } from '@/services/order/create-user-order.service';
 import { getOrdersOutletService } from '@/services/order/get-orders-outlet.service';
 import { getOrdersService } from '@/services/order/get-orders.service';
+import { processOrderService } from '@/services/order/process-order.service';
 import { createPickupService } from '@/services/pickup/create-pickup.service';
 import { OrderStatus } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
@@ -48,6 +49,15 @@ export class OrderController {
       };
 
       const result = await getOrdersOutletService(query, res.locals.user.id);
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async processOrder(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await processOrderService(req.body, res.locals.user.id);
       return res.status(200).send(result);
     } catch (error) {
       next(error);

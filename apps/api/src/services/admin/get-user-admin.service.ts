@@ -2,7 +2,7 @@ import prisma from '../../prisma';
 
 export const getUserAdminService = async (id: number) => {
   const user = await prisma.user.findFirst({
-    where: { id },
+    where: { id, isDeleted: false},
     include: {
       employee: {
         include: {

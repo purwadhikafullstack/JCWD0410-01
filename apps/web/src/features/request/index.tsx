@@ -291,12 +291,12 @@ const RequestOrderPage = () => {
                                 <span className="ml-2 rounded-xl bg-blue-500 p-1 text-center text-xs">
                                   Delivery: {deliveryDistance} km
                                 </span>
-                                <span className="ml-2 rounded-xl bg-blue-500 p-1 text-center text-xs">
+                                {/* <span className="ml-2 rounded-xl bg-blue-500 p-1 text-center text-xs">
                                   Total:{" "}
                                   {Number(pickupDistance) +
                                     Number(deliveryDistance)}{" "}
                                   km
-                                </span>
+                                </span> */}
                                 {distanceLimit ? (
                                   <span className="ml-2 text-red-600">
                                     Maximum distance is 10km
@@ -327,8 +327,8 @@ const RequestOrderPage = () => {
               </form>
               <div className="h-fit justify-between space-y-4 rounded-md border-[1px] p-6">
                 <div className="flex justify-between text-sm">
-                  <p>Jarak</p>
-                  <p>(Rounded) {Math.ceil(Number(distance))} km</p>
+                  <p>Jarak Total (Rounded)</p>
+                  <p>{Math.ceil(selectedPickupDistance) + Math.ceil(selectedDeliveryDistance)} km</p>
                 </div>
                 <div className="flex justify-between text-sm">
                   <p>Biaya/km</p>
@@ -337,7 +337,7 @@ const RequestOrderPage = () => {
                 <hr className="border-dashed" />
                 <div className="flex justify-between font-semibold">
                   <p>Total Biaya Transport</p>
-                  <p>{result.format(Math.ceil(Number(distance)) * baseFee)}</p>
+                  <p>{result.format((Math.ceil(selectedPickupDistance) + Math.ceil(selectedDeliveryDistance)) * baseFee)}</p>
                 </div>
               </div>
             </div>

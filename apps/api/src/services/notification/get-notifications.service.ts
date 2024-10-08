@@ -18,7 +18,7 @@ export const getNotificationsService = async (
     const { page, take, sortBy, sortOrder, search, unRead } = query;
 
     const user = await prisma.user.findFirst({
-      where: { id: userId },
+      where: { id: userId, isDeleted: false },
     });
 
     if (!user) {

@@ -33,7 +33,7 @@ const DashboardPickupOrdersDriversPage = () => {
     "REQUEST",
   );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [sortBy, setSortBy] = useState("pickupNumber");
+  const [sortBy, setSortBy] = useState("createdAt");
   const [outletId, setOutletId] = useState(0);
 
   const onChangePage = ({ selected }: { selected: number }) => {

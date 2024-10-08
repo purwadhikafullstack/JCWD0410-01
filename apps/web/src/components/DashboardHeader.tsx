@@ -9,11 +9,11 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const DashboardHeader = () => {
-  // const router = useRouter();
-  const refs = window.location.pathname.split("/").map((ref) => {
+  const pathname = usePathname();
+  const refs = pathname.split("/").map((ref) => {
     return "/" + ref;
   });
   let hrefs = "";
@@ -24,20 +24,17 @@ const DashboardHeader = () => {
           {refs.map((ref, index) => {
             if (index === 0) {
               return (
-                <>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link href={window.location.host + hrefs}>Home</Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                </>
+                <BreadcrumbItem key={index}>
+                  <BreadcrumbLink asChild>
+                    <Link href={ref}>Home {" >"}</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
               );
             }
             if (index === refs.length - 1) {
               hrefs += ref;
               return (
-                <BreadcrumbItem>
+                <BreadcrumbItem key={index}>
                   <BreadcrumbPage className="font-semibold first-letter:capitalize">
                     {ref.replace("/", "")}
                   </BreadcrumbPage>
@@ -46,19 +43,13 @@ const DashboardHeader = () => {
             }
             hrefs += ref;
             return (
-              <>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link
-                      href={window.location.host + hrefs}
-                      className="first-letter:capitalize"
-                    >
-                      {ref.replace("/", "")}
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-              </>
+              <BreadcrumbItem key={index}>
+                <BreadcrumbLink asChild>
+                  <Link href={hrefs} className="first-letter:capitalize">
+                    {ref.replace("/", "") + " >"}
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
             );
           })}
         </BreadcrumbList>

@@ -18,3 +18,6 @@ export const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
 export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
 export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
 export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+export const MIDTRANS_MERCHANT_ID = process.env.MIDTRANS_MERCHANT_ID;
+export const MIDTRANS_CLIENT_KEY = process.env.MIDTRANS_CLIENT_KEY;
+export const MIDTRANS_SERVER_KEY = process.env.MIDTRANS_SERVER_KEY;
