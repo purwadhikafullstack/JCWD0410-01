@@ -17,7 +17,7 @@ export const updateOrderStatusService = async (
     }
 
     const order = await tx.order.findFirst({
-      where: { id: orderId },
+      where: { id: orderId, isDeleted: false },
     });
 
     if (!order) {

@@ -29,7 +29,7 @@ const DashboardOrdersPage = () => {
   const [searchValue, setSearchValue] = useState("");
   const [status, setStatus] = useState<OrderStatus | "ALL">("ALL");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [sortBy, setSortBy] = useState("orderNumber");
+  const [sortBy, setSortBy] = useState("createdAt");
   const [outletId, setOutletId] = useState("");
 
   const { data: outlets } = useGetOutlets({ take: 10 });

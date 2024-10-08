@@ -30,70 +30,92 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import useUpdatePickupDriver from "@/hooks/api/pickup/useUpdatePickupDriver";
-import { GetOrders } from "@/hooks/api/order/useGetOrders";
-import { useRouter } from "next/navigation";
+import { WorkOrders_Extension } from "@/hooks/api/work/useGetWorkOrdersWorker";
 
-export const ordersAdminsColumns: ColumnDef<GetOrders>[] = [
-  // const formattedEndDate = format(
-  //   new Date(card.endDate),
-  //   "MMM dd, yyyy, HH:mm:ss",
-  // );
+export const workOrderWorkerColumns: ColumnDef<WorkOrders_Extension>[] = [
   {
-    accessorKey: "orderNumber",
+    accessorKey: "order.orderNumber",
     header: "Order Number",
   },
-  // {
-  //   accessorKey: "address.address",
-  //   header: "Customer Address",
-  //   cell: ({ row }) => {
-  //     const address = String(row.original.address.address);
-  //     return (
-  //       <div className="line-clamp-2 max-w-[20ch] break-all">{address}</div>
-  //     );
-  //   },
-  // },
   {
-    accessorKey: "orderStatus",
-    header: "Order Status",
-  },
-  {
-    accessorKey: "total",
-    header: "Total fee",
+    accessorKey: "stationId",
+    header: "Station",
     cell: ({ row }) => {
-      const result = new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        maximumFractionDigits: 0,
-      });
-      if (row.original.orderStatus === "WAITING_FOR_PICKUP_DRIVER" || row.original.orderStatus === "PICKUP_ON_THE_WAY_TO_CUSTOMER" || row.original.orderStatus === "PICKUP_ON_THE_WAY_TO_OUTLET" || row.original.orderStatus === "ARRIVED_AT_OUTLET") {
-        return <div>Enroute</div>
-      } else return <div>{result.format(row.original.total)}</div>;
+      const station = Number(row.original.stationId);
+      if (station === 1) {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Washing</div>
+        );
+      } else if (station === 2) {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Ironing</div>
+        );
+      } else if (station === 3) {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Packing</div>
+        );
+      }
     },
   },
   {
-    accessorKey: "isPaid",
-    header: "Payment",
+    accessorKey: "status",
+    header: "Status",
     cell: ({ row }) => {
-      return (
-        <div>
-          {row.original.isPaid ? (
-            <span className="flex items-center text-green-500">
-              {/* <IoMdCheckmarkCircle className="mr-1" /> */}
-               Paid
-            </span>
-          ) : (
-            <span className="flex items-center text-red-500">
-              {/* <IoMdCheckmarkCircle className="mr-1" />  */}
-              Unpaid
-            </span>
-          )}
-        </div>
-      );
+      const status = String(row.original.status);
+      if (status === "READY_FOR_WASHING") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ready for washing
+          </div>
+        );
+      } else if (status === "BEING_WASHED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Washing</div>
+        );
+      } else if (status === "WASHING_COMPLETED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Washing complete
+          </div>
+        );
+      } else if (status === "READY_FOR_IRONING") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ready for Ironing
+          </div>
+        );
+      } else if (status === "BEING_IRONED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Ironing</div>
+        );
+      } else if (status === "IRONING_COMPLETED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ironing complete
+          </div>
+        );
+      } else if (status === "READY_FOR_PACKING") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ready for packing
+          </div>
+        );
+      } else if (status === "BEING_PACKED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Packing</div>
+        );
+      } else if (status === "PACKING_COMPLETED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Packing complete
+          </div>
+        );
+      } else if (status === "BYPASSED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Bypassed</div>
+        );
+      } else return <div></div>;
     },
-  },
-  {
-    accessorKey: "outlet.name",
-    header: "Outlet",
   },
   {
     accessorKey: "createdAt",
@@ -110,39 +132,61 @@ export const ordersAdminsColumns: ColumnDef<GetOrders>[] = [
     accessorKey: "requestAction",
     header: "Action",
     cell: ({ row }) => {
-      // const { mutateAsync } = useUpdatePickupDriver();
-      const router = useRouter();
-      if (row.original.orderStatus === "ARRIVED_AT_OUTLET") {
+      const { mutateAsync } = useUpdatePickupDriver();
+      const status = String(row.original.status);
+      if (status === "READY_FOR_WASHING") {
         return (
-          <div>
-            <AlertDialog>
-              <AlertDialogTrigger>
-                <span className="flex cursor-pointer items-center text-green-500">
-                  <IoMdCheckmarkCircle className="mr-1" /> Process order
-                </span>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Process order?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Click continue to head to process page.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => {
-                      router.push(`/dashboard/orders/${row.original.id}`)
-                    }}
-                  >
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ready for washing
           </div>
         );
-      }
+      } else if (status === "BEING_WASHED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Washing</div>
+        );
+      } else if (status === "WASHING_COMPLETED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Washing complete
+          </div>
+        );
+      } else if (status === "READY_FOR_IRONING") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ready for Ironing
+          </div>
+        );
+      } else if (status === "BEING_IRONED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Ironing</div>
+        );
+      } else if (status === "IRONING_COMPLETED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ironing complete
+          </div>
+        );
+      } else if (status === "READY_FOR_PACKING") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ready for packing
+          </div>
+        );
+      } else if (status === "BEING_PACKED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Packing</div>
+        );
+      } else if (status === "PACKING_COMPLETED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Packing complete
+          </div>
+        );
+      } else if (status === "BYPASSED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Bypassed</div>
+        );
+      } else return <div></div>;
     },
   },
   //   {

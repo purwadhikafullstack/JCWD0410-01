@@ -19,7 +19,7 @@ export const getOrdersOutletService = async (
     const { page, take, sortBy, sortOrder, search, status } = query;
 
     const user = await prisma.user.findFirst({
-      where: { id: userId },
+      where: { id: userId, isDeleted: false },
       include: {employee: {select: {outletId: true}}}
     });
 

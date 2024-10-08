@@ -19,7 +19,7 @@ export const getPickupAdminsService = async (
     const { page, take, sortBy, sortOrder, search, status, outletId } = query;
 
     const employee = await prisma.user.findFirst({
-      where: { id: userId },
+      where: { id: userId, isDeleted: false },
       include: { employee: { select: { outletId: true } } },
     });
 

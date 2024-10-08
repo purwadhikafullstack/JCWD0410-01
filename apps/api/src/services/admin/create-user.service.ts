@@ -31,6 +31,7 @@ export const createUserService = async (
       body.provider = 'CREDENTIALS';
       body.outletId = undefined;
       body.stationId = undefined;
+      body.isVerified = true;
 
       if (file) {
         const { secure_url } = await cloudinaryUpload(file);
@@ -70,7 +71,7 @@ export const createUserService = async (
         userWithoutPassword,
         message: 'Create employee success',
       };
-    });
+    }, {maxWait: 5000, timeout: 10000});
   } catch (error) {
     throw error;
   }

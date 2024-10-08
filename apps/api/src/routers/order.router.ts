@@ -1,5 +1,6 @@
 import { OrderController } from '@/controllers/order.controller';
 import { verifyToken } from '@/lib/verifyToken';
+import { adminsGuard } from '@/middleware/adminsGuard';
 import { Router } from 'express';
 
 export class OrderRouter {
@@ -15,15 +16,16 @@ export class OrderRouter {
   private initializeRoutes() {
     this.router.post(
       '/create-user-order',
-      verifyToken,
+      verifyToken, adminsGuard,
       this.orderController.createUserOrder,
     );
     this.router.get('/', verifyToken, this.orderController.getOrders);
     this.router.get(
       '/outlet',
-      verifyToken,
+      verifyToken, adminsGuard,
       this.orderController.getOrdersOutlet,
     );
+    this.router.patch('/', verifyToken, adminsGuard, this.orderController.processOrder)
   }
 
   getRouter(): Router {
