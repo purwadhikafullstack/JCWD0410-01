@@ -18,36 +18,36 @@ import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { pickupOrdersAdminsColumns } from "./components/PickupOrdersAdminsColumns";
 import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
 import useGetPickupOrdersAdmins from "@/hooks/api/pickup/useGetPickupOrdersAdmins";
+import useGetPickupOrdersUsers from "@/hooks/api/pickup/useGetPickupUser";
+import { pickupOrdersUsersColumns } from "./components/PickupUserColumns";
 
-const DashboardPickupOrdersAdminsPage = () => {
+const PickupOrdersUsersPage = () => {
   const session = useSession();
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [status, setStatus] = useState<
-    "ONGOING" | "REQUEST" | "HISTORY" | "ALL"
+    "ONGOING" | "HISTORY" | "ALL"
   >("ALL");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortBy, setSortBy] = useState("createdAt");
-  const [outletId, setOutletId] = useState("");
+  // const [outletId, setOutletId] = useState("");
 
-  const { data: outlets } = useGetOutlets({ take: 10 });
+  // const { data: outlets } = useGetOutlets({ take: 10 });
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
   };
 
-  const { data, isPending, refetch } = useGetPickupOrdersAdmins({
+  const { data, isPending, refetch } = useGetPickupOrdersUsers({
     page,
     take: 8,
     sortBy: sortBy,
     sortOrder: sortOrder,
     search: searchValue,
     status,
-    outletId,
   });
 
   const debouncedSearch = useMemo(
@@ -62,7 +62,7 @@ const DashboardPickupOrdersAdminsPage = () => {
     debouncedSearch(event.target.value);
   };
 
-  const handleSelectStatus = (value: "ONGOING" | "REQUEST" | "HISTORY" | "ALL") => {
+  const handleSelectStatus = (value: "ONGOING" | "HISTORY" | "ALL") => {
     setStatus(value);
   };
 
@@ -74,17 +74,16 @@ const DashboardPickupOrdersAdminsPage = () => {
     setSortBy(value);
   };
 
-  const handleOutletId = (value: string) => {
-    setOutletId(value);
-    if (value === "0") {
-      setOutletId("");
-    }
-  };
+  // const handleOutletId = (value: string) => {
+  //   setOutletId(value);
+  //   if (value === "0") {
+  //     setOutletId("");
+  //   }
+  // };
 
   return (
     <>
-      <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
+      <div className="text-md md: mx-auto h-full bg-white p-4">
         <div className="mb-2 text-sm">
           <input
             className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:w-[200px] md:text-sm"
@@ -104,8 +103,8 @@ const DashboardPickupOrdersAdminsPage = () => {
               <SelectGroup>
                 <SelectLabel>Sort by</SelectLabel>
                 <SelectItem value="pickupNumber">Pickup Number</SelectItem>
+                <SelectItem value="addressId">Address</SelectItem>
                 <SelectItem value="createdAt">Time of order</SelectItem>
-                <SelectItem value="updatedAt">Last Updated</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -129,39 +128,18 @@ const DashboardPickupOrdersAdminsPage = () => {
               <SelectGroup>
                 <SelectLabel>Status</SelectLabel>
                 <SelectItem value="ALL">ALL</SelectItem>
-                <SelectItem value="REQUEST">Requesting Pickup</SelectItem>
                 <SelectItem value="ONGOING">Ongoing Pickup</SelectItem>
                 <SelectItem value="HISTORY">History</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
-          {session.data?.user.role === "ADMIN" ? (
-            <Select onValueChange={handleOutletId}>
-              <SelectTrigger className="md:w-[200px]">
-                <SelectValue placeholder="Outlet" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Outlet</SelectLabel>
-                  <SelectItem value="0">ALL</SelectItem>
-                  {outlets?.data.map((outlet) => {
-                    return (
-                      <SelectItem value={String(outlet.id)}>
-                        {outlet.name}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          ) : null}
         </div>
         {isPending ? (
           <Loader2 className="mx-auto animate-spin" />
         ) : data?.data ? (
           <>
             <DataTable
-              columns={pickupOrdersAdminsColumns}
+              columns={pickupOrdersUsersColumns}
               data={data?.data!}
               meta={data.meta}
             />
@@ -176,7 +154,7 @@ const DashboardPickupOrdersAdminsPage = () => {
           </>
         ) : (
           <DataTable
-            columns={pickupOrdersAdminsColumns}
+            columns={pickupOrdersUsersColumns}
             data={[]}
             meta={{ page: 1, take: 8, total: 0 }}
           />
@@ -185,4 +163,4 @@ const DashboardPickupOrdersAdminsPage = () => {
     </>
   );
 };
-export default DashboardPickupOrdersAdminsPage;
+export default PickupOrdersUsersPage;

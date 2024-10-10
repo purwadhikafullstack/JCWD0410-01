@@ -1,26 +1,25 @@
 import prisma from '@/prisma';
 import { OrderStatus, Prisma } from '@prisma/client';
 
-interface GetOrdersOutletInterface {
+interface GetOrdersUserInterface {
   page: number;
   take: number;
   sortBy: string;
   sortOrder: string;
   search: string;
-  status: OrderStatus | '';
-  outletId: number;
+  status: OrderStatus | 'ALL';
+  isPaid: string;
 }
 
-export const getOrdersOutletService = async (
-  query: GetOrdersOutletInterface,
+export const getOrdersUserService = async (
+  query: GetOrdersUserInterface,
   userId: number,
 ) => {
   try {
-    const { page, take, sortBy, sortOrder, search, status } = query;
+    const { page, take, sortBy, sortOrder, search, status, isPaid } = query;
 
     const user = await prisma.user.findFirst({
       where: { id: userId, isDeleted: false },
-      include: { employee: { select: { outletId: true } } },
     });
 
     if (!user) {
@@ -28,12 +27,18 @@ export const getOrdersOutletService = async (
     }
 
     let whereClause: Prisma.OrderWhereInput = {
+      userId,
       isDeleted: false,
-      outletId: user.employee?.outletId,
     };
 
-    if (status) {
+    if (status === 'ALL') {
+      whereClause.orderStatus = undefined;
+    } else if (status) {
       whereClause.orderStatus = status;
+    }
+
+    if (isPaid) {
+      whereClause.isPaid = true;
     }
 
     if (search) {
@@ -42,6 +47,7 @@ export const getOrdersOutletService = async (
 
     const orders = await prisma.order.findMany({
       where: whereClause,
+      include: {outlet: {select: {name: true}}},
       take: take,
       skip: (page - 1) * take,
       orderBy: {
@@ -56,7 +62,6 @@ export const getOrdersOutletService = async (
     return {
       data: orders,
       meta: { total, take, page },
-      whereClause,
     };
   } catch (error) {
     throw error;

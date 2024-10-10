@@ -43,7 +43,7 @@ const DashboardOutletOrdersPage = () => {
     <>
       <DashboardHeader />
       <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
-        {isPending ? (
+        {/* {isPending ? (
           <div>Data fetching</div>
         ) : data?.data ? (
           <DataTable
@@ -57,7 +57,7 @@ const DashboardOutletOrdersPage = () => {
             data={[]}
             meta={{ page: 1, take: 8, total: 0 }}
           />
-        )}
+        )} */}
         <div className="flex items-center justify-end space-x-2 py-4">
           <Button
             variant="outline"

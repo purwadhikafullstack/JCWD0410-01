@@ -1,22 +1,9 @@
 "use client";
 
-import { UserWithAddress } from "@/hooks/api/admin/useGetCustomers";
+import { WorkOrders_Extension } from "@/hooks/api/work/useGetWorkOrdersWorker";
+import useUpdateWorkOrderWorker from "@/hooks/api/work/useUpdateWorkOrdersWorker";
+import { WorkStatus } from "@/types/work-order";
 import { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
-import { IoMdCheckmarkCircle } from "react-icons/io";
-import { FaCircleXmark } from "react-icons/fa6";
-import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { Pickup_Order_Extension } from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
 import { format } from "date-fns";
 import {
   AlertDialog,
@@ -29,8 +16,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import useUpdatePickupDriver from "@/hooks/api/pickup/useUpdatePickupDriver";
-import { WorkOrders_Extension } from "@/hooks/api/work/useGetWorkOrdersWorker";
+import { IoMdCheckmarkCircle } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 export const workOrderWorkerColumns: ColumnDef<WorkOrders_Extension>[] = [
   {
@@ -132,17 +119,76 @@ export const workOrderWorkerColumns: ColumnDef<WorkOrders_Extension>[] = [
     accessorKey: "requestAction",
     header: "Action",
     cell: ({ row }) => {
-      const { mutateAsync } = useUpdatePickupDriver();
+      const { mutateAsync } = useUpdateWorkOrderWorker();
       const status = String(row.original.status);
       if (status === "READY_FOR_WASHING") {
         return (
-          <div className="line-clamp-2 max-w-[20ch] break-all">
-            Ready for washing
+          <div>
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <span className="flex cursor-pointer items-center text-green-500">
+                  <IoMdCheckmarkCircle className="mr-1" /> Claim work
+                </span>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Do you want to accept this order?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Once confirmed, you can see the order in Ongoing tab.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      mutateAsync({
+                        id: Number(row.original.id),
+                        status: WorkStatus.READY_FOR_WASHING,
+                      });
+                      window.location.reload();
+                    }}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         );
       } else if (status === "BEING_WASHED") {
+        const router = useRouter()
         return (
-          <div className="line-clamp-2 max-w-[20ch] break-all">Washing</div>
+          <div>
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <span className="flex cursor-pointer items-center text-green-500">
+                  <IoMdCheckmarkCircle className="mr-1" /> Process
+                </span>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Do you want to process this order?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Click continue to head to the process page.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      router.push(`/dashboard/work-orders/${Number(row.original.id)}`)
+                    }}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         );
       } else if (status === "WASHING_COMPLETED") {
         return (
@@ -152,13 +198,72 @@ export const workOrderWorkerColumns: ColumnDef<WorkOrders_Extension>[] = [
         );
       } else if (status === "READY_FOR_IRONING") {
         return (
-          <div className="line-clamp-2 max-w-[20ch] break-all">
-            Ready for Ironing
-          </div>
+          <div>
+          <AlertDialog>
+            <AlertDialogTrigger>
+              <span className="flex cursor-pointer items-center text-green-500">
+                <IoMdCheckmarkCircle className="mr-1" /> Claim work
+              </span>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Do you want to accept this order?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Once confirmed, you can see the order in Ongoing tab.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    mutateAsync({
+                      id: Number(row.original.id),
+                      status: WorkStatus.READY_FOR_IRONING,
+                    });
+                    window.location.reload();
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
         );
       } else if (status === "BEING_IRONED") {
+        const router = useRouter()
         return (
-          <div className="line-clamp-2 max-w-[20ch] break-all">Ironing</div>
+          <div>
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <span className="flex cursor-pointer items-center text-green-500">
+                  <IoMdCheckmarkCircle className="mr-1" /> Process
+                </span>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Do you want to process this order?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Click continue to head to the process page.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      router.push(`/dashboard/work-orders/${Number(row.original.id)}`)
+                    }}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         );
       } else if (status === "IRONING_COMPLETED") {
         return (
@@ -168,13 +273,72 @@ export const workOrderWorkerColumns: ColumnDef<WorkOrders_Extension>[] = [
         );
       } else if (status === "READY_FOR_PACKING") {
         return (
-          <div className="line-clamp-2 max-w-[20ch] break-all">
-            Ready for packing
+          <div>
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <span className="flex cursor-pointer items-center text-green-500">
+                  <IoMdCheckmarkCircle className="mr-1" /> Claim work
+                </span>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Do you want to accept this order?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Once confirmed, you can see the order in Ongoing tab.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      mutateAsync({
+                        id: Number(row.original.id),
+                        status: WorkStatus.READY_FOR_PACKING,
+                      });
+                      window.location.reload();
+                    }}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         );
       } else if (status === "BEING_PACKED") {
+        const router = useRouter()
         return (
-          <div className="line-clamp-2 max-w-[20ch] break-all">Packing</div>
+          <div>
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <span className="flex cursor-pointer items-center text-green-500">
+                  <IoMdCheckmarkCircle className="mr-1" /> Process
+                </span>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Do you want to process this order?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Click continue to head to the process page.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      router.push(`/dashboard/work-orders/${Number(row.original.id)}`)
+                    }}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         );
       } else if (status === "PACKING_COMPLETED") {
         return (

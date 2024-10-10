@@ -191,7 +191,7 @@ model LaundryItem {
 
 model Payment {
   id              Int           @id @default(autoincrement())
-  invoiceNumber   Int           @unique
+  invoiceNumber   String        @unique
   amount          Int
   paymentMethod   String?
   paymentProof    String?

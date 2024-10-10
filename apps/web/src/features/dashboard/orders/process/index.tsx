@@ -117,88 +117,113 @@ const DashboardOrderProcessPage = () => {
                     render={(arrayHelpers) => (
                       <div>
                         {formik.values.orderItems.map((item, index) => (
-                          <div key={index} className="mb-4 flex gap-8">
-                            <div className="flex w-[200px] flex-col space-y-2">
-                              <Label
-                                htmlFor="laundryItemId"
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                              >
-                                Laundry Item
-                              </Label>
+                          <div key={index} className="grid grid-rows-2 mb-[-40px]">
+                            <div className="flex gap-8">
+                              <div className="flex md:w-[200px] flex-col space-y-2 w-[150px]">
+                                <Label
+                                  htmlFor="laundryItemId"
+                                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                  Laundry Item {index + 1}
+                                </Label>
 
-                              <Select
-                                onValueChange={(value) => {
-                                  handleLaundryItem(value, index);
-                                }}
-                                defaultValue={""}
-                              >
-                                <SelectTrigger className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
-                                  <SelectValue placeholder="Laundry Item" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectGroup>
-                                    <SelectLabel>Laundry Item</SelectLabel>
-                                    {items?.data.map((item) => {
-                                      return (
-                                        <SelectItem
-                                          value={String(item.id)}
-                                          key={item.id}
-                                        >
-                                          {item.name}
-                                        </SelectItem>
-                                      );
-                                    })}
-                                  </SelectGroup>
-                                </SelectContent>
-                              </Select>
+                                <Select
+                                  onValueChange={(value) => {
+                                    handleLaundryItem(value, index);
+                                  }}
+                                  defaultValue={""}
+                                >
+                                  <SelectTrigger className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
+                                    <SelectValue placeholder="Laundry Item" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectGroup>
+                                      <SelectLabel>Laundry Item</SelectLabel>
+                                      {items?.data.map((item) => {
+                                        return (
+                                          <SelectItem
+                                            value={String(item.id)}
+                                            key={item.id}
+                                          >
+                                            {item.name}
+                                          </SelectItem>
+                                        );
+                                      })}
+                                    </SelectGroup>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <FormInput
+                                name={`orderItems[${index}].name`}
+                                label="Item name"
+                                type="text"
+                                placeholder="Nama item"
+                                value={formik.values.orderItems[index].name}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                isError={
+                                  !!formik.touched.orderItems &&
+                                  !!formik.errors.orderItems
+                                }
+                                error={""}
+                                classname="w-[150px] md:text-base text-xs md:w-[200px]"
+                              />
+
+                              <FormInput
+                                name={`orderItems[${index}].itemQuantity`}
+                                label="Item Quantity"
+                                type="number"
+                                placeholder="Qty"
+                                value={
+                                  formik.values.orderItems[index].itemQuantity
+                                }
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                isError={
+                                  !!formik.touched.orderItems &&
+                                  !!formik.errors.orderItems
+                                }
+                                error={""}
+                                classname="md:w-[150px] md:text-base text-xs w-[100px]"
+                              />
+
+                              {index === 0 ? <button
+                                  type="button"
+                                  className="pt-8 cursor-none"
+                                >
+                                </button> : (
+                                <button
+                                  type="button"
+                                  onClick={() => arrayHelpers.remove(index)}
+                                  className="pt-4 text-red-500 text-3xl"
+                                >
+                                  -
+                                </button>
+                              )}
                             </div>
-                            <FormInput
-                              name={`orderItems[${index}].name`}
-                              label="Item name"
-                              type="text"
-                              placeholder="Masukkan nama item"
-                              value={formik.values.orderItems[index].name}
-                              onBlur={formik.handleBlur}
-                              onChange={formik.handleChange}
-                              isError={
-                                !!formik.touched.orderItems &&
-                                !!formik.errors.orderItems
-                              }
-                              error={""}
-                            />
-
-                            <FormInput
-                              name={`orderItems[${index}].itemQuantity`}
-                              label="Item Quantity"
-                              type="number"
-                              placeholder="Masukkan jumlah item"
-                              value={
-                                formik.values.orderItems[index].itemQuantity
-                              }
-                              onBlur={formik.handleBlur}
-                              onChange={formik.handleChange}
-                              isError={
-                                !!formik.touched.orderItems &&
-                                !!formik.errors.orderItems
-                              }
-                              error={""}
-                            />
-
-                            <button
-                              type="button"
-                              onClick={() => arrayHelpers.remove(index)}
-                              className="pt-8 text-red-400 underline"
-                            >
-                              Remove item
-                            </button>
+                            <div className="flex gap-2 text-red-500">
+                              <div className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                <ErrorMessage
+                                  name={`orderItems.${index}.laundryItemId`}
+                                />
+                              </div>
+                              <div className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                <ErrorMessage
+                                  name={`orderItems.${index}.name`}
+                                />
+                              </div>
+                              <div className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                <ErrorMessage
+                                  name={`orderItems.${index}.itemQuantity`}
+                                />
+                              </div>
+                            </div>
                           </div>
                         ))}
                         <button
                           type="button"
-                          onClick={() =>
-                            arrayHelpers.push({})
-                          }
-                          className="mt-[-8px] text-3xl"
+                          onClick={() => arrayHelpers.push({})}
+                          className="mt-[-40px] text-3xl"
                         >
                           +
                         </button>
@@ -224,6 +249,13 @@ const DashboardOrderProcessPage = () => {
                   ) : (
                     <div></div>
                   )} */}
+
+                  {/* {formikError ? <div>{Object.keys(formik.errors.orderItems).toString()} </div> :null} */}
+
+                  {/* {formik.errors.orderItems ? "name" in Object.keys(formik.errors.orderItems) ? <p className="text-xs text-red-500">Item name must consist of at least 3 characters</p> : null : null} */}
+                  {/* <p className="text-xs text-red-500">Laundry item must be selected</p>
+                  <p className="text-xs text-red-500">Item name must consist of at least 3 characters</p>
+                  <p className="text-xs text-red-500">Item quantity must be a positive integer</p> */}
 
                   <Button
                     className="bg-[#36bbe3]"
@@ -520,6 +552,156 @@ const DashboardOrderProcessPage = () => {
                   </Form>
                 )}
               </Formik> */}
+              {/* <Field
+                                name={`orderItems.${index}.laundryItemId`}
+                                render={({
+                                  field,
+                                }: {
+                                  field: FieldProps["field"];
+                                }) => {
+                                  return (
+                                    <>
+                                      <Select
+                                        {...field}
+                                        onValueChange={(value) => {
+                                          handleLaundryItem(value, index);
+                                        }}
+                                        defaultValue={""}
+                                      >
+                                        <SelectTrigger className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
+                                          <SelectValue placeholder="Laundry Item" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectGroup>
+                                            <SelectLabel>
+                                              Laundry Item
+                                            </SelectLabel>
+                                            {items?.data.map((item) => {
+                                              return (
+                                                <SelectItem
+                                                  value={String(item.id)}
+                                                  key={item.id}
+                                                >
+                                                  {item.name}
+                                                </SelectItem>
+                                              );
+                                            })}
+                                          </SelectGroup>
+                                        </SelectContent>
+                                      </Select>
+                                    </>
+                                  );
+                                }}
+                              />
+                            </div>
+                            <FormInput
+                                      label="Item name"
+                                      placeholder="Masukkan nama item"
+                                      type="text"
+                                      {...field}
+                                      // name={`orderItems[${index}].name`}
+                                      // value={
+                                      //   formik.values.orderItems[index].name
+                                      // }
+                                      // onBlur={formik.handleBlur}
+                                      // onChange={formik.handleChange}
+                                      onBlur={()=>{console.log(field.);
+                                      }}
+                                      // isError={
+                                      //   !!formik.touched.orderItems &&
+                                      //   !!formik.errors.orderItems
+                                      // }
+                                      error={{...field}.toString()}
+                                    />
+                            <Field name={`orderItems.${index}.name`}>
+                            render={({
+                                field,
+                              }: {
+                                field: FieldProps["field"];
+                              })}
+                              {({
+                                field, // { name, value, onChange, onBlur }
+                                form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+                                meta,
+                              }: {field: FieldProps["field"], form: , meta: }) => (
+                                <div>
+                                  <input
+                                    type="text"
+                                    placeholder="Email"
+                                    {...field}
+                                  />
+                                  {meta.touched && meta.error && (
+                                    <div className="error">{meta.error}</div>
+                                  )}
+                                </div>
+                              )}
+                            </Field>
+                            <Field
+                              name={`orderItems.${index}.name`}
+                              render={({
+                                field,
+                                form: { touched, errors },
+                                meta,
+                              }: {
+                                field: FieldProps["field"];
+                                form: any;
+                                meta: any;
+                              }) => {
+                                return (
+                                  <>
+                                    <FormInput
+                                      label="Item name"
+                                      placeholder="Masukkan nama item"
+                                      type="text"
+                                      {...field}
+                                      // name={`orderItems[${index}].name`}
+                                      // value={
+                                      //   formik.values.orderItems[index].name
+                                      // }
+                                      // onBlur={formik.handleBlur}
+                                      // onChange={formik.handleChange}
+                                      isError={
+                                        !!meta.touched[field.name] &&
+                                        !!meta.errors[field.name]
+                                      }
+                                      error={errors[field.name]}
+                                    />
+                                  </>
+                                );
+                              }}
+                            />
+
+                            <Field
+                              name={`orderItems.${index}.itemQuantity`}
+                              render={({
+                                field,
+                              }: {
+                                field: FieldProps["field"];
+                              }) => {
+                                return (
+                                  <>
+                                    <FormInput
+                                      {...field}
+                                      name={`orderItems[${index}].itemQuantity`}
+                                      label="Item Quantity"
+                                      type="number"
+                                      placeholder="Masukkan jumlah item"
+                                      value={
+                                        formik.values.orderItems[index]
+                                          .itemQuantity
+                                      }
+                                      onBlur={formik.handleBlur}
+                                      onChange={formik.handleChange}
+                                      isError={
+                                        !!formik.touched.orderItems &&
+                                        !!formik.errors.orderItems
+                                      }
+                                      error={""}
+                                    />
+                                  </>
+                                );
+                                }}
+                                /> */}
             </CardContent>
           </Card>
         </div>

@@ -15,9 +15,29 @@ export class PickupRouter {
   }
 
   private initializeRoutes() {
-    this.router.get('/drivers', verifyToken, driverGuard, this.pickupController.getPickupOrdersDrivers);
-    this.router.get('/admins', verifyToken, adminsGuard, this.pickupController.getPickupOrdersAdmins);
-    this.router.patch('/drivers', verifyToken, driverGuard, this.pickupController.updatePickupDriver);
+    this.router.get(
+      '/drivers',
+      verifyToken,
+      driverGuard,
+      this.pickupController.getPickupOrdersDrivers,
+    );
+    this.router.get(
+      '/admins',
+      verifyToken,
+      adminsGuard,
+      this.pickupController.getPickupOrdersAdmins,
+    );
+    this.router.get(
+      '/users',
+      verifyToken,
+      this.pickupController.getPickupOrdersUser,
+    );
+    this.router.patch(
+      '/drivers',
+      verifyToken,
+      driverGuard,
+      this.pickupController.updatePickupDriver,
+    );
   }
 
   getRouter(): Router {
