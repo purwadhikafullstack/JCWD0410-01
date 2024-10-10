@@ -12,42 +12,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetPickupOrdersDrivers from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
+import useGetOrdersUsers from "@/hooks/api/order/useGetOrdersUser";
+import { orderStatus, OrderStatus } from "@/types/order";
 import { debounce } from "lodash";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { pickupOrdersAdminsColumns } from "./components/PickupOrdersAdminsColumns";
-import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
-import useGetPickupOrdersAdmins from "@/hooks/api/pickup/useGetPickupOrdersAdmins";
+import React, { useMemo, useState } from "react";
+import { ordersUsersColumns } from "./components/OrdersUsersColumns";
 
-const DashboardPickupOrdersAdminsPage = () => {
+const OrdersUsersPage = () => {
   const session = useSession();
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
-  const [status, setStatus] = useState<
-    "ONGOING" | "REQUEST" | "HISTORY" | "ALL"
-  >("ALL");
+  const [status, setStatus] = useState<OrderStatus | "ALL">("ALL");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortBy, setSortBy] = useState("createdAt");
-  const [outletId, setOutletId] = useState("");
+  // const [outletId, setOutletId] = useState("");
 
-  const { data: outlets } = useGetOutlets({ take: 10 });
+  // const { data: outlets } = useGetOutlets({ take: 10 });
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
   };
 
-  const { data, isPending, refetch } = useGetPickupOrdersAdmins({
+  const { data, isPending, refetch } = useGetOrdersUsers({
     page,
     take: 8,
     sortBy: sortBy,
     sortOrder: sortOrder,
     search: searchValue,
     status,
-    outletId,
   });
 
   const debouncedSearch = useMemo(
@@ -62,7 +58,7 @@ const DashboardPickupOrdersAdminsPage = () => {
     debouncedSearch(event.target.value);
   };
 
-  const handleSelectStatus = (value: "ONGOING" | "REQUEST" | "HISTORY" | "ALL") => {
+  const handleSelectStatus = (value: OrderStatus | "ALL") => {
     setStatus(value);
   };
 
@@ -74,17 +70,20 @@ const DashboardPickupOrdersAdminsPage = () => {
     setSortBy(value);
   };
 
-  const handleOutletId = (value: string) => {
-    setOutletId(value);
-    if (value === "0") {
-      setOutletId("");
-    }
-  };
+  // const handleOutletId = (value: string) => {
+  //   setOutletId(value);
+  //   if (value === "0") {
+  //     setOutletId("");
+  //   }
+  // };
+
+  if (!session.data) {
+    return <div></div>;
+  }
 
   return (
     <>
-      <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
+      <div className="text-md md: mx-auto h-full bg-white p-4">
         <div className="mb-2 text-sm">
           <input
             className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:w-[200px] md:text-sm"
@@ -103,9 +102,10 @@ const DashboardPickupOrdersAdminsPage = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Sort by</SelectLabel>
-                <SelectItem value="pickupNumber">Pickup Number</SelectItem>
+                <SelectItem value="orderNumber">Order Number</SelectItem>
                 <SelectItem value="createdAt">Time of order</SelectItem>
                 <SelectItem value="updatedAt">Last Updated</SelectItem>
+                <SelectItem value="orderStatus">Order Status</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -129,39 +129,19 @@ const DashboardPickupOrdersAdminsPage = () => {
               <SelectGroup>
                 <SelectLabel>Status</SelectLabel>
                 <SelectItem value="ALL">ALL</SelectItem>
-                <SelectItem value="REQUEST">Requesting Pickup</SelectItem>
-                <SelectItem value="ONGOING">Ongoing Pickup</SelectItem>
-                <SelectItem value="HISTORY">History</SelectItem>
+                {orderStatus.map((status) => {
+                  return <SelectItem value={status}>{status}</SelectItem>;
+                })}
               </SelectGroup>
             </SelectContent>
           </Select>
-          {session.data?.user.role === "ADMIN" ? (
-            <Select onValueChange={handleOutletId}>
-              <SelectTrigger className="md:w-[200px]">
-                <SelectValue placeholder="Outlet" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Outlet</SelectLabel>
-                  <SelectItem value="0">ALL</SelectItem>
-                  {outlets?.data.map((outlet) => {
-                    return (
-                      <SelectItem value={String(outlet.id)}>
-                        {outlet.name}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          ) : null}
         </div>
         {isPending ? (
           <Loader2 className="mx-auto animate-spin" />
         ) : data?.data ? (
           <>
             <DataTable
-              columns={pickupOrdersAdminsColumns}
+              columns={ordersUsersColumns}
               data={data?.data!}
               meta={data.meta}
             />
@@ -176,7 +156,7 @@ const DashboardPickupOrdersAdminsPage = () => {
           </>
         ) : (
           <DataTable
-            columns={pickupOrdersAdminsColumns}
+            columns={ordersUsersColumns}
             data={[]}
             meta={{ page: 1, take: 8, total: 0 }}
           />
@@ -185,4 +165,5 @@ const DashboardPickupOrdersAdminsPage = () => {
     </>
   );
 };
-export default DashboardPickupOrdersAdminsPage;
+
+export default OrdersUsersPage;

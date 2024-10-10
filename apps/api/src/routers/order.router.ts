@@ -16,16 +16,32 @@ export class OrderRouter {
   private initializeRoutes() {
     this.router.post(
       '/create-user-order',
-      verifyToken, adminsGuard,
+      verifyToken,
       this.orderController.createUserOrder,
     );
-    this.router.get('/', verifyToken, this.orderController.getOrders);
+    this.router.get(
+      '/',
+      verifyToken,
+      adminsGuard,
+      this.orderController.getOrders,
+    );
     this.router.get(
       '/outlet',
-      verifyToken, adminsGuard,
+      verifyToken,
+      adminsGuard,
       this.orderController.getOrdersOutlet,
     );
-    this.router.patch('/', verifyToken, adminsGuard, this.orderController.processOrder)
+    this.router.get(
+      '/users',
+      verifyToken,
+      this.orderController.getOrdersUser,
+    );
+    this.router.patch(
+      '/',
+      verifyToken,
+      adminsGuard,
+      this.orderController.processOrder,
+    );
   }
 
   getRouter(): Router {

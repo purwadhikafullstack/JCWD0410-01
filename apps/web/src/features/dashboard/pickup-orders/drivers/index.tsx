@@ -32,7 +32,7 @@ const DashboardPickupOrdersDriversPage = () => {
   const [status, setStatus] = useState<"ONGOING" | "REQUEST" | "HISTORY">(
     "REQUEST",
   );
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortBy, setSortBy] = useState("createdAt");
   const [outletId, setOutletId] = useState(0);
 
