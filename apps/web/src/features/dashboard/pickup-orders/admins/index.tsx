@@ -21,10 +21,15 @@ import { useMemo, useState } from "react";
 import { pickupOrdersAdminsColumns } from "./components/PickupOrdersAdminsColumns";
 import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
 import useGetPickupOrdersAdmins from "@/hooks/api/pickup/useGetPickupOrdersAdmins";
+import { useMediaQuery } from "usehooks-ts";
+import PickupOrderCard from "../components/PickupOrderCard";
 
 const DashboardPickupOrdersAdminsPage = () => {
   const session = useSession();
   const router = useRouter();
+  const isDesktop = useMediaQuery("(min-width: 640px)", {
+    initializeWithValue: false,
+  });
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [status, setStatus] = useState<
@@ -62,7 +67,9 @@ const DashboardPickupOrdersAdminsPage = () => {
     debouncedSearch(event.target.value);
   };
 
-  const handleSelectStatus = (value: "ONGOING" | "REQUEST" | "HISTORY" | "ALL") => {
+  const handleSelectStatus = (
+    value: "ONGOING" | "REQUEST" | "HISTORY" | "ALL",
+  ) => {
     setStatus(value);
   };
 
@@ -84,20 +91,20 @@ const DashboardPickupOrdersAdminsPage = () => {
   return (
     <>
       <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
-        <div className="mb-2 text-sm">
-          <input
-            className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:w-[200px] md:text-sm"
-            placeholder="Search value"
-            type="text"
-            name="search"
-            value={searchValue}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="mb-4 flex flex-col gap-2 md:flex-row">
+      <div className="text-md md: h-ful mx-auto px-6">
+        <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-5">
+          <div className="mb-2 text-sm">
+            <input
+              className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:text-sm"
+              placeholder="Search value"
+              type="text"
+              name="search"
+              value={searchValue}
+              onChange={handleInputChange}
+            />
+          </div>
           <Select onValueChange={handleSortBy}>
-            <SelectTrigger className="md:w-[200px]">
+            <SelectTrigger>
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
             <SelectContent>
@@ -110,7 +117,7 @@ const DashboardPickupOrdersAdminsPage = () => {
             </SelectContent>
           </Select>
           <Select onValueChange={handleSortOrder}>
-            <SelectTrigger className="md:w-[200px]">
+            <SelectTrigger>
               <SelectValue placeholder="Sort Order" />
             </SelectTrigger>
             <SelectContent>
@@ -122,7 +129,7 @@ const DashboardPickupOrdersAdminsPage = () => {
             </SelectContent>
           </Select>
           <Select onValueChange={handleSelectStatus} defaultValue="ALL">
-            <SelectTrigger className="md:w-[200px]">
+            <SelectTrigger>
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -137,7 +144,7 @@ const DashboardPickupOrdersAdminsPage = () => {
           </Select>
           {session.data?.user.role === "ADMIN" ? (
             <Select onValueChange={handleOutletId}>
-              <SelectTrigger className="md:w-[200px]">
+              <SelectTrigger>
                 <SelectValue placeholder="Outlet" />
               </SelectTrigger>
               <SelectContent>
@@ -160,19 +167,52 @@ const DashboardPickupOrdersAdminsPage = () => {
           <Loader2 className="mx-auto animate-spin" />
         ) : data?.data ? (
           <>
-            <DataTable
-              columns={pickupOrdersAdminsColumns}
-              data={data?.data!}
-              meta={data.meta}
-            />
-            <div className="my-4 flex justify-center">
-              <Pagination
-                total={data?.meta?.total || 0}
-                limit={data?.meta?.take || 0}
-                onChangePage={onChangePage}
-                page={page}
+            {isDesktop ? (
+              <>
+                <DataTable
+                  columns={pickupOrdersAdminsColumns}
+                  data={data?.data!}
+                  meta={data.meta}
+                />
+                <div className="my-4 flex justify-center">
+                  <Pagination
+                    total={data?.meta?.total || 0}
+                    limit={data?.meta?.take || 0}
+                    onChangePage={onChangePage}
+                    page={page}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {data.data.map((order) => {
+                  return (
+                    <PickupOrderCard
+                      key={order.id}
+                      pickupNumber={order.pickupNumber}
+                      status={order.status}
+                      customer={order.user.name}
+                      customerAddress={order.address.address}
+                      outlet={order.outlet.name}
+                      timeOfOrder={order.createdAt}
+                    />
+                  );
+                })}
+              </div>
+            )}
+            {/* <DataTable
+                columns={ordersAdminsColumns}
+                data={data?.data!}
+                meta={data.meta}
               />
-            </div>
+              <div className="my-4 flex justify-center">
+                <Pagination
+                  total={data?.meta?.total || 0}
+                  limit={data?.meta?.take || 0}
+                  onChangePage={onChangePage}
+                  page={page}
+                />
+              </div> */}
           </>
         ) : (
           <DataTable

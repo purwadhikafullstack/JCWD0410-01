@@ -99,7 +99,7 @@ const DashboardCreateEmployeePage = () => {
   return session.data?.user.role === "ADMIN" ? (
     <>
       <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
+      <div className="text-md md: mx-auto h-full px-6 pb-10">
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Create Employee Form</CardTitle>
@@ -209,7 +209,9 @@ const DashboardCreateEmployeePage = () => {
                   disabled={role !== "WORKER"}
                 >
                   <SelectTrigger className="">
-                    {role !== "WORKER" ? null : <SelectValue placeholder="Washing"/>}
+                    {role !== "WORKER" ? null : (
+                      <SelectValue placeholder="Washing" />
+                    )}
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>

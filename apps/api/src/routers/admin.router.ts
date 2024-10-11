@@ -29,6 +29,12 @@ export class AdminRouter {
       this.adminController.getEmployeesAdmin,
     );
     this.router.get(
+      '/employee/:id',
+      verifyToken,
+      adminsGuard,
+      this.adminController.getEmployeeAdmin,
+    );
+    this.router.get(
       '/:id',
       verifyToken,
       adminGuard,
@@ -41,6 +47,14 @@ export class AdminRouter {
       adminGuard,
       uploader().single('profilePicture'),
       this.adminController.createUserAdmin,
+    );
+
+    this.router.patch(
+      '/update/:id',
+      verifyToken,
+      adminGuard,
+      uploader().single('profilePicture'),
+      this.adminController.updateEmployeeAdmin,
     );
 
     this.router.patch(

@@ -10,6 +10,10 @@ export const deleteLaundryItemService = async (laundryItemId: number) => {
       throw new Error('laundry item not found');
     }
 
+    if (item.isDeleted === true) {
+      throw new Error('Item has already been deleted');
+    }
+
     await prisma.laundryItem.update({
       where: { id: laundryItemId },
       data: {

@@ -3,14 +3,15 @@ import { Type } from '@prisma/client';
 
 interface CreateOutletBody {
   name: string;
+  type: Type;
+  address: string;
   latitude: string;
   longitude: string;
-  type: Type;
 }
 
 export const createOutletService = async (body: CreateOutletBody) => {
   try {
-    const { name, latitude, longitude, type } = body;
+    const { name, address, latitude, longitude, type } = body;
 
     const existingOutlet = await prisma.outlet.findFirst({
       where: { name },
@@ -23,9 +24,10 @@ export const createOutletService = async (body: CreateOutletBody) => {
     const newOutlet = await prisma.outlet.create({
       data: {
         name,
+        address,
+        type,
         latitude,
         longitude,
-        type,
       },
     });
 

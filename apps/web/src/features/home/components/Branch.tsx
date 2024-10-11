@@ -38,7 +38,7 @@ const Branch = () => {
                   <CardTitle className="text-neutral-600">
                     {outlet.name}
                   </CardTitle>
-                  <CardDescription>{outlet.latitude}</CardDescription>
+                  <CardDescription>{outlet.address}</CardDescription>
                 </CardHeader>
               </Card>
             );

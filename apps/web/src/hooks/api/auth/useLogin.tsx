@@ -23,9 +23,12 @@ const useLogin = () => {
       return data;
     },
     onSuccess: async (data) => {
-      await signIn("credentials", { ...data, redirect: false });
+      await signIn("credentials", {
+        ...data,
+        redirect: true,
+        callbackUrl: "/dashboard",
+      });
       toast.success("Login berhasil");
-      router.replace("/");
     },
     onError: (error: AxiosError<any>) => {
       toast.error(error.response?.data);

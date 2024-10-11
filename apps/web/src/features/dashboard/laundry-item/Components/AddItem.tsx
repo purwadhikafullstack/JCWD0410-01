@@ -30,8 +30,8 @@ const AddItem = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-1" type="button">
-          <FaPlus /> <p>Tambah Item</p>
+        <Button className="flex items-center gap-1 rounded-full" type="button">
+          <FaPlus /> Tambah <p className="hidden md:inline-block">Item</p>
         </Button>
       </DialogTrigger>
       <DialogContent>

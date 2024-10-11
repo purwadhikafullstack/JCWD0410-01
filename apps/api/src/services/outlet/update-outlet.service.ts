@@ -3,9 +3,10 @@ import { Type } from '@prisma/client';
 
 interface UpdateOutletBody {
   name: string;
+  address: string;
+  type: Type;
   latitude: string;
   longitude: string;
-  type: Type;
 }
 
 export const updateOutletService = async (
@@ -13,10 +14,10 @@ export const updateOutletService = async (
   body: UpdateOutletBody,
 ) => {
   try {
-    const { name, latitude, longitude, type } = body;
+    const { name, type, address, latitude, longitude } = body;
 
     const existingOutlet = await prisma.outlet.findFirst({
-      where: { id: outletId },
+      where: { id: outletId, isDeleted: false },
     });
 
     if (!existingOutlet) {
@@ -27,9 +28,10 @@ export const updateOutletService = async (
       where: { id: outletId },
       data: {
         name,
+        type,
+        address,
         latitude,
         longitude,
-        type,
       },
     });
 

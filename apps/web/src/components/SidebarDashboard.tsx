@@ -1,75 +1,94 @@
+"use client";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { TbCalendarStar, TbHome } from "react-icons/tb";
+import { FaStoreAlt } from "react-icons/fa";
+import { FaBell, FaShirt, FaUser } from "react-icons/fa6";
+import { IoPeople } from "react-icons/io5";
+import { LuLogOut } from "react-icons/lu";
+import { MdDeliveryDining } from "react-icons/md";
 
 const SidebarDashboard = () => {
+  const session = useSession();
   return (
-    <div className="fixed hidden w-64 bg-sky-600 md:block z-50">
-      <Link href="/">
+    <div className="fixed z-50 hidden w-64 items-center border-r-[1px] bg-white md:block">
+      <Link href="/dashboard">
         <Image
           src="/logo2.svg"
           alt="Description"
-          className="m-auto h-20 w-40 object-cover py-2"
+          className="mx-6 h-20 w-40 object-contain py-2"
           width={160}
           height={80}
         />
       </Link>
-      <div className="h-screen bg-blue-200">
-        <p className="p-2 pl-4 text-xl font-bold text-blue2">Dashboard</p>
-        <Link href="/dashboard/users/employees">
-          <div className="flex items-center justify-start space-x-2 p-2 pl-4 text-sm font-semibold hover:bg-sky-600 hover:text-blue2">
-            <span>
-              <TbHome />
-            </span>
-            <span>Users</span>
+      <hr />
+      <div className="h-screen space-y-10 bg-white p-6 text-sm text-neutral-600">
+        <div className="space-y-4">
+          <Link
+            href="/dashboard"
+            className="text-lg font-semibold text-[#37bae3]"
+          >
+            Dashboard
+          </Link>
+          <div className="flex flex-col gap-3">
+            <Link href="/dashboard/users/employees">
+              <div className="flex items-center justify-start gap-2">
+                <IoPeople size={18} />
+                <span>Employees</span>
+              </div>
+            </Link>
+            <Link href="/dashboard/outlet">
+              <div className="flex items-center justify-start gap-3">
+                <FaStoreAlt />
+                <span>Outlets</span>
+              </div>
+            </Link>
+            <Link href="/dashboard/laundry-item">
+              <div className="flex items-center justify-start gap-3">
+                <FaShirt />
+                <span>Laundry Item</span>
+              </div>
+            </Link>
           </div>
-        </Link>
-        <Link href="/dashboard/active-events" className="hover:text-black1">
-          <div className="hover:bg-blue3 flex items-center justify-start space-x-2 rounded-full p-2 pl-4 text-sm font-semibold hover:text-blue2">
-            <span>
-              <TbCalendarStar />
-            </span>
-            <span>Events</span>
+        </div>
+        {/* <hr /> */}
+        <div className="space-y-4">
+          <Link
+            href="/dashboard"
+            className="text-lg font-semibold text-[#37bae3]"
+          >
+            Account
+          </Link>
+          <div className="flex flex-col gap-3">
+            <Link href="/dashboard/profile">
+              <div className="flex items-center justify-start gap-3">
+                <FaUser />
+                <span>Profile</span>
+              </div>
+            </Link>
+            <Link href="/dashboard/notification">
+              <div className="flex items-center justify-start gap-3">
+                <FaBell />
+                <span>Notification</span>
+              </div>
+            </Link>
+            <Link href="/dashboard/pickup-orders/ongoing">
+              <div className="flex items-center justify-start gap-3">
+                <MdDeliveryDining size={18} />
+                <span>Pickup Orders</span>
+              </div>
+            </Link>
+            {session && (
+              <button
+                className="flex items-center justify-start gap-3"
+                onClick={() => signOut()}
+              >
+                <LuLogOut size={18} />
+                <span>Logout</span>
+              </button>
+            )}
           </div>
-        </Link>
-        <Link href="/dashboard/transactions" className="hover:text-black1">
-          <div className="hover:bg-blue3 flex items-center justify-start space-x-2 rounded-full p-2 pl-4 text-sm font-semibold hover:text-blue2">
-            <span>
-              <TbCalendarStar />
-            </span>
-            <span>Transactions</span>
-          </div>
-        </Link>
-        <hr className="mx-2 border-blue2"></hr>
-        <p className="p-2 pl-4 text-xl font-bold text-blue1">Account</p>
-        <Link href="/profile" className="hover:text-black1">
-          <div className="hover:bg-blue3 flex items-center justify-start space-x-2 rounded-full p-2 pl-4 text-sm font-semibold hover:text-blue2">
-            <span>
-              <TbHome />
-            </span>
-            <span>Profile</span>
-          </div>
-        </Link>
-        <Link href="/dashboard/notification" className="hover:text-black1">
-          <div className="hover:bg-blue3 flex items-center justify-start space-x-2 rounded-full p-2 pl-4 text-sm font-semibold hover:text-blue2">
-            <span>
-              <TbHome />
-            </span>
-            <span>Notification</span>
-          </div>
-        </Link>
-        <Link
-          href="/dashboard/pickup-orders/ongoing"
-          className="hover:text-black1"
-        >
-          <div className="hover:bg-blue3 flex items-center justify-start space-x-2 rounded-full p-2 pl-4 text-sm font-semibold hover:text-blue2">
-            <span>
-              <TbHome />
-            </span>
-            <span>Pickup Orders</span>
-          </div>
-        </Link>
+        </div>
       </div>
     </div>
   );

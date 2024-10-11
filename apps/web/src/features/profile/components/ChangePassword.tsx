@@ -1,5 +1,6 @@
 "use client";
 import AlertDialogDemo from "@/components/AlertDialog";
+import FormInput from "@/components/FormInput";
 import {
   Card,
   CardContent,
@@ -7,12 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import useUpdatePassword from "@/hooks/api/user/useChangePassword";
 import { useFormik } from "formik";
 import { ChangePasswordSchema } from "../schemas/ChangePassword";
-import FormInput from "@/components/FormInput";
 
 const ChangePassword = () => {
   const { mutateAsync: updatePassword, isPending } = useUpdatePassword();

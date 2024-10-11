@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 interface CreateOutletPayload {
   name: string;
   type: string;
+  address: string;
   latitude: string;
   longitude: string;
 }
