@@ -21,10 +21,15 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 import { ordersAdminsColumns } from "./components/OrdersAdminsColumns";
+import OrderCard from "./components/OrdersCard";
+import { useMediaQuery } from "usehooks-ts";
 
 const DashboardOrdersPage = () => {
   const session = useSession();
   const router = useRouter();
+  const isDesktop = useMediaQuery("(min-width: 640px)", {
+    initializeWithValue: false,
+  });
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [status, setStatus] = useState<OrderStatus | "ALL">("ALL");
@@ -47,6 +52,8 @@ const DashboardOrdersPage = () => {
     status,
     outletId,
   });
+
+  console.log(data);
 
   const debouncedSearch = useMemo(
     () =>
@@ -90,20 +97,22 @@ const DashboardOrdersPage = () => {
     return (
       <>
         <DashboardHeader />
-        <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
-          <div className="mb-2 text-sm">
-            <input
-              className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:w-[200px] md:text-sm"
-              placeholder="Search value"
-              type="text"
-              name="search"
-              value={searchValue}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="mb-4 flex flex-col gap-2 md:flex-row">
+        <div className="text-md md: mx-auto h-full px-6">
+          <div
+            className={`mb-4 grid grid-cols-1 gap-4 ${session.data.user.role === "ADMIN" ? `md:grid-cols-5` : "md:grid-cols-4"}`}
+          >
+            <div className="mb-2 text-sm">
+              <input
+                className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:text-sm"
+                placeholder="Search value"
+                type="text"
+                name="search"
+                value={searchValue}
+                onChange={handleInputChange}
+              />
+            </div>
             <Select onValueChange={handleSortBy}>
-              <SelectTrigger className="md:w-[200px]">
+              <SelectTrigger>
                 <SelectValue placeholder="Sort By" />
               </SelectTrigger>
               <SelectContent>
@@ -117,7 +126,7 @@ const DashboardOrdersPage = () => {
               </SelectContent>
             </Select>
             <Select onValueChange={handleSortOrder}>
-              <SelectTrigger className="md:w-[200px]">
+              <SelectTrigger>
                 <SelectValue placeholder="Sort Order" />
               </SelectTrigger>
               <SelectContent>
@@ -129,7 +138,7 @@ const DashboardOrdersPage = () => {
               </SelectContent>
             </Select>
             <Select onValueChange={handleSelectStatus} defaultValue="ALL">
-              <SelectTrigger className="md:w-[200px]">
+              <SelectTrigger>
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -167,7 +176,41 @@ const DashboardOrdersPage = () => {
             <Loader2 className="mx-auto animate-spin" />
           ) : data?.data ? (
             <>
-              <DataTable
+              {isDesktop ? (
+                <>
+                  <DataTable
+                    columns={ordersAdminsColumns}
+                    data={data?.data!}
+                    meta={data.meta}
+                  />
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={page}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {data.data.map((order) => {
+                    return (
+                      <OrderCard
+                        key={order.id}
+                        orderNumber={order.orderNumber}
+                        orderStatus={order.orderStatus}
+                        totalFee={order.total}
+                        paymentStatus={order.isPaid}
+                        outlet={order.outlet.name}
+                        timeOfOrder={order.createdAt}
+                        action={() => {}}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+              {/* <DataTable
                 columns={ordersAdminsColumns}
                 data={data?.data!}
                 meta={data.meta}
@@ -179,7 +222,7 @@ const DashboardOrdersPage = () => {
                   onChangePage={onChangePage}
                   page={page}
                 />
-              </div>
+              </div> */}
             </>
           ) : (
             <DataTable

@@ -19,6 +19,10 @@ export const updateLaundryItemsService = async (
       throw new Error('Laundry item not found');
     }
 
+    if (existingItem.name === name) {
+      throw new Error('Item already exist!');
+    }
+
     await prisma.laundryItem.update({
       where: { id: laundryItemId },
       data: {

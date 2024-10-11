@@ -76,20 +76,20 @@ const DashboardPickupOrdersDriversPage = () => {
   return (
     <>
       <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
-        <div className="mb-2 text-sm">
-          <input
-            className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:w-[200px] md:text-sm"
-            placeholder="Search value"
-            type="text"
-            name="search"
-            value={searchValue}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="mb-4 flex flex-col gap-2 md:flex-row">
+      <div className="text-md md: mx-auto h-full bg-white px-6">
+        <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
+          <div className="mb-2 text-sm">
+            <input
+              className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:text-sm"
+              placeholder="Search value"
+              type="text"
+              name="search"
+              value={searchValue}
+              onChange={handleInputChange}
+            />
+          </div>
           <Select onValueChange={handleSortBy}>
-            <SelectTrigger className="md:w-[200px]">
+            <SelectTrigger>
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
             <SelectContent>
@@ -102,7 +102,7 @@ const DashboardPickupOrdersDriversPage = () => {
             </SelectContent>
           </Select>
           <Select onValueChange={handleSortOrder}>
-            <SelectTrigger className="md:w-[200px]">
+            <SelectTrigger>
               <SelectValue placeholder="Sort Order" />
             </SelectTrigger>
             <SelectContent>
@@ -114,7 +114,7 @@ const DashboardPickupOrdersDriversPage = () => {
             </SelectContent>
           </Select>
           <Select onValueChange={handleSelectStatus} defaultValue="REQUEST">
-            <SelectTrigger className="md:w-[200px]">
+            <SelectTrigger>
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>

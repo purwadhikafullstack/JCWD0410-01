@@ -9,7 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Pickup_Order_Extension, PickupOrdersDriversPaginationQueries } from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
+import {
+  Pickup_Order_Extension,
+  PickupOrdersDriversPaginationQueries,
+} from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
 import { IPageableResponse } from "@/types/pagination";
 import { UseQueryResult } from "@tanstack/react-query";
 import { debounce } from "lodash";
@@ -19,11 +22,13 @@ import { FC, useMemo, useState } from "react";
 import Pagination from "./Pagination";
 
 interface TestPageInterface {
-  status: 'ONGOING' | 'REQUEST' | 'HISTORY',
-  callback: (queries: PickupOrdersDriversPaginationQueries) => UseQueryResult<IPageableResponse<Pickup_Order_Extension>, Error>
+  status: "ONGOING" | "REQUEST" | "HISTORY";
+  callback: (
+    queries: PickupOrdersDriversPaginationQueries,
+  ) => UseQueryResult<IPageableResponse<Pickup_Order_Extension>, Error>;
 }
 
-const TestPage: FC<TestPageInterface>  = ({status, callback}) => {
+const TestPage: FC<TestPageInterface> = ({ status, callback }) => {
   const searchParams = useSearchParams();
 
   const category = searchParams.get("category");
@@ -79,11 +84,11 @@ const TestPage: FC<TestPageInterface>  = ({status, callback}) => {
 
   return (
     <div className="bg-[#fbfbfb]">
-      <div className="mx-auto max-w-7xl p-4 sm:gap-8">
+      <div className="mx-auto max-w-7xl p-6 sm:gap-8">
         <div className="flex flex-col gap-2 sm:flex-row">
           <div className="text-sm">
             <input
-              className="block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:border-color1 focus:bg-white focus:outline-none sm:w-[200px] sm:text-sm"
+              className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none sm:w-[200px] sm:text-sm"
               placeholder="Search Event"
               type="text"
               name="search"

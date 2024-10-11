@@ -17,8 +17,11 @@ const DashboardPickupOrdersPage = () => {
 
   if (session.data.user.role === "DRIVER") {
     return <DashboardPickupOrdersDriversPage />;
-  } else if (session.data.user.role === "ADMIN" || session.data.user.role === "OUTLET_ADMIN") {
-    return <DashboardPickupOrdersAdminsPage />
+  } else if (
+    session.data.user.role === "ADMIN" ||
+    session.data.user.role === "OUTLET_ADMIN"
+  ) {
+    return <DashboardPickupOrdersAdminsPage />;
   } else {
     return (
       <>

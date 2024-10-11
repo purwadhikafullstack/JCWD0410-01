@@ -1,8 +1,10 @@
 import { createUserService } from '@/services/admin/create-user.service';
 import { deleteUserService } from '@/services/admin/delete-user.service';
 import { getCustomersService } from '@/services/admin/get-customers.service';
+import { getEmployeeService } from '@/services/admin/get-employee.service';
 import { getEmployeesService } from '@/services/admin/get-employees.service';
 import { getUserAdminService } from '@/services/admin/get-user-admin.service';
+import { updateUserService } from '@/services/admin/update-user.service';
 import { Role } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 
@@ -50,9 +52,31 @@ export class AdminController {
     }
   }
 
+  async getEmployeeAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await getEmployeeService(Number(req.params.id));
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
   async createUserAdmin(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await createUserService(req.body, req.file!);
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateEmployeeAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await updateUserService(
+        Number(req.params.id),
+        req.body,
+        req.file!,
+      );
+
       return res.status(200).send(result);
     } catch (error) {
       next(error);

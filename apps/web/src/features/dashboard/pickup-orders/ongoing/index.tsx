@@ -9,7 +9,7 @@ const DashboardPickupOrdersOngoingPage = () => {
   return (
     <>
       <PickupOrdersHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
+      <div className="text-md md: mx-auto h-full px-6">
         <PickupOrderTable
           status={"ONGOING"}
           callback={useGetPickupOrdersDrivers}

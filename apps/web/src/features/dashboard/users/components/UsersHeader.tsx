@@ -10,14 +10,14 @@ const UsersHeader = () => {
   const authorized = session.data?.user.role === "ADMIN";
   const pathname = usePathname();
   const unclicked =
-    "rounded-2xl px-3 py-2 hover:bg-blue2 w-28 text-center font-semibold";
+    "rounded-full px-2 py-1 md:px-3 md:py-2 hover:bg-blue2 w-28 text-center font-semibold";
   const clicked =
-    "rounded-2xl bg-blue2 px-3 py-2 w-28 text-center font-semibold";
+    "rounded-full px-2 py-1 bg-blue2 md:px-3 md:py-2 w-28 text-white text-md text-center font-semibold";
 
   return (
-    <nav className="fixed z-50 h-20 w-full content-center bg-blue-200 p-3 md:w-[calc(100%-256px)]">
+    <nav className="mx-6 content-center rounded-md bg-[#e5f3f5] p-4 text-sm shadow">
       {/* <div className="text-sm text-gray-500 mb-2">{pathname}</div> */}
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-2">
         <div className="flex justify-evenly gap-2 md:justify-normal">
           {pathname === "/dashboard/users/customers" ? (
             <button
@@ -54,7 +54,7 @@ const UsersHeader = () => {
         </div>
         <button
           onClick={() => router.push("/dashboard/users/employees/create")}
-          className="rounded-2xl bg-white px-3 py-2 text-center font-semibold"
+          className="md rounded-2xl bg-white px-2 py-1 text-center font-semibold text-[#38b9e3] shadow md:px-3 md:py-2"
           hidden={!authorized}
         >
           Create Employee

@@ -10,10 +10,10 @@ export const updateProfileService = async (
   file?: Express.Multer.File,
 ) => {
   delete body.profilePicture;
-  
+
   try {
     const user = await prisma.user.findFirst({
-      where: { id: userId },
+      where: { id: userId, isDeleted: false, role: 'CUSTOMER' },
     });
 
     if (!user) {

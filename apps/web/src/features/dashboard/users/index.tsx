@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import DashboardHeader from '@/components/DashboardHeader';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import React, { FC } from 'react'
+import DashboardHeader from "@/components/DashboardHeader";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React, { FC } from "react";
 
 interface DashboardUserInterface {
-  id: number
+  id: number;
 }
 
-const DashboardUserPage:FC<DashboardUserInterface> = ({id}) => {
+const DashboardUserPage: FC<DashboardUserInterface> = ({ id }) => {
   const session = useSession();
   const router = useRouter();
 
@@ -56,6 +56,6 @@ const DashboardUserPage:FC<DashboardUserInterface> = ({id}) => {
       </div>
     </>
   );
-}
+};
 
-export default DashboardUserPage
+export default DashboardUserPage;

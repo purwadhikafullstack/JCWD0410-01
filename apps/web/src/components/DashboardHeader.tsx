@@ -18,8 +18,8 @@ const DashboardHeader = () => {
   });
   let hrefs = "";
   return (
-    <nav className="fixed z-50 h-20 w-full content-center bg-blue-200 p-3 font-semibold text-black md:w-[calc(100%-256px)]">
-      <Breadcrumb className="pl-2">
+    <nav className="h-20 content-center rounded-md px-6 py-4 font-semibold text-black">
+      <Breadcrumb>
         <BreadcrumbList>
           {refs.map((ref, index) => {
             if (index === 0) {
