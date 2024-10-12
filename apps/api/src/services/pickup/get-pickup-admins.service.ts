@@ -35,7 +35,7 @@ export const getPickupAdminsService = async (
       whereClause.outletId = Number(outletId);
     }
 
-    if (employee.role === "OUTLET_ADMIN") {
+    if (employee.role === 'OUTLET_ADMIN') {
       whereClause.outletId = employee.employee.outletId;
     }
 
@@ -51,7 +51,10 @@ export const getPickupAdminsService = async (
     }
 
     if (status === 'HISTORY') {
-      whereClause.status = 'RECEIVED_BY_OUTLET';
+      whereClause.OR = [
+        { status: 'RECEIVED_BY_OUTLET' },
+        { status: 'ONSITE' },
+      ];
     }
 
     if (search) {

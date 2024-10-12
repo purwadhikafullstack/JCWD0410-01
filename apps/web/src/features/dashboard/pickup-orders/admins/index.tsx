@@ -23,6 +23,13 @@ import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
 import useGetPickupOrdersAdmins from "@/hooks/api/pickup/useGetPickupOrdersAdmins";
 import { useMediaQuery } from "usehooks-ts";
 import PickupOrderCard from "../components/PickupOrderCard";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const DashboardPickupOrdersAdminsPage = () => {
   const session = useSession();
@@ -113,6 +120,7 @@ const DashboardPickupOrdersAdminsPage = () => {
                 <SelectItem value="pickupNumber">Pickup Number</SelectItem>
                 <SelectItem value="createdAt">Time of order</SelectItem>
                 <SelectItem value="updatedAt">Last Updated</SelectItem>
+                <SelectItem value="status">Status</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

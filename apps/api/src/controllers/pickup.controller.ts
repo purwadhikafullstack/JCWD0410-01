@@ -51,7 +51,7 @@ export class PickupController {
         sortOrder: (req.query.sortOrder as string) || 'asc',
         sortBy: (req.query.sortBy as string) || 'createdAt',
         search: (req.query.search as string) || '',
-        status: (req.query.status as 'ONGOING' | 'HISTORY'),
+        status: (req.query.status as 'ONGOING' | 'HISTORY' | 'ALL'),
       };
 
       const result = await getPickupUserService(query, res.locals.user.id);

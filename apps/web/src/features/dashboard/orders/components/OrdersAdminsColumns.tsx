@@ -55,6 +55,94 @@ export const ordersAdminsColumns: ColumnDef<GetOrders>[] = [
   {
     accessorKey: "orderStatus",
     header: "Order Status",
+    cell: ({ row }) => {
+      const status = String(row.original.orderStatus);
+      if (status === "WAITING_FOR_PICKUP_DRIVER") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Waiting for pickup driver
+          </div>
+        );
+      } else if (status === "PICKUP_ON_THE_WAY_TO_CUSTOMER") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Pickup on the way to customer
+          </div>
+        );
+      } else if (status === "PICKUP_ON_THE_WAY_TO_OUTLET") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Pickup on the way to outlet
+          </div>
+        );
+      } else if (status === "ARRIVED_AT_OUTLET") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Arrived at outlet
+          </div>
+        );
+      } else if (status === "READY_FOR_WASHING") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ready for washing
+          </div>
+        );
+      } else if (status === "BEING_WASHED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Washing</div>
+        );
+      } else if (status === "WASHING_COMPLETED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Washing completed
+          </div>
+        );
+      } else if (status === "BEING_IRONED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Ironing</div>
+        );
+      } else if (status === "IRONING_COMPLETED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ironing completed
+          </div>
+        );
+      } else if (status === "BEING_PACKED") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">Packing</div>
+        );
+      } else if (status === "AWAITING_PAYMENT") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Awaiting payment
+          </div>
+        );
+      } else if (status === "READY_FOR_DELIVERY") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Ready for delivery
+          </div>
+        );
+      } else if (status === "WAITING_FOR_DELIVERY_DRIVER") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Awaiting delivery driver
+          </div>
+        );
+      } else if (status === "BEING_DELIVERED_TO_CUSTOMER") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Delivering to customer
+          </div>
+        );
+      } else if (status === "RECEIVED_BY_CUSTOMER") {
+        return (
+          <div className="line-clamp-2 max-w-[20ch] break-all">
+            Laundry delivered
+          </div>
+        );
+      } else return <div></div>;
+    },
   },
   {
     accessorKey: "total",
@@ -65,8 +153,13 @@ export const ordersAdminsColumns: ColumnDef<GetOrders>[] = [
         currency: "IDR",
         maximumFractionDigits: 0,
       });
-      if (row.original.orderStatus === "WAITING_FOR_PICKUP_DRIVER" || row.original.orderStatus === "PICKUP_ON_THE_WAY_TO_CUSTOMER" || row.original.orderStatus === "PICKUP_ON_THE_WAY_TO_OUTLET" || row.original.orderStatus === "ARRIVED_AT_OUTLET") {
-        return <div>Enroute</div>
+      if (
+        row.original.orderStatus === "WAITING_FOR_PICKUP_DRIVER" ||
+        row.original.orderStatus === "PICKUP_ON_THE_WAY_TO_CUSTOMER" ||
+        row.original.orderStatus === "PICKUP_ON_THE_WAY_TO_OUTLET" ||
+        row.original.orderStatus === "ARRIVED_AT_OUTLET"
+      ) {
+        return <div>Enroute</div>;
       } else return <div>{result.format(row.original.total)}</div>;
     },
   },
@@ -79,7 +172,7 @@ export const ordersAdminsColumns: ColumnDef<GetOrders>[] = [
           {row.original.isPaid ? (
             <span className="flex items-center text-green-500">
               {/* <IoMdCheckmarkCircle className="mr-1" /> */}
-               Paid
+              Paid
             </span>
           ) : (
             <span className="flex items-center text-red-500">
@@ -132,7 +225,7 @@ export const ordersAdminsColumns: ColumnDef<GetOrders>[] = [
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
-                      router.push(`/dashboard/orders/${row.original.id}`)
+                      router.push(`/dashboard/orders/${row.original.id}`);
                     }}
                   >
                     Continue

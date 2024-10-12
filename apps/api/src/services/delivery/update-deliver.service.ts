@@ -123,8 +123,17 @@ export const updateDeliveryOrderDriverService = async (
           tx,
         );
 
-        const oneMinuteFromNow = new Date(Date.now() + 60 * 1000);
-        scheduleJob('Complete user order', oneMinuteFromNow, () => {
+        const orderNumber = await tx.order.findFirst({
+          where: {id: deliveryOrder.orderId},
+          select: {orderNumber: true}
+        })
+
+        if (!orderNumber) {
+          throw new Error("Order not found")
+        }
+
+        const twoMinuteFromNow = new Date(Date.now() + 120 * 1000);
+        scheduleJob(orderNumber.orderNumber, twoMinuteFromNow, async () => {
           updateOrderStatusService(
             deliveryOrder.orderId,
             'RECEIVED_BY_CUSTOMER',
@@ -132,12 +141,6 @@ export const updateDeliveryOrderDriverService = async (
           );
         });
       }
-
-      // await transporter.sendMail({
-      //   to: payment.user.email,
-      //   subject: 'Payment Status',
-      //   html: `<h1>Your Payment Status has been updated</h1><p>Payment id: ${payment.id}</p><p>New Status: ${status}</p>`,
-      // });
 
       return { message: 'Update delivery order success' };
     });

@@ -1,13 +1,16 @@
 import { MIDTRANS_CLIENT_KEY, MIDTRANS_SERVER_KEY } from '@/config';
 import prisma from '@/prisma';
+import { Prisma } from '@prisma/client';
 import { MidtransClient } from 'midtrans-node-client';
+import { scheduleJob } from 'node-schedule';
+import { updatePaymentStatusService } from './update-payment-status.service';
 
-interface createPaymentArgs {
+interface ProcessPayment {
   orderId: number;
 }
 
-export const createPaymentService = async (
-  body: createPaymentArgs,
+export const processPaymentService = async (
+  body: ProcessPayment,
   userId: number,
 ) => {
   try {
@@ -58,7 +61,7 @@ export const createPaymentService = async (
         isDeleted: false,
         orderId: orderId,
         status: 'PENDING',
-        // snapToken: { not: null },
+        snapToken: { not: null },
       },
     });
 
@@ -66,38 +69,46 @@ export const createPaymentService = async (
       return outstandingPayment;
     }
 
-    const count = await prisma.payment.count({
-      where: { orderId },
+    return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const count = await tx.payment.count({
+        where: { orderId },
+      });
+
+      const invoiceNumber =
+        'INV-' + existingOrder.orderNumber + `-${count + 1}`;
+
+      const payload = {
+        transaction_details: {
+          order_id: invoiceNumber,
+          gross_amount: existingOrder.total,
+        },
+      };
+
+      const snap = new MidtransClient.Snap({
+        isProduction: false,
+        clientKey: MIDTRANS_CLIENT_KEY,
+        serverKey: MIDTRANS_SERVER_KEY,
+      });
+
+      const transaction = await snap.createTransaction(payload);
+
+      const payment = await tx.payment.create({
+        data: {
+          orderId,
+          invoiceNumber,
+          amount: existingOrder.total,
+          snapToken: transaction.token,
+          snapRedirectUrl: transaction.redirect_url,
+        },
+      });
+
+      const fiveMinuteFromNow = new Date(Date.now() + 180 * 1000);
+      scheduleJob(invoiceNumber, fiveMinuteFromNow, async () => {
+        updatePaymentStatusService(invoiceNumber, 'EXPIRED', tx)
+      });
+
+      return payment;
     });
-
-    const invoiceNumber = 'INV-' + existingOrder.orderNumber + `-${count + 1}`;
-
-    const payload = {
-      transaction_details: {
-        order_id: invoiceNumber,
-        gross_amount: existingOrder.total,
-      },
-    };
-
-    const snap = new MidtransClient.Snap({
-      isProduction: false,
-      clientKey: MIDTRANS_CLIENT_KEY,
-      serverKey: MIDTRANS_SERVER_KEY,
-    });
-
-    const transaction = await snap.createTransaction(payload);
-
-    const payment = await prisma.payment.create({
-      data: {
-        orderId,
-        invoiceNumber,
-        amount: existingOrder.total,
-        snapToken: transaction.token,
-        snapRedirectUrl: transaction.redirect_url,
-      },
-    });
-
-    return payment;
   } catch (error) {
     throw error;
   }
