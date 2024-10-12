@@ -5,10 +5,9 @@ import { Pickup_Order_Extension, PickupOrdersDriversPaginationQueries } from "@/
 import { IPageableResponse } from "@/types/pagination";
 import { UseQueryResult } from "@tanstack/react-query";
 import { FC, useState } from "react";
-import { pickupOrderColumns } from "./PickupOrderColumns";
-import { ColumnDef } from "@tanstack/react-table";
-import { pickupOrderRequestColumns } from "../request/components/PickupOrderRequestColumns";
 import { pickupOrderOngoingColumns } from "../ongoing/components/PickupOrderOngoingColumns";
+import { pickupOrderRequestColumns } from "../request/components/PickupOrderRequestColumns";
+import { pickupOrderColumns } from "./PickupOrderColumns";
 
 interface PickupOrderTableInterface {
   status: 'ONGOING' | 'REQUEST' | 'HISTORY',

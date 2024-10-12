@@ -9,7 +9,7 @@ import { sign } from 'jsonwebtoken';
 export const updateEmailService = async (userId: number, email: string) => {
   try {
     const user = await prisma.user.findFirst({
-      where: { email },
+      where: { email, isDeleted: false, role: 'CUSTOMER' },
     });
 
     if (user) {

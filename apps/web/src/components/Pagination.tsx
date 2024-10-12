@@ -19,12 +19,12 @@ const Pagination: FC<PaginationProps> = ({
   return (
     <ReactPaginate
       breakLabel={<span></span>}
-      nextLabel={<ChevronRight className="" />}
-      previousLabel={<ChevronLeft className="" />}
+      nextLabel={<ChevronRight size={20} />}
+      previousLabel={<ChevronLeft size={20} />}
       pageCount={Math.ceil(total / limit)}
       renderOnZeroPageCount={null}
-      containerClassName="flex gap-4 w-fit"
-      pageLinkClassName="py-2 px-3 rounded-md"
+      containerClassName="flex gap-4 mt-3 w-fit items-center"
+      pageLinkClassName="py-1 px-2 rounded-md"
       activeLinkClassName="border-[1px] border-neutral-300"
       onPageChange={onChangePage}
       forcePage={Number(page) - 1}

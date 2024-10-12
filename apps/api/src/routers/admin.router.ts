@@ -1,4 +1,5 @@
 import { AdminController } from '@/controllers/admin.controller';
+import { uploader } from '@/lib/multer';
 import { verifyToken } from '@/lib/verifyToken';
 import { adminGuard } from '@/middleware/adminGuard';
 import { adminsGuard } from '@/middleware/adminsGuard';
@@ -15,16 +16,53 @@ export class AdminRouter {
   }
 
   private initializeRoutes() {
-    this.router.get('/customers', verifyToken, adminsGuard, this.adminController.getCustomersAdmin);
-    this.router.get('/employees', verifyToken, adminsGuard, this.adminController.getEmployeesAdmin);
-    this.router.get('/:id', verifyToken, adminGuard, this.adminController.getUserAdmin)  
-    this.router.post('/', verifyToken, adminGuard, this.adminController.createUserAdmin);
-    // this.router.post(
-    //   '/',
-    //   verifyToken,
-    //   uploader().single('thumbnail'),
-    //   this.eventController.createEvent,
-    // );
+    this.router.get(
+      '/customers',
+      verifyToken,
+      adminsGuard,
+      this.adminController.getCustomersAdmin,
+    );
+    this.router.get(
+      '/employees',
+      verifyToken,
+      adminsGuard,
+      this.adminController.getEmployeesAdmin,
+    );
+    this.router.get(
+      '/employee/:id',
+      verifyToken,
+      adminsGuard,
+      this.adminController.getEmployeeAdmin,
+    );
+    this.router.get(
+      '/:id',
+      verifyToken,
+      adminGuard,
+      this.adminController.getUserAdmin,
+    );
+
+    this.router.post(
+      '/',
+      verifyToken,
+      adminGuard,
+      uploader().single('profilePicture'),
+      this.adminController.createUserAdmin,
+    );
+
+    this.router.patch(
+      '/update/:id',
+      verifyToken,
+      adminGuard,
+      uploader().single('profilePicture'),
+      this.adminController.updateEmployeeAdmin,
+    );
+
+    this.router.patch(
+      '/delete',
+      verifyToken,
+      adminGuard,
+      this.adminController.deleteUserAdmin,
+    );
   }
 
   getRouter(): Router {

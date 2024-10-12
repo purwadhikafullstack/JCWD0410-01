@@ -1,0 +1,94 @@
+import prisma from '@/prisma';
+import { Prisma, Role, User } from '@prisma/client';
+
+interface GetPickupInterface {
+  page: number;
+  take: number;
+  sortBy: string;
+  sortOrder: string;
+  search: string;
+  status: 'ONGOING' | 'REQUEST' | 'HISTORY' | 'ALL';
+  outletId: string;
+}
+
+export const getPickupAdminsService = async (
+  query: GetPickupInterface,
+  userId: number,
+) => {
+  try {
+    const { page, take, sortBy, sortOrder, search, status, outletId } = query;
+
+    const employee = await prisma.user.findFirst({
+      where: { id: userId, isDeleted: false },
+      include: { employee: { select: { outletId: true } } },
+    });
+
+    if (!employee || !employee.employee) {
+      throw new Error('Employee not found');
+    }
+
+    let whereClause: Prisma.Pickup_OrderWhereInput = {
+      isDeleted: false,
+    };
+
+    if (outletId) {
+      whereClause.outletId = Number(outletId);
+    }
+
+    if (employee.role === 'OUTLET_ADMIN') {
+      whereClause.outletId = employee.employee.outletId;
+    }
+
+    if (status === 'ONGOING') {
+      whereClause.OR = [
+        { status: 'ON_THE_WAY_TO_OUTLET' },
+        { status: 'ON_THE_WAY_TO_CUSTOMER' },
+      ];
+    }
+
+    if (status === 'REQUEST') {
+      whereClause.status = 'WAITING_FOR_DRIVER';
+    }
+
+    if (status === 'HISTORY') {
+      whereClause.OR = [
+        { status: 'RECEIVED_BY_OUTLET' },
+        { status: 'ONSITE' },
+      ];
+    }
+
+    if (search) {
+      whereClause.pickupNumber = { contains: search };
+    }
+
+    const pickupOrders = await prisma.pickup_Order.findMany({
+      where: whereClause,
+      include: {
+        user: { select: { name: true, phoneNumber: true } },
+        address: { select: { address: true, latitude: true, longitude: true } },
+        outlet: { select: { name: true, latitude: true, longitude: true } },
+      },
+      take: take,
+      skip: (page - 1) * take,
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+    });
+
+    const total = await prisma.pickup_Order.count({
+      where: whereClause,
+    });
+
+    // const usersWithoutPassword = deliveryOrders.filter((deliveryOrder) => {
+    //   const { password, ...userWithoutPassword } = user;
+    //   return userWithoutPassword;
+    // });
+
+    return {
+      data: pickupOrders,
+      meta: { total, take, page },
+    };
+  } catch (error) {
+    throw error;
+  }
+};

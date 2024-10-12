@@ -75,69 +75,75 @@ export const createUserOrderService = async (
       );
     }
 
-    return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const order = await createOrderService(outletId, customerId, tx);
-      const pickupOrder = await createPickupService(
-        {
-          pickupStatus: status,
-          pickupAddressId: addressId,
-          pickupLatitude: latitude,
-          pickupLongitude: longitude,
-          pickupFee: fee,
-          outletId,
-          orderId: order.order.id,
-        },
-        customerId,
-        tx,
-      );
-
-      const notification = await createNotificationService(
-        {
-          title: `New Pickup request`,
-          message: `Requesting Pickup from ${pickupAddress} to ${outletName}`,
-        },
-        tx,
-      );
-
-      const drivers = await tx.user.findMany({
-        where: {
-          role: 'DRIVER',
-          employee: {outletId},
-        },
-        // include: {
-        //   employee: { select: { outletId: true } },
-        // },
-        select: {
-          id: true
-        }
-      });
-
-      // const outletDrivers = drivers.map((driver) => {
-      //   return driver.employee?.outletId === outletId ? {id: driver.id} : {id: 0}
-      // }).filter((driverFilter) => driverFilter.id === 0 ? false : true);
-
-      const pickupNotification = await createUserNotificationService(
-        { users: drivers, notificationId: notification.data.id },
-        tx,
-      );
-
-      const deliveryOrder = await createDeliveryService(
-        {
-          outletId,
+    return await prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        const order = await createOrderService(outletId, customerId, tx);
+        const pickupOrder = await createPickupService(
+          {
+            pickupStatus: status,
+            pickupAddressId: addressId,
+            pickupLatitude: latitude,
+            pickupLongitude: longitude,
+            pickupFee: fee,
+            outletId,
+            orderId: order.order.id,
+          },
           customerId,
-          orderId: order.order.id,
-          ...deliveryParams,
-        },
-        tx,
-      );
-      return {
-        message: 'User order succesfully created',
-        order,
-        pickupOrder,
-        pickupNotification,
-        deliveryOrder,
-      };
-    });
+          tx,
+        );
+
+        // const notification = await createNotificationService(
+        //   {
+        //     title: `New Pickup request`,
+        //     message: `Requesting Pickup from ${pickupAddress} to ${outletName}`,
+        //   },
+        //   tx,
+        // );
+
+        const drivers = await tx.user.findMany({
+          where: {
+            role: 'DRIVER',
+            employee: { outletId },
+          },
+          // include: {
+          //   employee: { select: { outletId: true } },
+          // },
+          select: {
+            id: true,
+          },
+        });
+
+        // const outletDrivers = drivers.map((driver) => {
+        //   return driver.employee?.outletId === outletId ? {id: driver.id} : {id: 0}
+        // }).filter((driverFilter) => driverFilter.id === 0 ? false : true);
+
+        const pickupNotification = await createUserNotificationService(
+          { users: drivers, notificationId: 1 },
+          tx,
+        );
+
+        const deliveryOrder = await createDeliveryService(
+          {
+            outletId,
+            customerId,
+            orderId: order.order.id,
+            ...deliveryParams,
+          },
+          tx,
+        );
+        return {
+          message: 'User order succesfully created',
+          order,
+          pickupOrder,
+          pickupNotification,
+          deliveryOrder,
+        };
+      },
+      {
+        maxWait: 5000,
+        timeout: 10000,
+      },
+    );
   } catch (error) {
     throw error;
   }

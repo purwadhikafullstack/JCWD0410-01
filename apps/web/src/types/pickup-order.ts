@@ -1,12 +1,12 @@
 export interface Pickup_Order {
   id: number;
-  pickupNumber: String;
+  pickupNumber: string;
   status: PickupStatus;
   fee: number;
   latitude: String;
   longitude: String;
   isDeleted: Boolean;
-  createdAt: string;
+  createdAt: Date;
   updatedAt: string;
   orderId: number;
   userId: number;

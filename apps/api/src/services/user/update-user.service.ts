@@ -13,7 +13,7 @@ export const updateProfileService = async (
 
   try {
     const user = await prisma.user.findFirst({
-      where: { id: userId },
+      where: { id: userId, isDeleted: false, role: 'CUSTOMER' },
     });
 
     if (!user) {

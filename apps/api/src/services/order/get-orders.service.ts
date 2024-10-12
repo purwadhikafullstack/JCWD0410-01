@@ -7,7 +7,7 @@ interface GetOrdersInterface {
   sortBy: string;
   sortOrder: string;
   search: string;
-  status: OrderStatus | "";
+  status: OrderStatus | 'ALL';
   outletId: number;
 }
 
@@ -19,24 +19,34 @@ export const getOrdersService = async (
     const { page, take, sortBy, sortOrder, search, status, outletId } = query;
 
     const user = await prisma.user.findFirst({
-      where: { id: userId },
-      include: {employee: {select: {outletId: true}}}
+      where: { id: userId, isDeleted: false },
+      include: { employee: { select: { outletId: true } } },
     });
 
     if (!user) {
       throw new Error('User does not exist');
     }
 
+    if (!user.employee) {
+      throw new Error('Employee does not exist');
+    }
+
     let whereClause: Prisma.OrderWhereInput = {
       isDeleted: false,
     };
 
-    if (status) {
+    if (status === 'ALL') {
+      whereClause.orderStatus = undefined;
+    } else if (status) {
       whereClause.orderStatus = status;
     }
 
     if (outletId) {
       whereClause.outletId = outletId;
+    }
+
+    if (user.role === 'OUTLET_ADMIN') {
+      whereClause.outletId = user.employee.outletId;
     }
 
     if (search) {
@@ -45,6 +55,7 @@ export const getOrdersService = async (
 
     const orders = await prisma.order.findMany({
       where: whereClause,
+      include: {outlet: {select: {name: true}}},
       take: take,
       skip: (page - 1) * take,
       orderBy: {

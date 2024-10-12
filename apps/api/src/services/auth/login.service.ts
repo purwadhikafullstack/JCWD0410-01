@@ -18,6 +18,10 @@ export const loginService = async (body: Pick<User, 'email' | 'password'>) => {
       throw new Error('Invalid email address');
     }
 
+    if (user.isDeleted) {
+      throw new Error('Account has been deleted, contact Master Admin if this was a mistake')
+    }
+
     const isPasswordValid = await comparePassword(password!, user.password!);
     if (!isPasswordValid) {
       throw new Error('Incorrect password');

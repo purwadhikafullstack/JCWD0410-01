@@ -42,14 +42,14 @@ const LoginPage = () => {
       </div>
 
       <div className="mx-auto flex h-screen w-full flex-col p-6 text-sm md:w-[70%]">
-        <div className="relative h-16 w-full">
+        <Link href="/" className="relative h-16 w-full">
           <Image
             src="/logo2.svg"
             alt="FreshNest Laundry Logo"
             fill
             className="object-contain"
           />
-        </div>
+        </Link>
 
         <div className="my-10 flex flex-col gap-2 text-center">
           <h1 className="text-2xl font-semibold md:text-3xl">Welcome Back!</h1>

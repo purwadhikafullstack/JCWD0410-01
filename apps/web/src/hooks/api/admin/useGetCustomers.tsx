@@ -3,6 +3,7 @@ import { Address } from "@/types/address";
 import { IPageableResponse, IPaginationQueries, } from "@/types/pagination";
 import { Role, User } from "@/types/user";
 import { useQuery } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 
 export interface GetUsersQuery extends IPaginationQueries {
   search?: string;
@@ -16,9 +17,10 @@ export interface UserWithAddress extends User {
 
 const useGetCustomers = (queries: GetUsersQuery) => {
   const { axiosInstance } = useAxios();
+  const pathname = usePathname();
 
   return useQuery({
-    queryKey: ["users", queries],
+    queryKey: ["users", queries, pathname],
     queryFn: async () => {
       const { data } = await axiosInstance.get<IPageableResponse<UserWithAddress>>(
         "/admin/customers",

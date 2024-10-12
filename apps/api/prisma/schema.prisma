@@ -81,6 +81,7 @@ model Outlet {
   id             Int              @id @default(autoincrement())
   name           String           @unique
   type           Type
+  address        String?
   latitude       String
   longitude      String
   isDeleted      Boolean          @default(false)
@@ -90,6 +91,7 @@ model Outlet {
   orders         Order[]
   pickupOrders   Pickup_Order[]
   deliveryOrders Delivery_Order[]
+  workOrders     Work_Order[]
 
   @@map("outlets")
 }
@@ -188,16 +190,19 @@ model LaundryItem {
 }
 
 model Payment {
-  id            Int           @id @default(autoincrement())
-  invoiceNumber Int           @unique
-  paymentMethod String
-  paymentProof  String
-  status        PaymentStatus
-  isDeleted     Boolean       @default(false)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  order         Order         @relation(fields: [orderId], references: [id])
-  orderId       Int
+  id              Int           @id @default(autoincrement())
+  invoiceNumber   String        @unique
+  amount          Int
+  paymentMethod   String?
+  paymentProof    String?
+  status          PaymentStatus @default(PENDING)
+  snapToken       String?
+  snapRedirectUrl String?
+  isDeleted       Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  order           Order         @relation(fields: [orderId], references: [id])
+  orderId         Int
 
   @@map("payments")
 }
@@ -271,22 +276,35 @@ enum PickupStatus {
 model Work_Order {
   id            Int        @id @default(autoincrement())
   status        WorkStatus
-  byPassedAdmin Int
+  byPassed      Boolean    @default(false)
+  byPassedAdmin Int?
+  bypassNote    String?
   isDeleted     Boolean    @default(false)
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   order         Order      @relation(fields: [orderId], references: [id])
   orderId       Int
   employee      Employee   @relation(fields: [employeeId], references: [id])
-  employeeId    Int
+  employeeId    Int        @default(1)
   station       Station    @relation(fields: [stationId], references: [id])
   stationId     Int
+  outlet        Outlet     @relation(fields: [outletId], references: [id])
+  outletId      Int
 
   @@map("work_orders")
 }
 
 enum WorkStatus {
-  m
+  READY_FOR_WASHING
+  BEING_WASHED
+  WASHING_COMPLETED
+  READY_FOR_IRONING
+  BEING_IRONED
+  IRONING_COMPLETED
+  READY_FOR_PACKING
+  BEING_PACKED
+  PACKING_COMPLETED
+  BYPASSED
 }
 
 model Station {

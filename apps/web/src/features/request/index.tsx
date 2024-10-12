@@ -16,8 +16,17 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import haversine from "haversine-distance";
+import useCreateUserOrder from "@/hooks/api/order/useCreateUserOrder";
+import { SpinnerCircularFixed } from "spinners-react";
 
 const RequestOrderPage = () => {
+  const { mutateAsync: createOrder, isPending } = useCreateUserOrder();
+  const baseFee = 3000;
+  const result = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  });
   const [selectedPickupAddress, setSelectedPickupAddress] =
     useState<string>("");
   const [selectedDeliveryAddress, setSelectedDeliveryAddress] =
@@ -41,18 +50,43 @@ const RequestOrderPage = () => {
   });
   const [selectedOutletName, setSelectedOutletName] = useState<string>("");
   const [selectedOutletId, setSelectedOutletId] = useState<number>(0);
-  const [distance, setDistance] = useState<number>(0);
+  const [selectedPickupDistance, setSelectedPickupDistance] =
+    useState<number>(0);
+  const [selectedDeliveryDistance, setSelectedDeliveryDistance] =
+    useState<number>(0);
+  const [distance, setDistance] = useState("0");
 
   const formik = useFormik({
     initialValues: {
-      fee: 0,
+      pickupLatitude: selectedPickupAddressCoord.lat,
+      pickupLongitude: selectedPickupAddressCoord.lon,
+      pickupFee: 0,
+      pickupAddressId: selectedPickupAddressId,
+      pickupAddress: selectedPickupAddress,
+      deliveryLatitude: selectedDeliveryAddressCoord.lat,
+      deliveryLongitude: selectedDeliveryAddressCoord.lon,
+      deliveryFee: 0,
+      deliveryAddressId: selectedDeliveryAddressId,
+      outletId: selectedOutletId,
+      outletName: selectedOutletName,
     },
     // validationSchema: CreateEventSchema,
     onSubmit: async (values) => {
-      // await createEvent({
-      //   ...values,
-      //   categoryId: selectedCategoryId,
-      // });
+      await createOrder({
+        pickupLatitude: String(values.pickupLatitude),
+        pickupLongitude: String(values.pickupLongitude),
+        pickupFee: baseFee * Math.ceil(selectedPickupDistance),
+        pickupAddressId: values.pickupAddressId,
+        pickupAddress: values.pickupAddress,
+        deliveryLatitude: String(values.deliveryLatitude),
+        deliveryLongitude: String(values.deliveryLongitude),
+        deliveryFee: baseFee * Math.ceil(selectedDeliveryDistance),
+        deliveryAddressId: values.deliveryAddressId,
+        outletId: values.outletId,
+        outletName: values.outletName,
+        pickupStatus: "WAITING_FOR_DRIVER",
+        deliveryStatus: "PROCESSING_LAUNDRY",
+      });
     },
   });
 
@@ -63,6 +97,10 @@ const RequestOrderPage = () => {
       lon: Number(value.split(" ")[2]),
     });
     setSelectedPickupAddress(value.split(" ")[3]);
+    formik.values.pickupAddressId = Number(value.split(" ")[0]);
+    formik.values.pickupLatitude = Number(value.split(" ")[1]);
+    formik.values.pickupLongitude = Number(value.split(" ")[2]);
+    formik.values.pickupAddress = value.split(" ")[3];
   };
 
   const handleSelectDeliveryAddress = (value: string) => {
@@ -72,6 +110,9 @@ const RequestOrderPage = () => {
       lon: Number(value.split(" ")[2]),
     });
     setSelectedDeliveryAddress(value.split(" ")[3]);
+    formik.values.deliveryAddressId = Number(value.split(" ")[0]);
+    formik.values.deliveryLatitude = Number(value.split(" ")[1]);
+    formik.values.deliveryLongitude = Number(value.split(" ")[2]);
   };
 
   const handleSelectOutlet = (value: string) => {
@@ -81,15 +122,35 @@ const RequestOrderPage = () => {
       lon: Number(value.split(" ")[2]),
     });
     setSelectedOutletName(value.split(" ")[3]);
+    formik.values.outletId = Number(value.split(" ")[0]);
+    formik.values.outletName = value.split(" ")[3];
   };
 
   const { data: addresses } = useGetAddresses();
 
-  const { data: outlets } = useGetOutlets({ take: 5 });
+  const { data: outlets } = useGetOutlets({ take: 10 });
 
   useEffect(() => {
-    setDistance(haversine(selectedPickupAddressCoord, selectedOutletCoord));
+    setDistance(
+      (
+        (haversine(selectedPickupAddressCoord, selectedOutletCoord) +
+          haversine(selectedDeliveryAddressCoord, selectedOutletCoord)) /
+        1000
+      ).toFixed(2),
+    );
+  }, [selectedOutletCoord]);
+
+  useEffect(() => {
+    setSelectedPickupDistance(
+      haversine(selectedPickupAddressCoord, selectedOutletCoord) / 1000,
+    );
   }, [selectedPickupAddressCoord, selectedOutletCoord]);
+
+  useEffect(() => {
+    setSelectedDeliveryDistance(
+      haversine(selectedDeliveryAddressCoord, selectedOutletCoord) / 1000,
+    );
+  }, [selectedDeliveryAddressCoord, selectedOutletCoord]);
 
   return (
     <div className="mx-auto my-10 max-w-7xl p-6">
@@ -116,7 +177,10 @@ const RequestOrderPage = () => {
         ) : (
           <>
             <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
-              <form className="space-y-6 rounded-md border-[1px] p-6 md:col-span-2">
+              <form
+                className="space-y-6 rounded-md border-[1px] p-6 md:col-span-2"
+                onSubmit={formik.handleSubmit}
+              >
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold">Alamat Pickup</Label>
                   <Select onValueChange={handleSelectPickupAddress}>
@@ -164,8 +228,10 @@ const RequestOrderPage = () => {
                   <Select
                     onValueChange={handleSelectOutlet}
                     disabled={
-                      !selectedPickupAddressCoord.lat &&
-                      !selectedPickupAddressCoord.lon
+                      (!selectedPickupAddressCoord.lat &&
+                        !selectedPickupAddressCoord.lon) ||
+                      (!selectedDeliveryAddressCoord.lat &&
+                        !selectedDeliveryAddressCoord.lon)
                     }
                   >
                     <SelectTrigger>
@@ -173,8 +239,8 @@ const RequestOrderPage = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        {outlets
-                          ?.data.sort(
+                        {outlets?.data
+                          .sort(
                             (a, b) =>
                               haversine(selectedPickupAddressCoord, {
                                 lat: Number(a.latitude),
@@ -225,12 +291,12 @@ const RequestOrderPage = () => {
                                 <span className="ml-2 rounded-xl bg-blue-500 p-1 text-center text-xs">
                                   Delivery: {deliveryDistance} km
                                 </span>
-                                <span className="ml-2 rounded-xl bg-blue-500 p-1 text-center text-xs">
+                                {/* <span className="ml-2 rounded-xl bg-blue-500 p-1 text-center text-xs">
                                   Total:{" "}
                                   {Number(pickupDistance) +
                                     Number(deliveryDistance)}{" "}
                                   km
-                                </span>
+                                </span> */}
                                 {distanceLimit ? (
                                   <span className="ml-2 text-red-600">
                                     Maximum distance is 10km
@@ -244,23 +310,34 @@ const RequestOrderPage = () => {
                   </Select>
                 </div>
 
-                <Button className="bg-[#36bbe3]" type="submit">
-                  Submit
+                <Button
+                  className="bg-[#36bbe3]"
+                  type="submit"
+                  disabled={isPending || (selectedPickupDistance > 10) || (selectedDeliveryDistance > 10) || (selectedDeliveryDistance === 0)}
+                >
+                  {isPending ? (
+                    <div className="flex items-center gap-1">
+                      <SpinnerCircularFixed size={20} />
+                      <p className="text-sm">Loading</p>
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
                 </Button>
               </form>
               <div className="h-fit justify-between space-y-4 rounded-md border-[1px] p-6">
                 <div className="flex justify-between text-sm">
-                  <p>Jarak</p>
-                  <p>3 km</p>
+                  <p>Jarak Total (Rounded)</p>
+                  <p>{Math.ceil(selectedPickupDistance) + Math.ceil(selectedDeliveryDistance)} km</p>
                 </div>
                 <div className="flex justify-between text-sm">
                   <p>Biaya/km</p>
-                  <p>Rp 5.000</p>
+                  <p>{result.format(baseFee)}</p>
                 </div>
                 <hr className="border-dashed" />
                 <div className="flex justify-between font-semibold">
-                  <p>Total Biaya</p>
-                  <p>Rp 15.000</p>
+                  <p>Total Biaya Transport</p>
+                  <p>{result.format((Math.ceil(selectedPickupDistance) + Math.ceil(selectedDeliveryDistance)) * baseFee)}</p>
                 </div>
               </div>
             </div>

@@ -7,7 +7,7 @@ interface GetOrdersOutletInterface {
   sortBy: string;
   sortOrder: string;
   search: string;
-  status: OrderStatus | "";
+  status: OrderStatus | '';
   outletId: number;
 }
 
@@ -19,8 +19,8 @@ export const getOrdersOutletService = async (
     const { page, take, sortBy, sortOrder, search, status } = query;
 
     const user = await prisma.user.findFirst({
-      where: { id: userId },
-      include: {employee: {select: {outletId: true}}}
+      where: { id: userId, isDeleted: false },
+      include: { employee: { select: { outletId: true } } },
     });
 
     if (!user) {
@@ -29,7 +29,7 @@ export const getOrdersOutletService = async (
 
     let whereClause: Prisma.OrderWhereInput = {
       isDeleted: false,
-      outletId: user.employee?.outletId
+      outletId: user.employee?.outletId,
     };
 
     if (status) {

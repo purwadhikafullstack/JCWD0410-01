@@ -1,5 +1,6 @@
 import { OrderController } from '@/controllers/order.controller';
 import { verifyToken } from '@/lib/verifyToken';
+import { adminsGuard } from '@/middleware/adminsGuard';
 import { Router } from 'express';
 
 export class OrderRouter {
@@ -18,11 +19,33 @@ export class OrderRouter {
       verifyToken,
       this.orderController.createUserOrder,
     );
-    this.router.get('/', verifyToken, this.orderController.getOrders);
+    this.router.get(
+      '/',
+      verifyToken,
+      adminsGuard,
+      this.orderController.getOrders,
+    );
     this.router.get(
       '/outlet',
       verifyToken,
+      adminsGuard,
       this.orderController.getOrdersOutlet,
+    );
+    this.router.get(
+      '/users',
+      verifyToken,
+      this.orderController.getOrdersUser,
+    );
+    this.router.get(
+      '/:id',
+      verifyToken,
+      this.orderController.getOrderUser,
+    );
+    this.router.patch(
+      '/',
+      verifyToken,
+      adminsGuard,
+      this.orderController.processOrder,
     );
   }
 

@@ -84,7 +84,7 @@ export const pickupOrderColumns: ColumnDef<Pickup_Order_Extension>[] = [
   // },
   // const formattedEndDate = format(
   //   new Date(card.endDate),
-  //   "MMMM dd, yyyy, HH:mm:ss",
+  //   "MMM dd, yyyy, HH:mm:ss",
   // );
   {
     accessorKey: "pickupNumber",
@@ -118,7 +118,7 @@ export const pickupOrderColumns: ColumnDef<Pickup_Order_Extension>[] = [
     cell: ({ row }) => {
       const createdAt = format(
         new Date(row.getValue("createdAt")),
-        "dd MMMM yyyy, HH:mm:ss",
+        "dd MMM yyyy, HH:mm:ss",
       );
       return <div>{createdAt}</div>;
     },

@@ -3,6 +3,8 @@
 import useAxios from "@/hooks/useAxios";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { Router } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 interface CreateUserOrderPayload {
@@ -23,13 +25,15 @@ interface CreateUserOrderPayload {
 
 const useCreateUserOrder = () => {
   const { axiosInstance } = useAxios();
+  const router = useRouter()
 
   return useMutation({
     mutationFn: async (payload: CreateUserOrderPayload) => {
-      const { data } = await axiosInstance.post("/order/create-user-order", payload);
+      const { data } = await axiosInstance.post("/orders/create-user-order", payload);
       return data;
     },
     onSuccess: () => {
+      router.push('/')
       toast.success("Create user order success");
     },
     onError: (error: AxiosError<any>) => {

@@ -2,6 +2,7 @@ export interface Outlet {
   id: number;
   name: string;
   type: Type;
+  address: string;
   latitude: string;
   longitude: string;
   isDeleted: boolean;

@@ -1,6 +1,16 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,41 +20,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserWithAddress } from "@/hooks/api/admin/useGetCustomers";
+import useDeleteUser from "@/hooks/api/admin/useDeleteUser";
 import { UserWithEmployee } from "@/hooks/api/admin/useGetEmployees";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { CiUser } from "react-icons/ci";
-import { FaCircleXmark } from "react-icons/fa6";
-import { IoMdCheckmarkCircle } from "react-icons/io";
+import { useRouter } from "next/navigation";
+import { IoWarningOutline } from "react-icons/io5";
 
 export const employeesColumns: ColumnDef<UserWithEmployee>[] = [
-  {
-    accessorKey: "employee.outlet.name",
-    header: "Outlet",
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-  },
-  {
-    accessorKey: "employee.employeeStations",
-    header: "Stations",
-    cell: ({ row }) => {
-      let employeeStation = "";
-      if (row.original.employee.employeeStations.length !== 0) {
-        row.original.employee.employeeStations.forEach((station) => {
-          employeeStation += station.station.name + " ";
-        });
-      }
-      return (
-        <div className="line-clamp-2 max-w-[20ch] break-words">
-          {employeeStation}
-        </div>
-      );
-    },
-  },
   {
     accessorKey: "name",
     header: "Name",
@@ -72,6 +56,71 @@ export const employeesColumns: ColumnDef<UserWithEmployee>[] = [
       }
       return (
         <div className="line-clamp-2 max-w-[20ch] break-words">{phone}</div>
+      );
+    },
+  },
+  {
+    accessorKey: "role",
+    header: "Role",
+  },
+  {
+    accessorKey: "employee.employeeStations",
+    header: "Stations",
+    cell: ({ row }) => {
+      let employeeStation = "";
+      if (row.original.employee) {
+        if (row.original.employee.employeeStations.length !== 0) {
+          row.original.employee.employeeStations.forEach((station) => {
+            employeeStation += station.station.name + " ";
+          });
+        }
+      }
+      return (
+        <div className="line-clamp-2 max-w-[20ch] break-words">
+          {employeeStation}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "employee.outlet.name",
+    header: "Outlet",
+  },
+  {
+    accessorKey: "deleteAction",
+    header: "Delete",
+    cell: ({ row }) => {
+      const { mutateAsync } = useDeleteUser();
+
+      return (
+        <div>
+          <AlertDialog>
+            <AlertDialogTrigger>
+              <span className="flex cursor-pointer items-center text-red-500">
+                <IoWarningOutline className="mr-1 text-red-500" /> Delete User
+              </span>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Are you sure you want to delete this user?
+                </AlertDialogTitle>
+                <AlertDialogDescription>{}</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    mutateAsync(Number(row.original.id));
+                    window.location.reload();
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       );
     },
   },
@@ -104,10 +153,15 @@ export const employeesColumns: ColumnDef<UserWithEmployee>[] = [
             >
               Copy Phone Number
             </DropdownMenuItem>
-            {/* <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/dashboard/users/${user.id}`}>View user</Link>
-            </DropdownMenuItem> */}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="w-full">
+              <Link
+                href={`/dashboard/users/employees/update/${user.id}`}
+                className="w-full"
+              >
+                Edit
+              </Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

@@ -14,22 +14,36 @@ interface GetEmployeesInterface {
   outletId?: number;
 }
 
-export const getEmployeesService = async (query: GetEmployeesInterface, userId: number) => {
+export const getEmployeesService = async (
+  query: GetEmployeesInterface,
+  userId: number,
+) => {
   try {
-    const { page, take, sortBy, sortOrder, email, name, phone, role, isVerified, outletId } = query;
+    const {
+      page,
+      take,
+      sortBy,
+      sortOrder,
+      email,
+      name,
+      phone,
+      role,
+      isVerified,
+      outletId,
+    } = query;
 
     const user = await prisma.user.findFirst({
-      where: {id: userId},
-      include: {employee: {select: {outletId: true}}}
-    })
+      where: { id: userId, isDeleted: false },
+      include: { employee: { select: { outletId: true } } },
+    });
 
     if (!user) {
-      throw new Error("User Does not exist")
+      throw new Error('User Does not exist');
     }
 
     const whereClause: Prisma.UserWhereInput = {
       isDeleted: false,
-      OR: [{role: 'OUTLET_ADMIN'}, {role: 'WORKER'}, {role: 'DRIVER'}, {role: 'ADMIN'}],
+      OR: [{ role: 'OUTLET_ADMIN' }, { role: 'WORKER' }, { role: 'DRIVER' }],
     };
 
     if (role) {
@@ -37,12 +51,16 @@ export const getEmployeesService = async (query: GetEmployeesInterface, userId: 
     }
 
     if (outletId) {
-      whereClause.employee = {outletId};
+      whereClause.employee = { outletId };
     }
 
     if (user.role === 'OUTLET_ADMIN') {
-      whereClause.employee = {outletId: user.employee?.outletId}
-      whereClause.OR = [{role: 'OUTLET_ADMIN'}, {role: 'WORKER'}, {role: 'DRIVER'}]
+      whereClause.employee = { outletId: user.employee?.outletId };
+      whereClause.OR = [
+        { role: 'OUTLET_ADMIN' },
+        { role: 'WORKER' },
+        { role: 'DRIVER' },
+      ];
     }
 
     if (email) {
@@ -57,11 +75,11 @@ export const getEmployeesService = async (query: GetEmployeesInterface, userId: 
       whereClause.phoneNumber = { contains: phone };
     }
 
-    if (isVerified === "VERIFIED") {
+    if (isVerified === 'VERIFIED') {
       whereClause.isVerified = true;
     }
 
-    if (isVerified === "UNVERIFIED") {
+    if (isVerified === 'UNVERIFIED') {
       whereClause.isVerified = false;
     }
 
@@ -90,9 +108,9 @@ export const getEmployeesService = async (query: GetEmployeesInterface, userId: 
     });
 
     const usersWithoutPassword = users.filter((user) => {
-      const {password, ...userWithoutPassword} = user;
+      const { password, ...userWithoutPassword } = user;
       return userWithoutPassword;
-    })
+    });
 
     return {
       data: usersWithoutPassword,

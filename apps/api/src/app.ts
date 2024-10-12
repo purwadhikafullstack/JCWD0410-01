@@ -18,6 +18,10 @@ import { PickupRouter } from './routers/pickup.router';
 import { OutletRouter } from './routers/outlet.router';
 import { NotificationRouter } from './routers/notification.router';
 import { LaundryItemRouter } from './routers/laundry-item.router';
+import { WorkRouter } from './routers/work.router';
+import { OrderItemRouter } from './routers/order-item.router';
+import { PaymentRouter } from './routers/payment.router';
+import { DeliveryRouter } from './routers/delivery.router';
 
 export default class App {
   private app: Express;
@@ -69,6 +73,10 @@ export default class App {
     const outletRouter = new OutletRouter();
     const notificationRouter = new NotificationRouter();
     const laundryItemRouter = new LaundryItemRouter();
+    const workRouter = new WorkRouter();
+    const orderItemRouter = new OrderItemRouter();
+    const paymentRouter = new PaymentRouter();
+    const deliveryRouter = new DeliveryRouter();
 
     this.app.get('/api', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student API!`);
@@ -84,6 +92,10 @@ export default class App {
     this.app.use('/api/outlets', outletRouter.getRouter());
     this.app.use('/api/notifications', notificationRouter.getRouter());
     this.app.use('/api/laundry-items', laundryItemRouter.getRouter());
+    this.app.use('/api/work-orders', workRouter.getRouter());
+    this.app.use('/api/order-items', orderItemRouter.getRouter());
+    this.app.use('/api/payments', paymentRouter.getRouter());
+    this.app.use('/api/delivery-orders', deliveryRouter.getRouter());
   }
 
   public start(): void {

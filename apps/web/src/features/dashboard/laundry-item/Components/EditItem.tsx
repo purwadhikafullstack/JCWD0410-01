@@ -40,7 +40,7 @@ const EditItem: FC<EditItemProps> = ({ laundryItemId }) => {
     <Dialog>
       <DialogTrigger asChild>
         <Button type="button" variant="outline">
-          <p>Edit Item</p>
+          <p>Edit</p>
         </Button>
       </DialogTrigger>
       <DialogContent>
