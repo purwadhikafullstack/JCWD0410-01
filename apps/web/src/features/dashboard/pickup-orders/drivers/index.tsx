@@ -171,8 +171,6 @@ const DashboardPickupOrdersDriversPage = () => {
                 meta={{ page: 1, take: 8, total: 0 }}
               />
             )}
-          </CardContent>
-        </Card>
       </div>
     </>
   );
