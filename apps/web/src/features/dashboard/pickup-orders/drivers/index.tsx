@@ -22,6 +22,13 @@ import { useMemo, useState } from "react";
 import useGetPickupOrdersDrivers from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
 import { pickupOrderColumns } from "../components/PickupOrderColumns";
 import { pickupOrdersDriversColumns } from "./components/PickupOrdersDriversColumns";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const DashboardPickupOrdersDriversPage = () => {
   const session = useSession();
@@ -128,42 +135,44 @@ const DashboardPickupOrdersDriversPage = () => {
           </Select>
           {/* <Select onValueChange={handleOutletId}>
               <SelectTrigger className="md:w-[200px]">
-                <SelectValue placeholder="Outlet" />
+              <SelectValue placeholder="Outlet" />
               </SelectTrigger>
               <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Outlet</SelectLabel>
-                  <SelectItem value="0">All</SelectItem>
-                  <SelectItem value="1">not yet</SelectItem>
-                </SelectGroup>
+              <SelectGroup>
+              <SelectLabel>Outlet</SelectLabel>
+              <SelectItem value="0">All</SelectItem>
+              <SelectItem value="1">not yet</SelectItem>
+              </SelectGroup>
               </SelectContent>
-            </Select> */}
-        </div>
-        {isPending ? (
-          <Loader2 className="mx-auto animate-spin" />
-        ) : data?.data ? (
-          <>
-            <DataTable
-              columns={pickupOrdersDriversColumns}
-              data={data?.data!}
-              meta={data.meta}
-            />
-            <div className="my-4 flex justify-center">
-              <Pagination
-                total={data?.meta?.total || 0}
-                limit={data?.meta?.take || 0}
-                onChangePage={onChangePage}
-                page={page}
-              />
+              </Select> */}
             </div>
-          </>
-        ) : (
-          <DataTable
-            columns={pickupOrdersDriversColumns}
-            data={[]}
-            meta={{ page: 1, take: 8, total: 0 }}
-          />
-        )}
+            {isPending ? (
+              <Loader2 className="mx-auto animate-spin" />
+            ) : data?.data ? (
+              <>
+                <DataTable
+                  columns={pickupOrdersDriversColumns}
+                  data={data?.data!}
+                  meta={data.meta}
+                />
+                <div className="my-4 flex justify-center">
+                  <Pagination
+                    total={data?.meta?.total || 0}
+                    limit={data?.meta?.take || 0}
+                    onChangePage={onChangePage}
+                    page={page}
+                  />
+                </div>
+              </>
+            ) : (
+              <DataTable
+                columns={pickupOrdersDriversColumns}
+                data={[]}
+                meta={{ page: 1, take: 8, total: 0 }}
+              />
+            )}
+          </CardContent>
+        </Card>
       </div>
     </>
   );

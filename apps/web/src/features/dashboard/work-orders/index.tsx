@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React from 'react'
 import DashboardWorkOrdersWorkerPage from './workers';
-// import DashboardWorkOrdersAdminsPage from './admins';
+import DashboardWorkOrdersAdminsPage from './admins';
 
 const DashboardWorkOrdersPage = () => {
   const session = useSession();
@@ -18,7 +18,7 @@ const DashboardWorkOrdersPage = () => {
   if (session.data.user.role === "WORKER") {
     return <DashboardWorkOrdersWorkerPage />;
   } else if (session.data.user.role === "ADMIN" || session.data.user.role === "OUTLET_ADMIN") {
-    // return <DashboardWorkOrdersAdminsPage />
+    return <DashboardWorkOrdersAdminsPage />
   } else {
     return (
       <>

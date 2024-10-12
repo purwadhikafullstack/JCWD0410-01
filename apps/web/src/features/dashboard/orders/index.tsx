@@ -23,6 +23,13 @@ import React, { useMemo, useState } from "react";
 import { ordersAdminsColumns } from "./components/OrdersAdminsColumns";
 import OrderCard from "./components/OrdersCard";
 import { useMediaQuery } from "usehooks-ts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const DashboardOrdersPage = () => {
   const session = useSession();

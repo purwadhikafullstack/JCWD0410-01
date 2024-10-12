@@ -301,6 +301,7 @@ export const updateWorkOrdersWorkersService = async (
             where: { id },
             data: {
               status: 'BYPASSED',
+              byPassed: true,
             },
           });
 

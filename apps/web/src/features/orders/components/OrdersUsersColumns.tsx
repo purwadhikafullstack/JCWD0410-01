@@ -74,15 +74,16 @@ export const ordersUsersColumns: ColumnDef<GetOrders>[] = [
     accessorKey: "isPaid",
     header: "Payment",
     cell: ({ row }) => {
+      const router = useRouter()
       return (
         <div>
           {row.original.isPaid ? (
-            <span className="flex items-center text-green-500">
+            <span className="flex items-center text-green-500" onClick={()=>{router.push(`/orders/${Number(row.original.id)}`)}}>
               {/* <IoMdCheckmarkCircle className="mr-1" /> */}
                Paid
             </span>
           ) : (
-            <span className="flex items-center text-red-500">
+            <span className="flex items-center text-red-500" onClick={()=>{router.push(`/orders/${Number(row.original.id)}`)}}>
               {/* <IoMdCheckmarkCircle className="mr-1" />  */}
               Unpaid
             </span>

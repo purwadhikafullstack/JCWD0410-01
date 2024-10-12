@@ -54,6 +54,7 @@ import { OrderItem } from "@/types/order-item";
 import useUpdateWorkOrderWorker from "@/hooks/api/work/useUpdateWorkOrdersWorker";
 import { Input } from "@/components/ui/input";
 import { WorkStatus } from "@/types/work-order";
+import DashboardWorkOrderBypassPage from "../../admins/bypass";
 
 interface CountState {
   num: number;
@@ -192,11 +193,7 @@ const DashboardWorkOrderProcessPage = () => {
     return <>{router.push("/not-found")}</>;
   }
 
-  if (
-    // session.data.user.role === "ADMIN" ||
-    // session.data.user.role === "OUTLET_ADMIN" ||
-    session.data.user.role === "WORKER"
-  ) {
+  if (session.data.user.role === "WORKER") {
     return (
       <>
         <DashboardHeader />
@@ -410,14 +407,7 @@ const DashboardWorkOrderProcessPage = () => {
       </>
     );
   } else {
-    return (
-      <>
-        <nav className="fixed z-50 h-20 w-full content-center bg-blue-200 p-3 md:w-[calc(100%-256px)]"></nav>
-        <div className="md: mx-auto h-full bg-white p-4 pt-24 text-xl font-bold">
-          <>{router.push("/dashboard")}</>
-        </div>
-      </>
-    );
+    return <DashboardWorkOrderBypassPage />;
   }
 };
 

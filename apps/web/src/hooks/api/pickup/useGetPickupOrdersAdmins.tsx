@@ -5,7 +5,7 @@ import { IPageableResponse, IPaginationQueries } from "@/types/pagination";
 import { Pickup_Order } from "@/types/pickup-order";
 import { useQuery } from "@tanstack/react-query";
 
-export interface PickupOrdersDriversPaginationQueries extends IPaginationQueries {
+export interface PickupOrdersAdminsPaginationQueries extends IPaginationQueries {
   search?: string;
   status: 'ONGOING' | 'REQUEST' | 'HISTORY' | 'ALL';
   outletId?: string;
@@ -28,7 +28,7 @@ export interface Pickup_Order_Extension extends Pickup_Order {
   }
 }
 
-const useGetPickupOrdersAdmins = (queries: PickupOrdersDriversPaginationQueries) => {
+const useGetPickupOrdersAdmins = (queries: PickupOrdersAdminsPaginationQueries) => {
   const { axiosInstance } = useAxios();
 
   return useQuery({

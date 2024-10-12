@@ -81,7 +81,7 @@ export const getWorkOrdersWorkerService = async (
     const workOrders = await prisma.work_Order.findMany({
       where: whereClause,
       include: {
-        order: {select: {orderNumber: true}}
+        order: {select: {orderNumber: true}},
       },
       take: take,
       skip: (page - 1) * take,

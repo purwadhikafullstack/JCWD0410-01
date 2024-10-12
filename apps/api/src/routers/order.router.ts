@@ -36,6 +36,11 @@ export class OrderRouter {
       verifyToken,
       this.orderController.getOrdersUser,
     );
+    this.router.get(
+      '/:id',
+      verifyToken,
+      this.orderController.getOrderUser,
+    );
     this.router.patch(
       '/',
       verifyToken,

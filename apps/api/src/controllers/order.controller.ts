@@ -1,4 +1,5 @@
 import { createUserOrderService } from '@/services/order/create-user-order.service';
+import { getOrderUserService } from '@/services/order/get-order-user.service';
 import { getOrdersOutletService } from '@/services/order/get-orders-outlet.service';
 import { getOrdersUserService } from '@/services/order/get-orders-user.service';
 import { getOrdersService } from '@/services/order/get-orders.service';
@@ -79,6 +80,15 @@ export class OrderController {
       };
 
       const result = await getOrdersUserService(query, res.locals.user.id);
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getOrderUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await getOrderUserService(Number(req.params.id), res.locals.user.id);
       return res.status(200).send(result);
     } catch (error) {
       next(error);
