@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import useDeleteAddress from "@/hooks/api/address/useDeleteAddress";
 import useGetAddresses from "@/hooks/api/address/useGetAddresses";
 import useSetPrimaryAddress from "@/hooks/api/address/useSetPrimaryAddress";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa6";
 
 const AddressPage = () => {
+  const session = useSession();
   const { data, refetch } = useGetAddresses();
   const { mutateAsync: deleteAddress, isPending } = useDeleteAddress();
   const { mutateAsync: setPrimaryAddress, isPending: isLoading } =
@@ -24,13 +26,20 @@ const AddressPage = () => {
     refetch();
   };
 
+  if (!session.data) {
+    return "<DashboardHeader />";
+  }
+
   return (
-    <div className="mx-auto min-h-screen max-w-7xl space-y-6 p-6">
+    <div className="mx-auto min-h-screen max-w-7xl space-y-6 px-6 py-10">
       <div className="flex items-center justify-between">
         <p className="text-lg font-semibold">Alamat Saya</p>
         <Link href="/address/add-address">
           <Button className="flex items-center gap-1">
-            <FaPlus /> <p>Tambah Alamat Baru</p>
+            <FaPlus />{" "}
+            <p>
+              Tambah <span className="hidden md:inline-block">Alamat Baru</span>
+            </p>
           </Button>
         </Link>
       </div>
@@ -60,11 +69,11 @@ const AddressPage = () => {
                   </div>
                 </div>
                 <div className="flex flex-col justify-between gap-2 p-4 md:flex-row">
-                  <div className="space-y-1">
+                  <div className="space-y-1 md:w-[60%]">
                     <p>{address.address}</p>
-                    <p>{`${address.district.toUpperCase()}, ${address.city.toUpperCase()}, DI YOGYAKARTA`}</p>
+                    <p>{`${address.district.toUpperCase()}, ${address.city.toUpperCase()}`}</p>
                   </div>
-                  <div className="flex flex-row justify-between gap-2 md:flex-col md:justify-normal">
+                  <div className="flex flex-row justify-between gap-2 md:w-fit md:flex-col md:justify-normal">
                     <div className="flex items-center justify-end gap-4 text-[#37bae3]">
                       <Link
                         href={`/address/update-address/${address.id}`}

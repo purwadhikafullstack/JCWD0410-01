@@ -8,6 +8,7 @@ import useForgotPassword from "@/hooks/api/auth/useForgotPassword";
 import Image from "next/image";
 import { SpinnerCircularFixed } from "spinners-react";
 import { ForgotPasswordSchema } from "./schemas/ForgotPasswordSchema";
+import Link from "next/link";
 
 const ForgotPasswordPage = () => {
   const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
@@ -19,7 +20,6 @@ const ForgotPasswordPage = () => {
     validationSchema: ForgotPasswordSchema,
     onSubmit: async (values, { resetForm }) => {
       await forgotPassword(values);
-      //setelah di send formnya akan kosong lagi
       resetForm();
     },
   });
@@ -35,55 +35,55 @@ const ForgotPasswordPage = () => {
         />
       </div>
 
-      <div className="mx-auto flex min-h-[100vh] w-full flex-col p-6 text-sm md:w-[70%]">
-        <div className="relative h-16 w-full">
+      <div className="mx-auto flex min-h-[100vh] w-full flex-col gap-20 p-6 text-sm">
+        <Link href="/" className="relative h-14 w-full">
           <Image
             src="/logo2.svg"
             alt="FreshNest Laundry Logo"
             fill
             className="object-contain"
           />
-        </div>
+        </Link>
 
-        <div className="my-10 flex flex-col gap-2 text-center">
-          <h1 className="text-2xl font-semibold md:text-3xl">
-            Forgot Your Password?
-          </h1>
-          <p className="text-neutral-500">
-            Don’t worry! Just enter your email, and we’ll send instructions to
-            reset your password. FreshNest is just a step away!
-          </p>
-        </div>
+        <div>
+          <div className="mx-auto md:w-[70%]">
+            <div className="mb-10 flex flex-col gap-2 text-center">
+              <h1 className="text-2xl font-semibold md:text-3xl">
+                Forgot Your Password?
+              </h1>
+              <p className="text-neutral-500">
+                Don’t worry! Just enter your email, and we’ll send instructions
+                to reset your password. FreshNest is just a step away!
+              </p>
+            </div>
 
-        <div className="space-y-6">
-          <form className="space-y-4" onSubmit={formik.handleSubmit}>
-            <FormInput
-              name="email"
-              label="Email"
-              type="email"
-              placeholder="Masukkan email anda"
-              value={formik.values.email}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              isError={!!formik.touched.email && !!formik.errors.email}
-              error={formik.errors.email}
-            />
+            <div className="space-y-6">
+              <form className="space-y-6" onSubmit={formik.handleSubmit}>
+                <FormInput
+                  name="email"
+                  label="Email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={formik.values.email}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  isError={!!formik.touched.email && !!formik.errors.email}
+                  error={formik.errors.email}
+                />
 
-            <Button
-              className="w-full bg-[#36bbe3]"
-              disabled={isPending}
-              type="submit"
-            >
-              {isPending ? (
-                <div className="flex items-center gap-1">
-                  <SpinnerCircularFixed size={20} />
-                  <p className="text-sm">Loading</p>
-                </div>
-              ) : (
-                "Submit"
-              )}
-            </Button>
-          </form>
+                <Button className="w-full" disabled={isPending} type="submit">
+                  {isPending ? (
+                    <div className="flex items-center gap-1">
+                      <SpinnerCircularFixed size={20} />
+                      <p className="text-sm">Loading</p>
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
+                </Button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -39,7 +39,11 @@ export const completeRegistrationService = async (
       },
     });
 
-    return newUser;
+    return {
+      newUser,
+      message:
+        'Registration complete. You can now log in and start using your account',
+    };
   } catch (error) {
     throw error;
   }

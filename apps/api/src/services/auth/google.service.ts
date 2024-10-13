@@ -8,15 +8,6 @@ import { sign } from 'jsonwebtoken';
 
 export const loginWithGoogleService = async (accessToken: string) => {
   try {
-    // const tokens = await getTokens(code);
-
-    // if (!tokens) {
-    //   return {
-    //     status: 400,
-    //     message: 'Failed to get tokens from google',
-    //   };
-    // }
-
     const userInfo = await getUserInfo(accessToken);
 
     if (!userInfo) {

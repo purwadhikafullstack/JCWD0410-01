@@ -27,7 +27,7 @@ const reasonData = [
 const Reason = () => {
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-7xl space-y-20 px-4 py-10 md:py-20">
+      <div className="mx-auto max-w-7xl space-y-20 px-6 py-10 md:py-20">
         <h1 className="text-center text-3xl font-semibold text-[#37bae3] md:text-4xl">
           Mengapa Memilih Kami
         </h1>

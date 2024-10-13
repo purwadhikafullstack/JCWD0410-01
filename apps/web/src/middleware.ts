@@ -7,7 +7,13 @@ const loggedOutRoutes = [
   "/forgot-password",
 ];
 
-const loggedInRoutes = ["/profile", "/address", "/request", "pickup-orders", "orders"];
+const loggedInRoutes = [
+  "/profile",
+  "/address",
+  "/request",
+  "pickup-orders",
+  "orders",
+];
 
 const privateRoutes = ["/dashboard"];
 
@@ -45,6 +51,13 @@ export default auth((req) => {
     const newUrl = new URL("/", req.nextUrl.origin);
     return Response.redirect(newUrl);
   }
+
+  // Redirect authenticated users away from loggedOutRoutes
+  if (req.auth && req.auth.user.role !== "CUSTOMER" && isLoggedInRoute) {
+    const newUrl = new URL("/dashboard", req.nextUrl.origin);
+    return Response.redirect(newUrl);
+  }
+
   if (!req.auth && isLoggedInRoute) {
     const newUrl = new URL("/login", req.nextUrl.origin);
     return Response.redirect(newUrl);

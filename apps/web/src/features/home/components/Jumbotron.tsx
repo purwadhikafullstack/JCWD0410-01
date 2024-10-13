@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const Jumbotron = () => {
   return (
     <div className="bg-[#e5f3f7]">
-      <div className="text-md mx-auto grid max-w-7xl grid-cols-1 gap-10 p-4 md:grid-cols-2 md:py-20">
+      <div className="text-md mx-auto grid max-w-7xl grid-cols-1 gap-10 p-6 md:grid-cols-2 md:py-20">
         <div className="box-border flex flex-col justify-center gap-8 text-[#29a8d0]">
           <h1 className="text-5xl font-semibold">
             Kesegaran dan Kualitas, Setiap Cucian
@@ -18,7 +18,7 @@ const Jumbotron = () => {
             terbaru untuk memastikan pakaian Anda tetap segar dan berkualitas di
             setiap cucian.
           </p>
-          <Link href="/register">
+          <Link href="/request">
             <Button className="text-white" type="button" size="lg">
               Pesan Sekarang
             </Button>
@@ -38,7 +38,7 @@ const Jumbotron = () => {
             </div>
           </div>
         </div>
-        <motion.div
+        {/* <motion.div
           className="box"
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -47,18 +47,18 @@ const Jumbotron = () => {
             delay: 0.5,
             ease: [0, 0.71, 0.2, 1.01],
           }}
-        >
-          <div className="flex justify-end">
-            <div className="relative h-[500px] w-full overflow-hidden">
-              <Image
-                src="/laundry.png"
-                alt="Whoosh Laundry Logo"
-                fill
-                className="rounded-md object-cover object-top"
-              />
-            </div>
+        > */}
+        <div className="flex justify-end">
+          <div className="relative h-[500px] w-full overflow-hidden">
+            <Image
+              src="/laundry.png"
+              alt="Whoosh Laundry Logo"
+              fill
+              className="rounded-md object-cover object-top"
+            />
           </div>
-        </motion.div>
+        </div>
+        {/* </motion.div> */}
       </div>
     </div>
   );

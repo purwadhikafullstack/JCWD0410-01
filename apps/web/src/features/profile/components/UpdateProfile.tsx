@@ -57,7 +57,7 @@ const UpdateProfile: FC<UpdateProfileProps> = ({ name, phoneNumber }) => {
   };
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow">
       <CardHeader>
         <CardTitle className="text-xl">Ubah Profile</CardTitle>
         <CardDescription>

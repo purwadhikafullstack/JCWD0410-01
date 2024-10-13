@@ -1,6 +1,7 @@
 import { UserController } from '@/controllers/user.controller';
 import { uploader } from '@/lib/multer';
 import { verifyToken } from '@/lib/verifyToken';
+import { validateEmail, validatePassword } from '@/validators/user.validator';
 import { Router } from 'express';
 
 export class UserRouter {
@@ -24,6 +25,7 @@ export class UserRouter {
     this.router.patch(
       '/update-email',
       verifyToken,
+      validateEmail,
       this.userController.updateEmailController,
     );
     this.router.patch(
@@ -34,6 +36,7 @@ export class UserRouter {
     this.router.patch(
       '/update-password',
       verifyToken,
+      validatePassword,
       this.userController.updatePasswordController,
     );
   }

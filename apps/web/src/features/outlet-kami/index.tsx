@@ -18,7 +18,7 @@ const OutletPage = () => {
   const currentQueryPage = searchParams.get("page") || "1";
   const [page, setPage] = useState(Number(currentQueryPage));
 
-  const { data, isPending } = useGetOutlets({ page: page });
+  const { data, isPending } = useGetOutlets({ page, take: 6 });
   const onPageChange = ({ selected }: { selected: number }) => {
     const newPage = selected + 1;
     setPage(newPage);

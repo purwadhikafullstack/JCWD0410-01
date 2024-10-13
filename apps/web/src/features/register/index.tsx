@@ -33,8 +33,8 @@ const RegisterPage = () => {
         />
       </div>
 
-      <div className="mx-auto flex min-h-[100vh] w-full flex-col p-6 text-sm md:w-[70%]">
-        <Link href="/" className="relative h-16 w-full">
+      <div className="mx-auto flex min-h-[100vh] w-full flex-col gap-20 p-6 text-sm">
+        <Link href="/" className="relative h-14">
           <Image
             src="/logo2.svg"
             alt="FreshNest Laundry Logo"
@@ -43,63 +43,65 @@ const RegisterPage = () => {
           />
         </Link>
 
-        <div className="my-10 flex flex-col gap-2 text-center">
-          <h1 className="text-2xl font-semibold md:text-3xl">Create Account</h1>
-          <p className="text-neutral-500">
-            Register with your email or quickly sign up via Google and let us
-            handle your laundry needs.
-          </p>
-        </div>
-        <div className="space-y-6">
-          <form className="space-y-4" onSubmit={formik.handleSubmit}>
-            <FormInput
-              name="email"
-              label="Email"
-              type="text"
-              placeholder="your email"
-              value={formik.values.email}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              isError={!!formik.touched.email && !!formik.errors.email}
-              error={formik.errors.email}
-            />
+        <div className="flex justify-center">
+          <div className="md:w-[70%]">
+            <div className="mb-10 flex flex-col gap-2 text-center">
+              <h1 className="text-2xl font-semibold md:text-3xl">
+                Create Account
+              </h1>
+              <p className="text-neutral-500">
+                Register with your email or quickly sign up via Google and let
+                us handle your laundry needs.
+              </p>
+            </div>
+            <div className="space-y-6">
+              <form className="space-y-6" onSubmit={formik.handleSubmit}>
+                <FormInput
+                  name="email"
+                  label="Email"
+                  type="text"
+                  placeholder="Enter your email"
+                  value={formik.values.email}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  isError={!!formik.touched.email && !!formik.errors.email}
+                  error={formik.errors.email}
+                />
 
-            <Button
-              className="w-full bg-[#36bbe3]"
-              disabled={isPending}
-              type="submit"
-            >
-              {isPending ? (
-                <div className="flex items-center gap-1">
-                  <SpinnerCircularFixed size={20} />
-                  <p className="text-sm">Loading</p>
-                </div>
-              ) : (
-                "Register"
-              )}
-            </Button>
-          </form>
+                <Button className="w-full" disabled={isPending} type="submit">
+                  {isPending ? (
+                    <div className="flex items-center gap-1">
+                      <SpinnerCircularFixed size={20} />
+                      <p className="text-sm">Loading</p>
+                    </div>
+                  ) : (
+                    "Register"
+                  )}
+                </Button>
+              </form>
 
-          <div className="grid grid-cols-5 items-center">
-            <hr className="col-span-2" />
-            <p className="text-center text-neutral-500">or</p>
-            <hr className="col-span-2" />
-          </div>
+              <div className="grid grid-cols-5 items-center">
+                <hr className="col-span-2" />
+                <p className="text-center text-neutral-500">or</p>
+                <hr className="col-span-2" />
+              </div>
 
-          <Button
-            variant="outline"
-            className="items-cen flex w-full justify-center gap-2"
-            onClick={() => signIn("google")}
-          >
-            <FcGoogle size={24} />
-            <p>Sign Up with Google</p>
-          </Button>
+              <Button
+                variant="outline"
+                className="items-cen flex w-full justify-center gap-2"
+                onClick={() => signIn("google")}
+              >
+                <FcGoogle size={24} />
+                <p>Sign Up with Google</p>
+              </Button>
 
-          <div className="flex items-center justify-center gap-1">
-            <p>Already have an account?</p>
-            <Link href="/login" className="font-semibold text-[#36bbe3]">
-              Login
-            </Link>
+              <div className="flex items-center justify-center gap-1">
+                <p>Already have an account?</p>
+                <Link href="/login" className="font-semibold underline">
+                  Sign In
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
