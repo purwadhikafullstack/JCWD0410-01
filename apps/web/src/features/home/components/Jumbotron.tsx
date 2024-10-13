@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 const Jumbotron = () => {
   return (
@@ -38,16 +37,7 @@ const Jumbotron = () => {
             </div>
           </div>
         </div>
-        {/* <motion.div
-          className="box"
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.8,
-            delay: 0.5,
-            ease: [0, 0.71, 0.2, 1.01],
-          }}
-        > */}
+
         <div className="flex justify-end">
           <div className="relative h-[500px] w-full overflow-hidden">
             <Image
@@ -58,7 +48,6 @@ const Jumbotron = () => {
             />
           </div>
         </div>
-        {/* </motion.div> */}
       </div>
     </div>
   );

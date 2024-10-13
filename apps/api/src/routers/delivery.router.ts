@@ -3,6 +3,7 @@ import { PickupController } from '@/controllers/pickup.controller';
 import { verifyToken } from '@/lib/verifyToken';
 import { adminsGuard } from '@/middleware/adminsGuard';
 import { driverGuard } from '@/middleware/driverGuard';
+import { validateUpdateDelivery } from '@/validators/delivery.validator';
 import { Router } from 'express';
 
 export class DeliveryRouter {
@@ -37,6 +38,7 @@ export class DeliveryRouter {
       '/drivers',
       verifyToken,
       driverGuard,
+      validateUpdateDelivery,
       this.deliveryController.updateDeliveryDriver,
     );
   }

@@ -1,19 +1,7 @@
 "use client";
 
-import * as Yup from "yup";
 import DashboardHeader from "@/components/DashboardHeader";
 import FormInput from "@/components/FormInput";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,41 +10,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import useBypassWorkOrder from "@/hooks/api/work/useBypassWorkOrder";
+import useGetWorkOrderAdmins from "@/hooks/api/work/useGetWorkOrderAdmins";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import useGetLaundryItems from "@/hooks/api/laundry-item/useGetLaundryItems";
-import useGetOrderItems from "@/hooks/api/order-item/useGetOrderItems";
-import useProcessOrder from "@/hooks/api/order/useProcessOrder";
-import {
-  Formik,
-  Form,
-  Field,
-  FieldArray,
-  ErrorMessage,
-  FormikProvider,
   FormikValues,
+  useFormik
 } from "formik";
-import { useFormik } from "formik";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { IoMdCheckmarkCircle } from "react-icons/io";
+import { useState } from "react";
 import { SpinnerCircularFixed } from "spinners-react";
-import { OrderItem } from "@/types/order-item";
-import useUpdateWorkOrderWorker from "@/hooks/api/work/useUpdateWorkOrdersWorker";
-import { Input } from "@/components/ui/input";
-import { WorkStatus } from "@/types/work-order";
-import useGetWorkOrderAdmins from "@/hooks/api/work/useGetWorkOrderAdmins";
 import { BypassOrderSchema } from "../../schemas/BypassOrderSchema";
-import useBypassWorkOrder from "@/hooks/api/work/useBypassWorkOrder";
 
 interface CountState {
   num: number;
@@ -68,11 +32,6 @@ const DashboardWorkOrderBypassPage = () => {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
-  const [formikError, setFormikError] = useState(true);
-  const [count, setCount] = useState<CountState>({ num: 0, arr: [] });
-  const [initialValues, setInitialValues] = useState<FormikValues>({
-    items: [],
-  });
   const { mutateAsync: bypassOrder, isPending } = useBypassWorkOrder();
   const { data: workOrder, isPending: workOrderPending } =
     useGetWorkOrderAdmins(Number(id));
@@ -108,7 +67,7 @@ const DashboardWorkOrderBypassPage = () => {
     return (
       <>
         <DashboardHeader />
-        <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
+        <div className="text-md md: mx-auto h-full bg-white p-4">
           <Card className="shadow-sm">
             <CardHeader>
               <CardTitle className="text-xl">Bypass order</CardTitle>

@@ -3,6 +3,7 @@ import { uploader } from '@/lib/multer';
 import { verifyToken } from '@/lib/verifyToken';
 import { adminGuard } from '@/middleware/adminGuard';
 import { adminsGuard } from '@/middleware/adminsGuard';
+import { validateCreateUseradmin, validateDeleteUserAdmin } from '@/validators/admin.validator';
 import { Router } from 'express';
 
 export class AdminRouter {
@@ -45,7 +46,7 @@ export class AdminRouter {
       '/',
       verifyToken,
       adminGuard,
-      uploader().single('profilePicture'),
+      uploader().single('profilePicture'), validateCreateUseradmin,
       this.adminController.createUserAdmin,
     );
 
@@ -61,6 +62,7 @@ export class AdminRouter {
       '/delete',
       verifyToken,
       adminGuard,
+      validateDeleteUserAdmin,
       this.adminController.deleteUserAdmin,
     );
   }

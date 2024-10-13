@@ -16,10 +16,6 @@ export const processPaymentService = async (
   try {
     const { orderId } = body;
 
-    if (!orderId) {
-      throw new Error('Order id must exist');
-    }
-
     const user = await prisma.user.findFirst({
       where: { id: userId, isDeleted: false },
     });

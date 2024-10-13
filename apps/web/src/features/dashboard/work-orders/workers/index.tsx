@@ -4,6 +4,13 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { DataTable } from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -12,22 +19,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetEmployees from "@/hooks/api/admin/useGetEmployees";
-import { Role } from "@/types/user";
-import { debounce } from "lodash";
+import useGetWorkOrdersWorker from "@/hooks/api/work/useGetWorkOrdersWorker";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import useGetWorkOrdersWorker from "@/hooks/api/work/useGetWorkOrdersWorker";
+import { useState } from "react";
+import { useDebounceValue } from "usehooks-ts";
 import { workOrderWorkerColumns } from "../components/WorkOrdersWorkerColumns";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 const DashboardWorkOrdersWorkerPage = () => {
   const session = useSession();
@@ -41,6 +39,7 @@ const DashboardWorkOrdersWorkerPage = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortBy, setSortBy] = useState("createdAt");
   const [outletId, setOutletId] = useState(0);
+  const [debouncedSearch] = useDebounceValue(searchValue, 300)
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
@@ -51,20 +50,12 @@ const DashboardWorkOrdersWorkerPage = () => {
     take: 8,
     sortBy: sortBy,
     sortOrder: sortOrder,
-    search: searchValue,
+    search: debouncedSearch,
     status,
   });
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value) => {
-        setSearchValue(value);
-      }, 300),
-    [setSearchValue],
-  );
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   const handleSelectStatus = (value: "ONGOING" | "REQUEST" | "HISTORY") => {
@@ -82,7 +73,7 @@ const DashboardWorkOrdersWorkerPage = () => {
   return (
     <>
       <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
+      <div className="text-md md: mx-auto h-full bg-white p-4">
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Work Orders</CardTitle>

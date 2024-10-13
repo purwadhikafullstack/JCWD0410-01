@@ -1,31 +1,15 @@
-// import * as Yup from "yup";
+import * as Yup from "yup";
 
-// export const CreateUserOrderSchema = Yup.object().shape({
-//   title: Yup.string().required("Title is required"),
-//   desc: Yup.string().required("Description is required"),
-//   location: Yup.string().required("Location is required"),
-//   startDate: Yup.date().required("Start date is required"),
-//   endDate: Yup.date().required("End date is required"),
-//   price: Yup.number()
-//     .min(0, "Price must be at least 0")
-//     .required("Price is required"),
-//   quota: Yup.number()
-//     .min(1, "Quota must be at least 1")
-//     .required("Quota is required"),
-//   img: Yup.mixed().required("Image is required"),
-//   categoryId: Yup.number().required("Category is required"),
-
-//   pickupStatus: Yup.string().oneOf(['WAITING_FOR_DRIVER','ONSITE']).required("Either WAITING_FOR_DRIVER or ONSITE required"),
-//   pickupLatitude: Yup.string().,
-//   pickupLongitude: string,
-//   pickupFee: number,
-//   pickupAddressId: number,
-//   pickupAddress: string,
-//   deliveryStatus: "PROCESSING_LAUNDRY" | "ONSITE",
-//   deliveryLatitude: string,
-//   deliveryLongitude: string,
-//   deliveryFee: number,
-//   deliveryAddressId: number,
-//   outletId: number,
-//   outletName: string,
-// });
+export const CreateUserOrderSchema = Yup.object().shape({
+  pickupLatitude: Yup.string().required("Pickup Latitude is required"),
+  pickupLongitude: Yup.string().required("Pickup Longitude is required"),
+  pickupFee: Yup.number().required("Pickup fee required"),
+  pickupAddressId: Yup.number().required("Pickup address Id required"),
+  pickupAddress: Yup.string().required("Pickup Address required"),
+  deliveryLatitude: Yup.string().required("Delivery Latitude is required"),
+  deliveryLongitude: Yup.string().required("Delivery Longitude is required"),
+  deliveryFee: Yup.number().required("Delviery fee required"),
+  deliveryAddressId: Yup.number().required("Delivery address Id required"),
+  outletId: Yup.number().required("Outlet Id required"),
+  outletName: Yup.string().required("Outlet name is required"),
+});

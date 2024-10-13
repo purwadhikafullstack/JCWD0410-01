@@ -1,5 +1,3 @@
-// import { forgotPasswordService } from '@/services/auth/forgot-password.service';
-// import { loginService } from '@/services/auth/login.service';
 import { completeRegistrationService } from '@/services/auth/complete-register.service';
 import { forgotPasswordService } from '@/services/auth/forgot-password.service';
 import { getEmailFromTokenService } from '@/services/auth/get-email-from-token.service';
@@ -7,7 +5,6 @@ import { loginWithGoogleService } from '@/services/auth/google.service';
 import { loginService } from '@/services/auth/login.service';
 import { registerService } from '@/services/auth/register.service';
 import { resetPasswordService } from '@/services/auth/reset-password.service';
-// import { resetPasswordService } from '@/services/auth/reset-password.service';
 import { NextFunction, Request, Response } from 'express';
 
 export class AuthController {

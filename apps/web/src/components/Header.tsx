@@ -16,10 +16,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiUser } from "react-icons/ci";
 import {
+  LuAlertCircle,
   LuHistory,
   LuHome,
   LuLogOut,
   LuMenu,
+  LuPlaneLanding,
+  LuPlaneTakeoff,
   LuShoppingCart,
   LuUser2,
 } from "react-icons/lu";
@@ -78,7 +81,7 @@ export const Header = () => {
             className="object-contain"
           />
         </Link>
-        <div className="hidden items-center gap-8 text-sm text-neutral-600 md:flex">
+        <div className="hidden items-center gap-8 text-sm font-medium text-neutral-600 md:flex">
           <Link href="/outlet-kami">Outlet Kami</Link>
           <Link href="/layanan-kami">Layanan & Harga</Link>
           <Link href="/request">Buat Pesanan</Link>
@@ -89,7 +92,7 @@ export const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none">
                 <div className="flex items-center gap-3">
-                  <div className="text-sm">{session.user.name}</div>
+                  <div className="text-sm font-medium">{session.user.name}</div>
                   <Avatar>
                     <AvatarImage
                       src={session.user.profilePicture}
@@ -105,8 +108,8 @@ export const Header = () => {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="flex flex-col gap-1 font-normal">
                   <div className="flex items-center gap-1">
-                    <p className="font-semibold">{session.user.name}</p>{" "}
-                    {String(session.user.isVerified) === "true" && (
+                    <p className="font-semibold">{session.user.name}</p>
+                    {Boolean(session.user.isVerified) === true && (
                       <MdVerified color="#37bae3" />
                     )}
                   </div>
@@ -131,10 +134,28 @@ export const Header = () => {
                     <p>Pesanan Saya</p>
                   </DropdownMenuItem>
                 </Link>
+                <Link href={`/pickup-orders`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuPlaneTakeoff />
+                    <p>Pickup orders</p>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/delivery-orders`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuPlaneLanding />
+                    <p>Delivery orders</p>
+                  </DropdownMenuItem>
+                </Link>
                 <Link href={`/request`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <LuShoppingCart />
                     <p>Buat Pesanan</p>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/notifications`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuAlertCircle />
+                    <p>Notifikasi</p>
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
@@ -212,17 +233,11 @@ export const Header = () => {
                         </AvatarFallback>
                       </Avatar>
 
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-1">
-                          <p className="font-semibold">{session.user.name}</p>
-                          {String(session.user.isVerified) === "true" && (
-                            <MdVerified color="#37bae3" />
-                          )}
-                        </div>
-
-                        <p className="line-clamp-1 max-w-[20ch] break-all text-neutral-500">
-                          {session.user.email}
-                        </p>
+                      <div className="flex items-center gap-1">
+                        <p className="font-semibold">{session.user.name}</p>
+                        {String(session.user.isVerified) === "true" && (
+                          <MdVerified color="#37bae3" />
+                        )}
                       </div>
                     </div>
                     <MdArrowForwardIos size={16} className="mr-2 p-0" />

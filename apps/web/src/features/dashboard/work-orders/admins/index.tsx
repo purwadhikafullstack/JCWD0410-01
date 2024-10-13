@@ -4,6 +4,13 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { DataTable } from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -12,24 +19,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetEmployees from "@/hooks/api/admin/useGetEmployees";
-import { Role } from "@/types/user";
-import { debounce } from "lodash";
+import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
+import useGetWorkOrdersAdmins from "@/hooks/api/work/useGetWorkOrdersAdmins";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import useGetWorkOrdersWorker from "@/hooks/api/work/useGetWorkOrdersWorker";
-import { workOrderWorkerColumns } from "../components/WorkOrdersWorkerColumns";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import useGetWorkOrdersAdmins from "@/hooks/api/work/useGetWorkOrdersAdmins";
-import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
+import { useState } from "react";
+import { useDebounceValue } from "usehooks-ts";
 import { workOrderAdminsColumns } from "../components/WorkOrdersAdminsColumns";
 
 const DashboardWorkOrdersAdminsPage = () => {
@@ -45,6 +41,8 @@ const DashboardWorkOrdersAdminsPage = () => {
   const [sortBy, setSortBy] = useState("createdAt");
   const [outletId, setOutletId] = useState("");
   const { data: outlets } = useGetOutlets({ take: 10 });
+  const [debouncedSearch] = useDebounceValue(searchValue, 300)
+
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
@@ -55,21 +53,13 @@ const DashboardWorkOrdersAdminsPage = () => {
     take: 8,
     sortBy: sortBy,
     sortOrder: sortOrder,
-    search: searchValue,
+    search: debouncedSearch,
     status,
     outletId,
   });
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value) => {
-        setSearchValue(value);
-      }, 300),
-    [setSearchValue],
-  );
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   const handleSelectStatus = (value: "ONGOING" | "REQUEST" | "HISTORY" | "ALL") => {
@@ -94,7 +84,7 @@ const DashboardWorkOrdersAdminsPage = () => {
   return (
     <>
       <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
+      <div className="text-md md: mx-auto h-full bg-white p-4">
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Work Orders</CardTitle>
@@ -162,7 +152,7 @@ const DashboardWorkOrdersAdminsPage = () => {
                         <SelectItem value="0">ALL</SelectItem>
                         {outlets?.data.map((outlet) => {
                           return (
-                            <SelectItem value={String(outlet.id)}>
+                            <SelectItem value={String(outlet.id)} key={outlet.id}>
                               {outlet.name}
                             </SelectItem>
                           );

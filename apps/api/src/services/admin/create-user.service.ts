@@ -1,7 +1,7 @@
 import { hashPassword } from '@/lib/bcrypt';
 import { cloudinaryUpload } from '@/lib/cloudinary';
 import prisma from '@/prisma';
-import { Prisma, User } from '@prisma/client';
+import { User } from '@prisma/client';
 
 interface CreateUserInterface extends User {
   stationId?: number;

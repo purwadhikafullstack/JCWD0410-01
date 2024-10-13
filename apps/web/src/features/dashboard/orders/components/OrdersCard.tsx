@@ -63,7 +63,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
               orderStatus === "PICKUP_ON_THE_WAY_TO_CUSTOMER" ||
               orderStatus === "PICKUP_ON_THE_WAY_TO_OUTLET" ||
               orderStatus === "ARRIVED_AT_OUTLET"
-                ? "Enroute"
+                ? "Awaiting process"
                 : result.format(totalFee)}
             </p>
           </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 const UsersHeader = () => {
@@ -16,7 +15,6 @@ const UsersHeader = () => {
 
   return (
     <nav className="mx-6 content-center rounded-md bg-[#e5f3f5] p-4 text-sm shadow">
-      {/* <div className="text-sm text-gray-500 mb-2">{pathname}</div> */}
       <div className="flex justify-between gap-2">
         <div className="flex justify-evenly gap-2 md:justify-normal">
           {pathname === "/dashboard/users/customers" ? (

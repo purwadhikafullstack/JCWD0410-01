@@ -1,5 +1,5 @@
 import prisma from '@/prisma';
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 interface GetPickupRequestInterface {
   page: number;
@@ -21,10 +21,6 @@ export const getPickupRequestService = async (
       status: 'WAITING_FOR_DRIVER',
     };
 
-    // if (search) {
-    //   whereClause.pickupNumber = { contains: search };
-    // }
-
     const pickupOrders = await prisma.pickup_Order.findMany({
       where: whereClause,
       include: {
@@ -41,11 +37,6 @@ export const getPickupRequestService = async (
     const total = await prisma.pickup_Order.count({
       where: whereClause,
     });
-
-    // const usersWithoutPassword = deliveryOrders.filter((deliveryOrder) => {
-    //   const { password, ...userWithoutPassword } = user;
-    //   return userWithoutPassword;
-    // });
 
     return {
       data: pickupOrders,

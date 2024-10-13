@@ -23,14 +23,13 @@ import {
 } from "@/components/ui/select";
 import useCreateEmployee from "@/hooks/api/admin/useCreateEmployee";
 import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
-import { Role } from "@/types/user";
 import { useFormik } from "formik";
-import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { SpinnerCircularFixed } from "spinners-react";
+import { CreateUserAdminSchema } from "../../schemas/CreateUserAdminSchema";
 
 const DashboardCreateEmployeePage = () => {
   const session = useSession();
@@ -41,8 +40,7 @@ const DashboardCreateEmployeePage = () => {
   const [outletId, setOutletId] = useState("2");
   const [stationId, setStationId] = useState("1");
   const { mutateAsync: createEmployee, isPending } = useCreateEmployee();
-  const { data: outlets } = useGetOutlets({ take: 5 });
-  // const [role, setRole] = useState("OUTLET_ADMIN");
+  const { data: outlets } = useGetOutlets({ take: 16 });
 
   const formik = useFormik({
     initialValues: {
@@ -55,7 +53,7 @@ const DashboardCreateEmployeePage = () => {
       stationId: "",
       outletId,
     },
-    // validationSchema: UpdateProfileSchema,
+    validationSchema: CreateUserAdminSchema,
     onSubmit: async (values) => {
       await createEmployee(values);
     },

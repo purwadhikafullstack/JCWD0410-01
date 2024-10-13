@@ -13,10 +13,6 @@ export const getOrderItemsWorkOrderService = async (query: GetOrderItemsInterfac
   try {
     const { page, take, sortBy, sortOrder, workOrderId } = query;
 
-    if (!workOrderId) {
-      throw new Error("Work order Id is missing")
-    }
-
     const workOrder = await prisma.work_Order.findFirst({
       where: {id: workOrderId}
     })
@@ -40,8 +36,6 @@ export const getOrderItemsWorkOrderService = async (query: GetOrderItemsInterfac
 
     const plainOrderItems = await prisma.order_Item.findMany({
       where: whereClause,
-      // take: take,
-      // skip: (page - 1) * take,
       orderBy: {
         [sortBy]: sortOrder,
       },

@@ -1,7 +1,5 @@
 import { Prisma, WorkStatus } from '@prisma/client';
 import prisma from '../../prisma';
-import { transporter } from '@/lib/nodemailer';
-import { createNotificationService } from '../notification/create-notification.service';
 import { createUserNotificationService } from '../notification/create-user-notification.service';
 import { updateOrderStatusService } from '../order/update-order-status.service';
 
@@ -16,14 +14,6 @@ export const updateWorkOrdersWorkersService = async (
 ) => {
   try {
     const { status, id } = body;
-
-    if (!status) {
-      throw new Error('Wajib ada status, ini placeholder, pindah ke validator');
-    }
-
-    if (!id) {
-      throw new Error('Wajib ada id, ini placeholder, pindah ke validator');
-    }
 
     const workOrder = await prisma.work_Order.findFirst({
       where: { id, isDeleted: false },

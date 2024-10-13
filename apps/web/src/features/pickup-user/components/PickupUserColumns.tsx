@@ -90,15 +90,4 @@ export const pickupOrdersUsersColumns: ColumnDef<Pickup_Order_User_Extension>[] 
         return <div>{createdAt}</div>;
       },
     },
-    // {
-    //   accessorKey: "updatedAt",
-    //   header: "Last updated",
-    //   cell: ({ row }) => {
-    //     const updatedAt = format(
-    //       new Date(row.getValue("updatedAt")),
-    //       "dd MMM yyyy, HH:mm:ss",
-    //     );
-    //     return <div>{updatedAt}</div>;
-    //   },
-    // },
   ];

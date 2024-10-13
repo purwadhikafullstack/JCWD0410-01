@@ -1,16 +1,5 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,12 +8,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useDeleteUser from "@/hooks/api/admin/useDeleteUser";
 import { UserWithEmployee } from "@/hooks/api/admin/useGetEmployees";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { IoWarningOutline } from "react-icons/io5";
 
 export const employeesOutletAdminColumns: ColumnDef<UserWithEmployee>[] = [
   {
@@ -111,10 +97,6 @@ export const employeesOutletAdminColumns: ColumnDef<UserWithEmployee>[] = [
             >
               Copy Phone Number
             </DropdownMenuItem>
-            {/* <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/dashboard/users/${user.id}`}>View user</Link>
-            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       );

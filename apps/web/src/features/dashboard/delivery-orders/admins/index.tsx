@@ -4,6 +4,13 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { DataTable } from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -12,27 +19,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetPickupOrdersDrivers from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
-import { debounce } from "lodash";
+import useGetDeliveryOrdersAdmins from "@/hooks/api/delivery/useGetDeliveryAdmins";
+import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
-import useGetPickupOrdersAdmins from "@/hooks/api/pickup/useGetPickupOrdersAdmins";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import useGetDeliveryOrdersAdmins from "@/hooks/api/delivery/useGetDeliveryAdmins";
+import { useState } from "react";
+import { useDebounceValue, useMediaQuery } from "usehooks-ts";
+import PickupOrderCard from "../../pickup-orders/components/PickupOrderCard";
 import { deliveryOrdersAdminsColumns } from "../components/DeliveryOrdersAdminsColumns";
 
 const DashboardDeliveryOrdersAdminsPage = () => {
   const session = useSession();
-  const router = useRouter();
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [status, setStatus] = useState<
@@ -41,8 +39,12 @@ const DashboardDeliveryOrdersAdminsPage = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortBy, setSortBy] = useState("createdAt");
   const [outletId, setOutletId] = useState("");
+  const [debouncedSearch] = useDebounceValue(searchValue, 300);
+  const isDesktop = useMediaQuery("(min-width: 768px)", {
+    initializeWithValue: false,
+  });
 
-  const { data: outlets } = useGetOutlets({ take: 10 });
+  const { data: outlets } = useGetOutlets({ take: 12 });
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
@@ -53,21 +55,13 @@ const DashboardDeliveryOrdersAdminsPage = () => {
     take: 8,
     sortBy: sortBy,
     sortOrder: sortOrder,
-    search: searchValue,
+    search: debouncedSearch,
     status,
     outletId,
   });
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value) => {
-        setSearchValue(value);
-      }, 300),
-    [setSearchValue],
-  );
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   const handleSelectStatus = (
@@ -94,7 +88,7 @@ const DashboardDeliveryOrdersAdminsPage = () => {
   return (
     <>
       <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
+      <div className="text-md md: mx-auto h-full bg-white p-4">
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Delivery orders</CardTitle>
@@ -161,9 +155,9 @@ const DashboardDeliveryOrdersAdminsPage = () => {
                     <SelectGroup>
                       <SelectLabel>Outlet</SelectLabel>
                       <SelectItem value="0">ALL</SelectItem>
-                      {outlets?.data.map((outlet) => {
+                      {outlets?.data.map((outlet, index) => {
                         return (
-                          <SelectItem value={String(outlet.id)}>
+                          <SelectItem value={String(outlet.id)} key={index}>
                             {outlet.name}
                           </SelectItem>
                         );
@@ -176,21 +170,49 @@ const DashboardDeliveryOrdersAdminsPage = () => {
             {isPending ? (
               <Loader2 className="mx-auto animate-spin" />
             ) : data?.data ? (
-              <>
-                <DataTable
-                  columns={deliveryOrdersAdminsColumns}
-                  data={data?.data!}
-                  meta={data.meta}
-                />
-                <div className="my-4 flex justify-center">
-                  <Pagination
-                    total={data?.meta?.total || 0}
-                    limit={data?.meta?.take || 0}
-                    onChangePage={onChangePage}
-                    page={page}
+              isDesktop ? (
+                <>
+                  <DataTable
+                    columns={deliveryOrdersAdminsColumns}
+                    data={data?.data!}
+                    meta={data.meta}
                   />
-                </div>
-              </>
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={page}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4">
+                    {data.data.map((order) => {
+                      return (
+                        <PickupOrderCard
+                          key={order.id}
+                          pickupNumber={order.deliveryNumber}
+                          status={order.status}
+                          customer={order.user.name}
+                          customerAddress={order.address.address}
+                          outlet={order.outlet.name}
+                          timeOfOrder={order.createdAt}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={page}
+                    />
+                  </div>
+                </>
+              )
             ) : (
               <DataTable
                 columns={deliveryOrdersAdminsColumns}

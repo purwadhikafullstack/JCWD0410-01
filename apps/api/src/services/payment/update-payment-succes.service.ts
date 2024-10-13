@@ -1,8 +1,7 @@
-import { OrderStatus, PaymentStatus, Prisma } from '@prisma/client';
-import prisma from '@/prisma';
-import { createUserNotificationService } from '../notification/create-user-notification.service';
-import { updateOrderStatusService } from '../order/update-order-status.service';
 import { cancelJobs } from '@/lib/cancelJobs';
+import prisma from '@/prisma';
+import { Prisma } from '@prisma/client';
+import { createUserNotificationService } from '../notification/create-user-notification.service';
 
 interface UpdatePaymentSuccess {
   invoice: string;
@@ -13,12 +12,6 @@ export const updatePaymentSuccessService = async (
 ) => {
   try {
     const { invoice } = body;
-
-    if (!invoice) {
-      throw new Error(
-        'Wajib ada invoice, ini placeholder, pindah ke validator',
-      );
-    }
 
     const payment = await prisma.payment.findFirst({
       where: { invoiceNumber: invoice, isDeleted: false },

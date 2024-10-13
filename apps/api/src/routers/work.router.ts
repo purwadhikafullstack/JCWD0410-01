@@ -2,6 +2,7 @@ import { WorkController } from '@/controllers/work.controller';
 import { verifyToken } from '@/lib/verifyToken';
 import { adminsGuard } from '@/middleware/adminsGuard';
 import { workerGuard } from '@/middleware/workerGuard';
+import { validateBypassWork, validateUpdateWork } from '@/validators/work.validator';
 import { Router } from 'express';
 
 export class WorkRouter {
@@ -18,8 +19,8 @@ export class WorkRouter {
     this.router.get('/workers', verifyToken, workerGuard, this.workController.getWorkOrdersWorker);
     this.router.get('/admins', verifyToken, adminsGuard, this.workController.getWorkOrdersAdmins);
     this.router.get('/:id', verifyToken, adminsGuard, this.workController.getWorkOrderAdmins);
-    this.router.patch('/workers', verifyToken, workerGuard, this.workController.updateWorkOrdersWorker);
-    this.router.patch('/bypass', verifyToken, adminsGuard, this.workController.bypassWorkOrder);
+    this.router.patch('/workers', verifyToken, workerGuard, validateUpdateWork, this.workController.updateWorkOrdersWorker);
+    this.router.patch('/bypass', verifyToken, adminsGuard, validateBypassWork, this.workController.bypassWorkOrder);
   }
 
   getRouter(): Router {

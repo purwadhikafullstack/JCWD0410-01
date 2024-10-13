@@ -11,8 +11,10 @@ const loggedInRoutes = [
   "/profile",
   "/address",
   "/request",
-  "pickup-orders",
-  "orders",
+  "/pickup-orders",
+  "/delivery-orders",
+  "/orders",
+  "/notifications",
 ];
 
 const privateRoutes = ["/dashboard"];
@@ -28,6 +30,7 @@ export default auth((req) => {
   const isLoggedInRoute = loggedInRoutes.some((route) =>
     pathname.startsWith(route),
   );
+
   // Redirect unauthenticated users to login if they are accessing private routes
   if (!req.auth && isPrivateRoute) {
     const newUrl = new URL("/login", req.nextUrl.origin);
@@ -49,12 +52,6 @@ export default auth((req) => {
     isLoggedOutRoute
   ) {
     const newUrl = new URL("/", req.nextUrl.origin);
-    return Response.redirect(newUrl);
-  }
-
-  // Redirect authenticated users away from loggedOutRoutes
-  if (req.auth && req.auth.user.role !== "CUSTOMER" && isLoggedInRoute) {
-    const newUrl = new URL("/dashboard", req.nextUrl.origin);
     return Response.redirect(newUrl);
   }
 
