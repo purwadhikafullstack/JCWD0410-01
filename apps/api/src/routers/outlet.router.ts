@@ -1,5 +1,6 @@
 import { OutletController } from '@/controllers/outlet.controller';
 import { verifyToken } from '@/lib/verifyToken';
+import { validateAddOutlet } from '@/validators/outlet.validator';
 import { Router } from 'express';
 
 export class OutletRouter {
@@ -15,7 +16,12 @@ export class OutletRouter {
   private initializeRoutes() {
     this.router.get('/', this.outletController.getOutlets);
     this.router.get('/:id', verifyToken, this.outletController.getOutlet);
-    this.router.post('/', verifyToken, this.outletController.createOutlet);
+    this.router.post(
+      '/',
+      verifyToken,
+      validateAddOutlet,
+      this.outletController.createOutlet,
+    );
     this.router.patch(
       '/update-outlet/:id',
       verifyToken,

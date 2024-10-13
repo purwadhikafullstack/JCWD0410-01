@@ -91,26 +91,26 @@ const OrdersUsersPage = () => {
 
   return (
     <>
-      <div className="text-md md: mx-auto h-full bg-white p-4">
+      <div className="text-md md: mx-auto h-full max-w-7xl bg-white px-4 py-10">
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Orders</CardTitle>
             <CardDescription>List of orders</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="mb-2 text-sm">
-              <input
-                className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:w-[200px] md:text-sm"
-                placeholder="Search value"
-                type="text"
-                name="search"
-                value={searchValue}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4 flex flex-col gap-2 md:flex-row">
+            <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
+              <div className="text-sm">
+                <input
+                  className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:text-sm"
+                  placeholder="Search value"
+                  type="text"
+                  name="search"
+                  value={searchValue}
+                  onChange={handleInputChange}
+                />
+              </div>
               <Select onValueChange={handleSortBy}>
-                <SelectTrigger className="md:w-[200px]">
+                <SelectTrigger>
                   <SelectValue placeholder="Sort By" />
                 </SelectTrigger>
                 <SelectContent>
@@ -124,7 +124,7 @@ const OrdersUsersPage = () => {
                 </SelectContent>
               </Select>
               <Select onValueChange={handleSortOrder}>
-                <SelectTrigger className="md:w-[200px]">
+                <SelectTrigger>
                   <SelectValue placeholder="Sort Order" />
                 </SelectTrigger>
                 <SelectContent>
@@ -136,7 +136,7 @@ const OrdersUsersPage = () => {
                 </SelectContent>
               </Select>
               <Select onValueChange={handleSelectStatus} defaultValue="ALL">
-                <SelectTrigger className="md:w-[200px]">
+                <SelectTrigger>
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>

@@ -8,9 +8,7 @@ export const loginService = async (body: Pick<User, 'email' | 'password'>) => {
   try {
     const { email, password } = body;
 
-    //mencari email di db
     const user = await prisma.user.findFirst({
-      //koma maksudnya dan(&)
       where: { email, provider: 'CREDENTIALS' },
     });
 
@@ -19,7 +17,9 @@ export const loginService = async (body: Pick<User, 'email' | 'password'>) => {
     }
 
     if (user.isDeleted) {
-      throw new Error('Account has been deleted, contact Master Admin if this was a mistake')
+      throw new Error(
+        'Account has been deleted, contact Master Admin if this was a mistake',
+      );
     }
 
     const isPasswordValid = await comparePassword(password!, user.password!);
@@ -31,7 +31,6 @@ export const loginService = async (body: Pick<User, 'email' | 'password'>) => {
       expiresIn: '2h',
     });
 
-    //ngeluarin password
     const { password: pass, ...userWithourPassword } = user;
 
     return { ...userWithourPassword, token };

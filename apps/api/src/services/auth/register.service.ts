@@ -1,12 +1,11 @@
 import { BASE_URL_FE, JWT_SECRET } from '@/config';
-import { hashPassword } from '@/lib/bcrypt';
 import { transporter } from '@/lib/nodemailer';
 import prisma from '@/prisma';
 import { User } from '@prisma/client';
-import Handlebars from 'handlebars';
-import path from 'path';
 import fs from 'fs';
+import Handlebars from 'handlebars';
 import { sign } from 'jsonwebtoken';
+import path from 'path';
 
 export const registerService = async (body: User) => {
   try {
