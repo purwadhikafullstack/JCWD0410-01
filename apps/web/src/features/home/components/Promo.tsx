@@ -43,30 +43,6 @@ const Promo = () => {
         <CarouselNext className="size-6 opacity-50" />
       </Carousel>
     </div>
-    // <div className="bg-[#e5f3f7]">
-    //   <Carousel className="mx-auto max-w-7xl p-4 py-10">
-    //     <CarouselContent>
-    //       <CarouselItem className="relative h-28 w-full overflow-hidden md:h-96">
-    //         <Image
-    //           src="/promo1.svg"
-    //           alt="Promo"
-    //           fill
-    //           className="rounded-md object-cover"
-    //         />
-    //       </CarouselItem>
-    //       <CarouselItem className="relative h-28 w-full rounded-md border-[1px] border-[#38b9e3] md:h-96">
-    //         <Image
-    //           src="/promo2.svg"
-    //           alt="Promo"
-    //           fill
-    //           className="rounded-md object-contain"
-    //         />
-    //       </CarouselItem>
-    //     </CarouselContent>
-    //     <CarouselPrevious />
-    //     <CarouselNext />
-    //   </Carousel>
-    // </div>
   );
 };
 

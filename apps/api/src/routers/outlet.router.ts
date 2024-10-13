@@ -1,5 +1,6 @@
 import { OutletController } from '@/controllers/outlet.controller';
 import { verifyToken } from '@/lib/verifyToken';
+import { adminGuard } from '@/middleware/adminGuard';
 import { validateAddOutlet } from '@/validators/outlet.validator';
 import { Router } from 'express';
 
@@ -20,16 +21,19 @@ export class OutletRouter {
       '/',
       verifyToken,
       validateAddOutlet,
+      adminGuard,
       this.outletController.createOutlet,
     );
     this.router.patch(
       '/update-outlet/:id',
       verifyToken,
+      adminGuard,
       this.outletController.updateOutlet,
     );
     this.router.patch(
       '/delete-outlet/:id',
       verifyToken,
+      adminGuard,
       this.outletController.deleteOutlet,
     );
   }

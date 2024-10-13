@@ -1,5 +1,3 @@
-//jarang berubah tinggal copas di tiap project
-
 import { Request } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 

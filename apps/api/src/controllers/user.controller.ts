@@ -48,8 +48,8 @@ export class UserController {
   async VerifyEmailController(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await verifyEmailService(
-        Number(res.locals.user.id), // id user mn yg d update
-        res.locals.user.email, // email yg d gnti
+        Number(res.locals.user.id),
+        res.locals.user.email,
       );
       return res.status(200).send(result);
     } catch (error) {

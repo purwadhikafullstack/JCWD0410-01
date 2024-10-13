@@ -6,16 +6,6 @@ export const validateEmail = [
     .notEmpty()
     .withMessage('Validation: Email is required')
     .isEmail(),
-  // body('role')
-  //   .notEmpty()
-  //   .withMessage('Validation: Role is missing')
-  //   .custom((value) => {
-  //     if (value !== 'EO' && value !== 'CUSTOMER') {
-  //       throw new Error('Role validation Error');
-  //     } else {
-  //       return value;
-  //     }
-  //   }),
 
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);

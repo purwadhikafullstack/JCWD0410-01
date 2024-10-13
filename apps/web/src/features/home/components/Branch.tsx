@@ -13,7 +13,7 @@ const Branch = () => {
   const { data } = useGetOutlets({ take: 3 });
 
   return (
-    <div className="bg-white">
+    <div className="mt-20 bg-[#e5f3f6]">
       <div className="mx-auto max-w-7xl space-y-10 px-6 py-10 md:py-20">
         <div className="flex items-center justify-between text-[#37bae3]">
           <h1 className="text-3xl font-semibold md:text-4xl">Lokasi Outlet</h1>

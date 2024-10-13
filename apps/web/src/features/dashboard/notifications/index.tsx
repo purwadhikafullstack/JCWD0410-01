@@ -25,6 +25,7 @@ import React, { useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import { notificationsColumns } from "./components/NotificationsColumns";
 import Pagination from "@/components/Pagination";
+import NotificationHeader from "./components/NotificationHeaders";
 
 const DashboardNotificationPage = () => {
   const session = useSession();
@@ -66,77 +67,26 @@ const DashboardNotificationPage = () => {
   }
   return (
     <>
-      {pathname === "/notifications" ? "" : <DashboardHeader />}
-      <div className={`text-md md: mx-auto h-full bg-white p-4`}>
-        <Card className="shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-xl">Notifications</CardTitle>
-            <CardDescription>List of notifications</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
-              <div className="text-sm">
-                <input
-                  className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:text-sm"
-                  placeholder="Search value"
-                  type="text"
-                  name="search"
-                  value={searchValue}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <Select onValueChange={handleSortBy}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Sort by</SelectLabel>
-                    <SelectItem value="orderNumber">Order Number</SelectItem>
-                    <SelectItem value="createdAt">Time of order</SelectItem>
-                    <SelectItem value="updatedAt">Last Updated</SelectItem>
-                    <SelectItem value="orderStatus">Order Status</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Select onValueChange={handleSortOrder}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort Order" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Sort order</SelectLabel>
-                    <SelectItem value="asc">Ascending</SelectItem>
-                    <SelectItem value="desc">Descending</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-            {isPending ? (
-              <div>Data fetching</div>
-            ) : data?.data ? (
-              <DataTable
-                columns={notificationsColumns}
-                data={data.data}
-                meta={data.meta}
-              />
-            ) : (
-              <DataTable
-                columns={notificationsColumns}
-                data={[]}
-                meta={{ page: 1, take: 8, total: 0 }}
-              />
-            )}
-            <div className="my-4 flex justify-center">
-              <Pagination
-                total={data?.meta?.total || 0}
-                limit={data?.meta?.take || 0}
-                onChangePage={onChangePage}
-                page={page}
-              />
-            </div>
-          </CardContent>
-        </Card>
+      <NotificationHeader />
+      <div className="text-md md: mx-auto h-full bg-white p-4 pt-24">
+        Notif
+        <>
+          {isPending ? (
+            <div>Data fetching</div>
+          ) : data?.data ? (
+            <DataTable
+              columns={notificationsColumns}
+              data={data.data}
+              meta={data.meta}
+            />
+          ) : (
+            <DataTable
+              columns={notificationsColumns}
+              data={[]}
+              meta={{ page: 1, take: 8, total: 0 }}
+            />
+          )}
+        </>
       </div>
     </>
   );

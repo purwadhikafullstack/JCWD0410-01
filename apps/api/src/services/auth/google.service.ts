@@ -37,13 +37,6 @@ export const loginWithGoogleService = async (accessToken: string) => {
           profilePicture: userInfo.picture,
         },
       });
-
-      // await transporter.sendMail({
-      //   from: 'Admin',
-      //   to: userInfo.email,
-      //   subject: 'Welcome to belanja.in',
-      //   html: `<p>Welcome to belanja.in</p>`,
-      // });
     }
 
     const token = sign({ id: newUser?.id || user?.id }, JWT_SECRET!, {

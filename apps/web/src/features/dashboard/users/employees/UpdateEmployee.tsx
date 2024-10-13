@@ -83,7 +83,7 @@ const UpdateEmployeePage: FC<UpdateEmployeeProps> = ({ userId }) => {
           values.stationId != data?.employee.employeeStations.stationId
             ? values.stationId
             : undefined,
-        oultetId:
+        outletId:
           values.outletId != data?.employee.outletId
             ? values.outletId
             : undefined,
@@ -113,15 +113,15 @@ const UpdateEmployeePage: FC<UpdateEmployeeProps> = ({ userId }) => {
   };
 
   const handleSelectRole = (value: string) => {
-    formik.setFieldValue("role", value); // Menggunakan formik.setFieldValue
+    formik.setFieldValue("role", value);
   };
 
   const handleOutletId = (value: string) => {
-    formik.setFieldValue("outletId", value); // Menggunakan formik.setFieldValue
+    formik.setFieldValue("outletId", value);
   };
 
   const handleStationId = (value: string) => {
-    formik.setFieldValue("stationId", value); // Menggunakan formik.setFieldValue
+    formik.setFieldValue("stationId", value);
   };
 
   if (!session.data) {
