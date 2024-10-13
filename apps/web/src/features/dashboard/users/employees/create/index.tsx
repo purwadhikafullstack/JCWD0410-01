@@ -40,7 +40,7 @@ const DashboardCreateEmployeePage = () => {
   const [outletId, setOutletId] = useState("2");
   const [stationId, setStationId] = useState("1");
   const { mutateAsync: createEmployee, isPending } = useCreateEmployee();
-  const { data: outlets } = useGetOutlets({ take: 5 });
+  const { data: outlets } = useGetOutlets({ take: 16 });
 
   const formik = useFormik({
     initialValues: {

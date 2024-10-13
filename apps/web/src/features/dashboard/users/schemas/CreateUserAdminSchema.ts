@@ -2,8 +2,8 @@ import * as Yup from "yup";
 import YupPassword from "yup-password";
 YupPassword(Yup);
 
-const MAX_FILE_SIZE = 1 * 1024 * 1024;
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png", "image/avif"];
 
 export const CreateUserAdminSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
