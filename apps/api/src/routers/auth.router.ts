@@ -1,7 +1,12 @@
 import { AuthController } from '@/controllers/auth.controller';
 import { getEmailFromToken } from '@/lib/getEmailFromToken';
-import { uploader } from '@/lib/multer';
 import { verifyToken } from '@/lib/verifyToken';
+import {
+  validateCompleteRegistration,
+  validateEmail,
+  validateLogin,
+  validateResetPassword,
+} from '@/validators/auth.validator';
 import { Router } from 'express';
 
 export class AuthRouter {
@@ -15,7 +20,7 @@ export class AuthRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.post('/register', this.authController.register);
+    this.router.post('/register', validateEmail, this.authController.register);
     this.router.get(
       '/get-email-token',
       getEmailFromToken,
@@ -24,17 +29,23 @@ export class AuthRouter {
     this.router.patch(
       '/register/complete-registration/',
       getEmailFromToken,
+      validateCompleteRegistration,
       this.authController.completeRegistration,
     );
-    this.router.post('/login', this.authController.login);
+    this.router.post('/login', validateLogin, this.authController.login);
     this.router.post(
       '/login/google',
       this.authController.loginWithGoogleController,
     );
-    this.router.post('/forgot-password', this.authController.forgotPassword);
+    this.router.post(
+      '/forgot-password',
+      validateEmail,
+      this.authController.forgotPassword,
+    );
     this.router.patch(
       '/reset-password',
       verifyToken,
+      validateResetPassword,
       this.authController.resetPassword,
     );
   }

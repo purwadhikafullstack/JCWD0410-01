@@ -20,17 +20,23 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import TableSkeleton from "./component/TableSkeleton";
+import { useMediaQuery } from "usehooks-ts";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const th = ["Nama", "Tipe", "Alamat", "Action"];
 
 const OutletDashboardPage = () => {
+  const isDesktop = useMediaQuery("(min-width: 640px)", {
+    initializeWithValue: false,
+  });
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentQueryPage = searchParams.get("page") || "1";
   const [page, setPage] = useState(parseInt(currentQueryPage));
 
   const { data, isPending, refetch } = useGetOutlets({
-    take: 4,
+    take: 5,
     page,
   });
 
@@ -49,7 +55,7 @@ const OutletDashboardPage = () => {
     refetch();
   };
 
-  if (isPending) {
+  if (isPending && isDesktop) {
     return <TableSkeleton />;
   }
 
@@ -60,7 +66,7 @@ const OutletDashboardPage = () => {
   return (
     <>
       <DashboardHeader />
-      <div className="space-y-6 px-6">
+      <div className="space-y-6 px-6 pb-10">
         <div className="flex items-center justify-between rounded-md bg-[#e5f3f6] p-4 shadow">
           <h3 className="text-xl font-semibold text-[#37bae3]">Outlet</h3>
           <Link href="/dashboard/outlet/tambah-outlet">
@@ -70,52 +76,81 @@ const OutletDashboardPage = () => {
             </Button>
           </Link>
         </div>
-        <section className="rounded-md bg-white py-2 shadow">
-          <Table>
-            <TableCaption>
-              Total outlet saat ini: {data.meta.total}
-            </TableCaption>
-            <TableHeader>
-              <TableRow>
-                {th.map((item, index) => {
-                  return (
-                    <TableHead className="px-4" key={index}>
-                      {item}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data?.data.map((outlet) => (
-                <TableRow key={outlet.id}>
-                  <TableCell className="px-4 font-medium">
-                    {outlet.name}
-                  </TableCell>
-                  <TableCell className="px-4 font-medium">
-                    {outlet.type}
-                  </TableCell>
-                  <TableCell className="px-4 font-medium">
-                    {outlet.address}
-                  </TableCell>
-                  <TableCell className="flex items-center gap-3">
+        {isDesktop ? (
+          <section className="rounded-md bg-white py-2 shadow">
+            <Table>
+              <TableCaption>
+                Total outlet saat ini: {data.meta.total}
+              </TableCaption>
+              <TableHeader>
+                <TableRow>
+                  {th.map((item, index) => {
+                    return (
+                      <TableHead className="px-4" key={index}>
+                        {item}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data?.data.map((outlet) => (
+                  <TableRow key={outlet.id}>
+                    <TableCell className="px-4 font-medium">
+                      {outlet.name}
+                    </TableCell>
+                    <TableCell className="px-4 font-medium">
+                      {outlet.type}
+                    </TableCell>
+                    <TableCell className="px-4 font-medium">
+                      {outlet.address}
+                    </TableCell>
+                    <TableCell className="flex items-center gap-3">
+                      <Link href={`/dashboard/outlet/edit-outlet/${outlet.id}`}>
+                        <Button variant="outline">Edit</Button>
+                      </Link>
+                      <AlertDialogDemo
+                        classname="bg-red-500 text-white px-4 py-2 rounded-md"
+                        action={"Hapus"}
+                        title="Apakah Anda yakin?"
+                        description="Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data outlet secara permanen dari database."
+                        onclick={() => handleDeleteOutlet(outlet.id)}
+                        disabled={pendingDelete}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </section>
+        ) : (
+          <>
+            {data?.data.map((outlet) => (
+              <Card key={outlet.id}>
+                <div className="flex flex-row items-center justify-between bg-[#e5f3f6] p-4">
+                  <span className="font-semibold">{outlet.name}</span>
+                  <Badge>{outlet.type}</Badge>
+                </div>
+                <div className="space-y-2 p-4">
+                  <div>{outlet.address}</div>
+                  <div className="flex items-center justify-end gap-2">
                     <Link href={`/dashboard/outlet/edit-outlet/${outlet.id}`}>
                       <Button variant="outline">Edit</Button>
                     </Link>
                     <AlertDialogDemo
-                      classname="bg-red-500 text-white px-4 py-2 rounded-md"
+                      classname="bg-red-500 text-white px-4 py-1.5 rounded-md"
                       action={"Hapus"}
                       title="Apakah Anda yakin?"
                       description="Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data outlet secara permanen dari database."
                       onclick={() => handleDeleteOutlet(outlet.id)}
                       disabled={pendingDelete}
                     />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </section>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </>
+        )}
         <div className="flex justify-center">
           <Pagination
             total={data.meta.total}

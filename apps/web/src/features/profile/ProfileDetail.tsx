@@ -7,6 +7,7 @@ import { FaClock } from "react-icons/fa6";
 import ChangeEmail from "./components/ChangeEmail";
 import ChangePassword from "./components/ChangePassword";
 import UpdateProfile from "./components/UpdateProfile";
+import { MdVerified } from "react-icons/md";
 
 const ProfileDetailPage = () => {
   const { data, isPending, refetch } = useGetUser();
@@ -36,7 +37,12 @@ const ProfileDetailPage = () => {
           )}
         </div>
         <div className="space-y-2 text-center text-sm">
-          <h3 className="text-2xl">{data?.name}</h3>
+          <div className="flex items-center justify-center gap-1">
+            <h3 className="text-2xl">{data?.name}</h3>
+            {data?.isVerified === true && (
+              <MdVerified className="text-[#37bae3]" size={18} />
+            )}
+          </div>
           <p>{data?.email}</p>
           <div className="flex items-center gap-2">
             <FaClock />

@@ -10,7 +10,7 @@ import Link from "next/link";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 const Branch = () => {
-  const { data } = useGetOutlets({ take: 6 });
+  const { data } = useGetOutlets({ take: 3 });
 
   return (
     <div className="bg-white">

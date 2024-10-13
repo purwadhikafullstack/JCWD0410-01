@@ -2,12 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -19,8 +13,10 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { CiUser } from "react-icons/ci";
 import {
+  LuHistory,
   LuHome,
   LuLogOut,
   LuMenu,
@@ -29,11 +25,35 @@ import {
 } from "react-icons/lu";
 import { MdArrowForwardIos, MdClose, MdVerified } from "react-icons/md";
 import { Button } from "./ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTrigger,
+} from "./ui/sheet";
+import { IoMdClose } from "react-icons/io";
 
 export const Header = () => {
   const { data: session } = useSession();
-  const pathname = usePathname();
 
+  const [header, setHeader] = useState(false);
+  const scrollHeader = () => {
+    if (window.scrollY >= 20) {
+      setHeader(true);
+    } else {
+      setHeader(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollHeader);
+    return () => {
+      window.addEventListener("scroll", scrollHeader);
+    };
+  }, []);
+
+  const pathname = usePathname();
   const paths = [
     "/login",
     "/register",
@@ -48,17 +68,17 @@ export const Header = () => {
   }
 
   return (
-    <div className="sticky top-0 z-10 border-b-[1px] bg-white">
+    <div className="sticky top-0 z-10 bg-white shadow transition-shadow duration-300 ease-in-out">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
+        <Link href="/" className="relative hidden h-14 w-32 md:inline-block">
+          <Image
+            src="/logo2.svg"
+            alt="FreshNest Laundry Logo"
+            fill
+            className="object-contain"
+          />
+        </Link>
         <div className="hidden items-center gap-8 text-sm text-neutral-600 md:flex">
-          <Link href="/" className="relative h-14 w-32">
-            <Image
-              src="/logo2.svg"
-              alt="FreshNest Laundry Logo"
-              fill
-              className="object-contain"
-            />
-          </Link>
           <Link href="/outlet-kami">Outlet Kami</Link>
           <Link href="/layanan-kami">Layanan & Harga</Link>
           <Link href="/request">Buat Pesanan</Link>
@@ -67,7 +87,7 @@ export const Header = () => {
         {session?.user.id ? (
           <div className="hidden md:flex">
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger className="focus:outline-none">
                 <div className="flex items-center gap-3">
                   <div className="text-sm">{session.user.name}</div>
                   <Avatar>
@@ -86,7 +106,9 @@ export const Header = () => {
                 <DropdownMenuLabel className="flex flex-col gap-1 font-normal">
                   <div className="flex items-center gap-1">
                     <p className="font-semibold">{session.user.name}</p>{" "}
-                    <MdVerified color="#37bae3" />
+                    {String(session.user.isVerified) === "true" && (
+                      <MdVerified color="#37bae3" />
+                    )}
                   </div>
                   <p className="text-neutral-500">{session.user.email}</p>
                 </DropdownMenuLabel>
@@ -100,13 +122,19 @@ export const Header = () => {
                 <Link href={`/address`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <LuHome />
-                    <Link href={`/address`}>Alamat Saya</Link>
+                    <p>Alamat Saya</p>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/orders`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuHistory />
+                    <p>Pesanan Saya</p>
                   </DropdownMenuItem>
                 </Link>
                 <Link href={`/request`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <LuShoppingCart />
-                    <Link href="/request">Buat Pesanan</Link>
+                    <p>Buat Pesanan</p>
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
@@ -146,13 +174,13 @@ export const Header = () => {
             />
           </Link>
 
-          <Drawer>
-            <DrawerTrigger>
-              <LuMenu size={28} className="text-neutral-600" />
-            </DrawerTrigger>
-            <DrawerContent className="flex space-y-6 p-6">
-              <div className="flex justify-between">
-                <Link href="/" className="relative h-14 w-32">
+          <Sheet>
+            <SheetTrigger>
+              <LuMenu size={24} className="text-neutral-600" />
+            </SheetTrigger>
+            <SheetContent className="space-y-6 p-6" hideClose>
+              <SheetHeader className="flex flex-row items-center justify-between space-y-0">
+                <Link href="/dashboard" className="relative h-14 w-32">
                   <Image
                     src="/logo2.svg"
                     alt="FreshNest Laundry Logo"
@@ -160,46 +188,56 @@ export const Header = () => {
                     className="object-contain"
                   />
                 </Link>
-                <DrawerClose>
-                  <MdClose size={24} />
-                </DrawerClose>
-              </div>
-
+                <SheetClose asChild>
+                  <Button variant="ghost" className="h-7 w-7 p-0">
+                    <IoMdClose size={18} />
+                  </Button>
+                </SheetClose>
+              </SheetHeader>
               {session && (
-                <>
-                  <div className="flex flex-col gap-4">
-                    <Link
-                      className="flex items-center justify-between"
-                      href={`/profile`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Avatar>
-                          <AvatarImage
-                            src={session.user.profilePicture}
-                            alt="@shadcn"
-                            className="object-cover"
-                          />
-                          <AvatarFallback>
-                            <CiUser size={24} />
-                          </AvatarFallback>
-                        </Avatar>
+                <div className="flex flex-col gap-4">
+                  <Link
+                    className="flex items-center justify-between"
+                    href={`/profile`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Avatar>
+                        <AvatarImage
+                          src={session.user.profilePicture}
+                          alt="@shadcn"
+                          className="object-cover"
+                        />
+                        <AvatarFallback>
+                          <CiUser size={24} />
+                        </AvatarFallback>
+                      </Avatar>
 
-                        {session.user.name}
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-1">
+                          <p className="font-semibold">{session.user.name}</p>
+                          {String(session.user.isVerified) === "true" && (
+                            <MdVerified color="#37bae3" />
+                          )}
+                        </div>
+
+                        <p className="line-clamp-1 max-w-[20ch] break-all text-neutral-500">
+                          {session.user.email}
+                        </p>
                       </div>
-                      <MdArrowForwardIos size={18} />
-                    </Link>
+                    </div>
+                    <MdArrowForwardIos size={16} className="mr-2 p-0" />
+                  </Link>
 
-                    <hr />
-                    <Link href="/address">Alamat Saya</Link>
-                    <Link href="">Pesanan Saya</Link>
+                  <hr />
+                  <Link href="/address">Alamat Saya</Link>
+                  <Link href="/orders">Pesanan Saya</Link>
 
-                    <hr />
-                  </div>
-                </>
+                  <hr />
+                </div>
               )}
 
               <div className="flex flex-col gap-4 text-neutral-600">
-                <Link href="/outlet-kami">Outlet Kami</Link>
+                <Link href="/outlet-kami"> Outlet Kami</Link>
                 <Link href="/layanan-kami">Layanan & Harga</Link>
                 <Link href="/request">Buat Pesanan</Link>
               </div>
@@ -217,8 +255,8 @@ export const Header = () => {
                   <Link href="/register">Register</Link>
                 </div>
               )}
-            </DrawerContent>
-          </Drawer>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { AddressController } from '@/controllers/address.controller';
 import { verifyToken } from '@/lib/verifyToken';
+import { validateAddAddress } from '@/validators/address.validator';
 import { Router } from 'express';
 
 export class AddressRouter {
@@ -15,7 +16,12 @@ export class AddressRouter {
   private initializeRoutes() {
     this.router.get('/', verifyToken, this.addressController.getAddresses);
     this.router.get('/:id', verifyToken, this.addressController.getAddress);
-    this.router.post('/', verifyToken, this.addressController.createAddress);
+    this.router.post(
+      '/',
+      verifyToken,
+      validateAddAddress,
+      this.addressController.createAddress,
+    );
     this.router.patch(
       '/update-address/:id',
       verifyToken,

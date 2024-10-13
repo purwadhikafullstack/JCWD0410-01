@@ -1,5 +1,6 @@
 import { LaundryItemController } from '@/controllers/laundry-item.controller';
 import { verifyToken } from '@/lib/verifyToken';
+import { validateAddLaundryItem } from '@/validators/laundry-item.validator';
 import { Router } from 'express';
 
 export class LaundryItemRouter {
@@ -26,6 +27,7 @@ export class LaundryItemRouter {
     this.router.post(
       '/',
       verifyToken,
+      validateAddLaundryItem,
       this.laundryItemController.createLaundryItem,
     );
     this.router.patch(

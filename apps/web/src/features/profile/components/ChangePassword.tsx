@@ -34,7 +34,7 @@ const ChangePassword = () => {
 
   return (
     <>
-      <Card className="shadow-sm">
+      <Card className="shadow">
         <CardHeader>
           <CardTitle className="text-xl">Ubah Password</CardTitle>
           <CardDescription>

@@ -29,7 +29,7 @@ const ChangeEmail = () => {
   });
   return (
     <>
-      <Card className="shadow-sm">
+      <Card className="shadow">
         <CardHeader>
           <CardTitle className="text-xl">Ubah Email</CardTitle>
           <CardDescription>

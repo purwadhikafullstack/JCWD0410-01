@@ -74,7 +74,6 @@ export const Footer = () => {
             <FaRegCopyright />
             <p>2024 FreshNest. All rights reserved.</p>
           </div>
-          <p>2024 FreshNest. All rights reserved.</p>
         </div>
       </div>
     </div>
