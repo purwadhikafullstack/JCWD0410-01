@@ -1,4 +1,4 @@
-import { OrderStatus, PaymentStatus, Prisma } from '@prisma/client';
+import { PaymentStatus, Prisma } from '@prisma/client';
 
 export const updatePaymentStatusService = async (
   invoice: string,
@@ -6,15 +6,6 @@ export const updatePaymentStatusService = async (
   tx: Prisma.TransactionClient,
 ) => {
   try {
-    if (!status) {
-      throw new Error('Wajib ada status, ini placeholder, pindah ke validator');
-    }
-
-    if (!invoice) {
-      throw new Error(
-        'Wajib ada invoice, ini placeholder, pindah ke validator',
-      );
-    }
 
     const payment = await tx.payment.findFirst({
       where: { invoiceNumber: invoice, isDeleted: false },

@@ -2,20 +2,18 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import useGetOrderItems from "@/hooks/api/order-item/useGetOrderItems";
+import useConfirmOrder from "@/hooks/api/order/useConfirmOrder";
 import useGetOrderUser from "@/hooks/api/order/useGetOrderUser";
 import useProcessPayment from "@/hooks/api/payment/useProcessPayment";
 import useUpdatePaymentSuccess from "@/hooks/api/payment/useUpdatePaymentSuccess";
 import { format } from "date-fns";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 
 const OrderDetailPage = () => {
@@ -25,7 +23,7 @@ const OrderDetailPage = () => {
   const { data, isPending, refetch } = useGetOrderUser(Number(id));
   const { mutateAsync: processPayment } = useProcessPayment();
   const {mutateAsync: paymentSuccess} = useUpdatePaymentSuccess()
-  // useGetOrderItems({workOrderId: data.})
+  const {mutateAsync: confirmOrder} = useConfirmOrder()
 
   const statusLabels = {
     WAITING_FOR_PICKUP_DRIVER: "Waiting for pickup driver",
@@ -117,7 +115,7 @@ const OrderDetailPage = () => {
       data.orderStatus === "PICKUP_ON_THE_WAY_TO_OUTLET" ||
       data.orderStatus === "ARRIVED_AT_OUTLET";
     return (
-      <div className="text-md md: mx-auto h-full bg-white pt-4">
+      <div className="text-md md: mx-auto max-w-7xl h-full bg-white pt-4">
         <Card className="mb-[-4px] shadow-sm">
           <CardHeader>
             <CardTitle className="text-center text-xl">Order Detail</CardTitle>
@@ -228,12 +226,16 @@ const OrderDetailPage = () => {
                   <p className="text-sm font-semibold">Status :</p>
                   <p className="text-lg">{orderStatusLabel}</p>
                 </div>
+                <div className="mb-2 flex justify-between">
+                  <p className="text-sm font-semibold">Payment status :</p>
+                  <p className="text-lg">{data.isPaid ? "Paid" : "Unpaid"}</p>
+                </div>
                 {data.deliveryOrders[0].status === "RECEIVED_BY_CUSTOMER" &&
                 data.orderStatus === "BEING_DELIVERED_TO_CUSTOMER" ? (
                   <Button
-                  // onClick={() => {
-                  //   handlePayment();
-                  // }}
+                  onClick={() => {
+                    confirmOrder({orderId: Number(id)});
+                  }}
                   >
                     Press to confirm delivery
                   </Button>

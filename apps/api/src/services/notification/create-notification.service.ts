@@ -12,14 +12,6 @@ export const createNotificationService = async (
   try {
     const { title, message } = body;
 
-    if (!title) {
-      throw new Error('Wajib ada type, ini placeholder, pindah ke validator');
-    }
-
-    if (!message) {
-      throw new Error('Wajib ada origin, ini placeholder, pindah ke validator');
-    }
-
     const notif = await tx.notification.create({
       data: {
         title,

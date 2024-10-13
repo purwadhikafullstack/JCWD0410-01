@@ -7,7 +7,7 @@ import DashboardHeader from "@/components/DashboardHeader";
 import DashboardDeliveryOrdersDriversPage from "./drivers";
 import DashboardDeliveryOrdersAdminsPage from "./admins";
 
-const DashboardPickupOrdersPage = () => {
+const DashboardDeliveryOrdersPage = () => {
   const session = useSession();
   const router = useRouter();
 
@@ -31,4 +31,4 @@ const DashboardPickupOrdersPage = () => {
   }
 };
 
-export default DashboardPickupOrdersPage;
+export default DashboardDeliveryOrdersPage;

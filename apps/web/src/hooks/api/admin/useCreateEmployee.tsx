@@ -1,12 +1,11 @@
 "use client";
 
+import useAxios from "@/hooks/useAxios";
+import { Role } from "@/types/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import useAxios from "@/hooks/useAxios";
-import { getSession, signIn, useSession } from "next-auth/react";
-import { Role } from "@/types/user";
 
 interface CreateEmployeePayload {
   profilePicture?: File | string;

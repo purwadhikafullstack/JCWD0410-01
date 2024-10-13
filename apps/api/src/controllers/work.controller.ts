@@ -1,15 +1,8 @@
-import { createUserService } from '@/services/admin/create-user.service';
-import { getCustomersService } from '@/services/admin/get-customers.service';
-import { getEmployeesService } from '@/services/admin/get-employees.service';
-import { getPickupAdminsService } from '@/services/pickup/get-pickup-admins.service';
-import { getPickupDriverService } from '@/services/pickup/get-pickup-driver.service';
-import { updatePickupOrderDriverService } from '@/services/pickup/update-pickup-driver.service';
 import { bypassWorkOrderService } from '@/services/worker/bypass-work.service';
 import { getWorkOrderAdminsService } from '@/services/worker/get-work-order-admins.service';
 import { getWorkOrdersAdminsService } from '@/services/worker/get-work-orders-admins.service';
 import { getWorkOrdersWorkerService } from '@/services/worker/get-work-orders-worker.service';
 import { updateWorkOrdersWorkersService } from '@/services/worker/update-work-orders-worker.service';
-import { Role } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 
 export class WorkController {

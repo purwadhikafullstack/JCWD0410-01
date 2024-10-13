@@ -94,10 +94,7 @@ export const getEmployeesService = async (
         employee: {
           include: {
             employeeStations: { include: { station: true } },
-            // deliveryOrders: true,
-            // pickupOrders: true,
             outlet: true,
-            // workOrders: true,
           },
         },
       },

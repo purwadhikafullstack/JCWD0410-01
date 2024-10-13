@@ -14,14 +14,6 @@ export const createUserNotificationService = async (
   try {
     const { users, notificationId } = body;
 
-    if (!users) {
-      throw new Error('Wajib ada type, ini placeholder, pindah ke validator');
-    }
-
-    if (!notificationId) {
-      throw new Error('Wajib ada origin, ini placeholder, pindah ke validator');
-    }
-
     const data = users.map((user) => {
       return { userId: user.id, notificationId };
     });

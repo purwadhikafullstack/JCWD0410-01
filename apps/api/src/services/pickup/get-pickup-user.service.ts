@@ -1,5 +1,5 @@
 import prisma from '@/prisma';
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 interface GetPickupInterface {
   page: number;

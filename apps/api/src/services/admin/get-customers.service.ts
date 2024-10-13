@@ -1,5 +1,5 @@
 import prisma from '@/prisma';
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 interface GetCustomersInterface {
   page: number;
@@ -8,9 +8,6 @@ interface GetCustomersInterface {
   sortOrder: string;
   search: string;
   isVerified?: string;
-  // email?: string;
-  // name?: string;
-  // phone?: string;
 }
 
 export const getCustomersService = async (query: GetCustomersInterface) => {

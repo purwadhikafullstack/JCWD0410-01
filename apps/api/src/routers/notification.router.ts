@@ -1,5 +1,4 @@
 import { NotificationController } from '@/controllers/notification.controller';
-import { PickupController } from '@/controllers/pickup.controller';
 import { verifyToken } from '@/lib/verifyToken';
 import { Router } from 'express';
 

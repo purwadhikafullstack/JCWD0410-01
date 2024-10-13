@@ -1,7 +1,5 @@
 import { Prisma } from '@prisma/client';
 import prisma from '../../prisma';
-import { transporter } from '@/lib/nodemailer';
-import { createNotificationService } from '../notification/create-notification.service';
 import { createUserNotificationService } from '../notification/create-user-notification.service';
 import { updateOrderStatusService } from '../order/update-order-status.service';
 
@@ -16,14 +14,6 @@ export const updatePickupOrderDriverService = async (
 ) => {
   try {
     const { status, id } = body;
-
-    if (!status) {
-      throw new Error('Wajib ada status, ini placeholder, pindah ke validator');
-    }
-
-    if (!id) {
-      throw new Error('Wajib ada id, ini placeholder, pindah ke validator');
-    }
 
     const pickupOrder = await prisma.pickup_Order.findFirst({
       where: { id, isDeleted: false },
@@ -128,12 +118,6 @@ export const updatePickupOrderDriverService = async (
           tx,
         );
       }
-
-      // await transporter.sendMail({
-      //   to: payment.user.email,
-      //   subject: 'Payment Status',
-      //   html: `<h1>Your Payment Status has been updated</h1><p>Payment id: ${payment.id}</p><p>New Status: ${status}</p>`,
-      // });
 
       return { message: 'Update pickup order success' };
     });

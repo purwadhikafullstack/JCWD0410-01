@@ -1,8 +1,8 @@
 'use client'
 
 import useAxios from "@/hooks/useAxios";
+import { Delivery_Order } from "@/types/delivery-order";
 import { IPageableResponse, IPaginationQueries } from "@/types/pagination";
-import { Pickup_Order } from "@/types/pickup-order";
 import { useQuery } from "@tanstack/react-query";
 
 export interface DeliveryOrdersDriversPaginationQueries extends IPaginationQueries {
@@ -10,7 +10,7 @@ export interface DeliveryOrdersDriversPaginationQueries extends IPaginationQueri
   status: 'ONGOING' | 'REQUEST' | 'HISTORY';
 }
 
-export interface Delivery_Order_Extension extends Pickup_Order {
+export interface Delivery_Order_Extension extends Delivery_Order {
   address: {
     latitude: string;
     longitude: string;

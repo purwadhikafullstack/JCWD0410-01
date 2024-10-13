@@ -4,6 +4,13 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { DataTable } from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -13,14 +20,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useGetCustomers from "@/hooks/api/admin/useGetCustomers";
-import { debounce } from "lodash";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { userColumns } from "../components/UserColumns";
-import UsersHeader from "../components/UsersHeader";
+import { useState } from "react";
+import { useDebounceValue } from "usehooks-ts";
 import { customersColumns } from "../components/CustomersColumns";
+import UsersHeader from "../components/UsersHeader";
 
 const DashboardUsersCustomersPage = () => {
   const session = useSession();
@@ -30,6 +36,7 @@ const DashboardUsersCustomersPage = () => {
   const [isVerified, setIsVerified] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [sortBy, setSortBy] = useState("name");
+  const [debouncedSearch] = useDebounceValue(searchValue, 300);
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
@@ -40,20 +47,12 @@ const DashboardUsersCustomersPage = () => {
     take: 8,
     sortBy,
     sortOrder,
-    search: searchValue,
+    search: debouncedSearch,
     isVerified,
   });
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value) => {
-        setSearchValue(value);
-      }, 300),
-    [setSearchValue],
-  );
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   const handleSelectIsVerified = (value: string) => {
@@ -78,84 +77,92 @@ const DashboardUsersCustomersPage = () => {
   return session.data?.user.role === "ADMIN" ? (
     <>
       <DashboardHeader />
-      <UsersHeader />
-      <div className="text-md md: mx-auto h-full p-6">
-        <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
-          <div className="mb-2 text-sm">
-            <input
-              className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:text-sm"
-              placeholder="Search value"
-              type="text"
-              name="search"
-              value={searchValue}
-              onChange={handleInputChange}
-            />
-          </div>
-          <Select onValueChange={handleSortBy}>
-            <SelectTrigger>
-              <SelectValue placeholder="Sort By" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Sort by</SelectLabel>
-                <SelectItem value="name">Name</SelectItem>
-                <SelectItem value="email">Email</SelectItem>
-                <SelectItem value="phoneNumber">Phone Number</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Select onValueChange={handleSortOrder}>
-            <SelectTrigger>
-              <SelectValue placeholder="Sort Order" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Sort order</SelectLabel>
-                <SelectItem value="asc">Ascending</SelectItem>
-                <SelectItem value="desc">Descending</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Select onValueChange={handleSelectIsVerified}>
-            <SelectTrigger>
-              <SelectValue placeholder="Verification" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Status</SelectLabel>
-                <SelectItem value="ALL">All Status</SelectItem>
-                <SelectItem value="VERIFIED">Verified</SelectItem>
-                <SelectItem value="UNVERIFIED">Unverified</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        {isPending ? (
-          <Loader2 className="mx-auto animate-spin" />
-        ) : data?.data ? (
-          <>
-            <DataTable
-              columns={customersColumns}
-              data={data?.data!}
-              meta={data.meta}
-            />
-            <div className="my-4 flex justify-center">
-              <Pagination
-                total={data?.meta?.total || 0}
-                limit={data?.meta?.take || 0}
-                onChangePage={onChangePage}
-                page={page}
-              />
+      <Card className="shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-xl">Users</CardTitle>
+          <CardDescription>List of users</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <UsersHeader />
+          <div className="text-md md: mx-auto h-full p-6">
+            <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
+              <div className="mb-2 text-sm">
+                <input
+                  className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:text-sm"
+                  placeholder="Search value"
+                  type="text"
+                  name="search"
+                  value={searchValue}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <Select onValueChange={handleSortBy}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Sort by</SelectLabel>
+                    <SelectItem value="name">Name</SelectItem>
+                    <SelectItem value="email">Email</SelectItem>
+                    <SelectItem value="phoneNumber">Phone Number</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select onValueChange={handleSortOrder}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort Order" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Sort order</SelectLabel>
+                    <SelectItem value="asc">Ascending</SelectItem>
+                    <SelectItem value="desc">Descending</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select onValueChange={handleSelectIsVerified}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Verification" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Status</SelectLabel>
+                    <SelectItem value="ALL">All Status</SelectItem>
+                    <SelectItem value="VERIFIED">Verified</SelectItem>
+                    <SelectItem value="UNVERIFIED">Unverified</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
-          </>
-        ) : (
-          <DataTable
-            columns={customersColumns}
-            data={[]}
-            meta={{ page: 1, take: 8, total: 0 }}
-          />
-        )}
-      </div>
+            {isPending ? (
+              <Loader2 className="mx-auto animate-spin" />
+            ) : data?.data ? (
+              <>
+                <DataTable
+                  columns={customersColumns}
+                  data={data?.data!}
+                  meta={data.meta}
+                />
+                <div className="my-4 flex justify-center">
+                  <Pagination
+                    total={data?.meta?.total || 0}
+                    limit={data?.meta?.take || 0}
+                    onChangePage={onChangePage}
+                    page={page}
+                  />
+                </div>
+              </>
+            ) : (
+              <DataTable
+                columns={customersColumns}
+                data={[]}
+                meta={{ page: 1, take: 8, total: 0 }}
+              />
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </>
   ) : (
     <>

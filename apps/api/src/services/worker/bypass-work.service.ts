@@ -12,14 +12,6 @@ export const bypassWorkOrderService = async (
   try {
     const { bypassNote, id } = body;
 
-    if (!bypassNote) {
-      throw new Error('Wajib ada status, ini placeholder, pindah ke validator');
-    }
-
-    if (!id) {
-      throw new Error('Wajib ada id, ini placeholder, pindah ke validator');
-    }
-
     const workOrder = await prisma.work_Order.findFirst({
       where: { id, isDeleted: false },
     });

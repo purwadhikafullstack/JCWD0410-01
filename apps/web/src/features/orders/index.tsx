@@ -1,8 +1,14 @@
 "use client";
 
-import DashboardHeader from "@/components/DashboardHeader";
 import { DataTable } from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -14,19 +20,14 @@ import {
 } from "@/components/ui/select";
 import useGetOrdersUsers from "@/hooks/api/order/useGetOrdersUser";
 import { orderStatus, OrderStatus } from "@/types/order";
-import { debounce } from "lodash";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
+import { useDebounceValue, useMediaQuery } from "usehooks-ts";
+import OrderCard from "../dashboard/orders/components/OrdersCard";
 import { ordersUsersColumns } from "./components/OrdersUsersColumns";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 const OrdersUsersPage = () => {
   const session = useSession();
@@ -36,10 +37,10 @@ const OrdersUsersPage = () => {
   const [status, setStatus] = useState<OrderStatus | "ALL">("ALL");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortBy, setSortBy] = useState("createdAt");
-
-  // const [outletId, setOutletId] = useState("");
-
-  // const { data: outlets } = useGetOutlets({ take: 10 });
+  const [debouncedSearch] = useDebounceValue(searchValue, 300);
+  const isDesktop = useMediaQuery("(min-width: 768px)", {
+    initializeWithValue: false,
+  });
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
@@ -50,20 +51,12 @@ const OrdersUsersPage = () => {
     take: 8,
     sortBy: sortBy,
     sortOrder: sortOrder,
-    search: searchValue,
+    search: debouncedSearch,
     status,
   });
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value) => {
-        setSearchValue(value);
-      }, 300),
-    [setSearchValue],
-  );
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   const handleSelectStatus = (value: OrderStatus | "ALL") => {
@@ -77,13 +70,6 @@ const OrdersUsersPage = () => {
   const handleSortBy = (value: string) => {
     setSortBy(value);
   };
-
-  // const handleOutletId = (value: string) => {
-  //   setOutletId(value);
-  //   if (value === "0") {
-  //     setOutletId("");
-  //   }
-  // };
 
   if (!session.data) {
     return <div></div>;
@@ -143,8 +129,12 @@ const OrdersUsersPage = () => {
                   <SelectGroup>
                     <SelectLabel>Status</SelectLabel>
                     <SelectItem value="ALL">ALL</SelectItem>
-                    {orderStatus.map((status) => {
-                      return <SelectItem value={status}>{status}</SelectItem>;
+                    {orderStatus.map((status, index) => {
+                      return (
+                        <SelectItem value={status} key={index}>
+                          {status}
+                        </SelectItem>
+                      );
                     })}
                   </SelectGroup>
                 </SelectContent>
@@ -153,21 +143,52 @@ const OrdersUsersPage = () => {
             {isPending ? (
               <Loader2 className="mx-auto animate-spin" />
             ) : data?.data ? (
-              <>
-                <DataTable
-                  columns={ordersUsersColumns}
-                  data={data?.data!}
-                  meta={data.meta}
-                />
-                <div className="my-4 flex justify-center">
-                  <Pagination
-                    total={data?.meta?.total || 0}
-                    limit={data?.meta?.take || 0}
-                    onChangePage={onChangePage}
-                    page={page}
+              isDesktop ? (
+                <>
+                  <DataTable
+                    columns={ordersUsersColumns}
+                    data={data?.data!}
+                    meta={data.meta}
                   />
-                </div>
-              </>
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={page}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4">
+                    {data.data.map((order) => {
+                      return (
+                        <Link href={`/orders/${order.id}`}>
+                          <OrderCard
+                            key={order.id}
+                            orderNumber={order.orderNumber}
+                            orderStatus={order.orderStatus}
+                            totalFee={order.total}
+                            paymentStatus={order.isPaid}
+                            outlet={order.outlet.name}
+                            timeOfOrder={order.createdAt}
+                            action={() => {}}
+                          />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={page}
+                    />
+                  </div>
+                </>
+              )
             ) : (
               <DataTable
                 columns={ordersUsersColumns}

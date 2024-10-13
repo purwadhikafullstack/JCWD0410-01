@@ -27,47 +27,10 @@ export const createDeliveryService = async (
       orderId,
     } = body;
 
-    if (!outletId) {
-      throw new Error(
-        'Wajib ada deliveryOutletId, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!latitude) {
-      throw new Error(
-        'Wajib ada deliveryLatitude, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!longitude) {
-      throw new Error(
-        'Wajib ada deliveryLongitude, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!fee) {
-      throw new Error(
-        'Wajib ada deliveryFee, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!addressId) {
-      throw new Error(
-        'Wajib ada deliveryAddressId, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!status) {
-      throw new Error(
-        'Wajib ada deliveryStatus, ini placeholder, pindah ke validator',
-      );
-    }
-
     const count =
       (await tx.delivery_Order.count({
         where: {
           userId: customerId,
-          // NOT: { status: 'ONSITE' },
         },
       })) + 1;
     const deliveryNumber =

@@ -1,17 +1,6 @@
 "use client";
 
 import { DataTable } from "@/components/DataTable";
-import React, { FC, useEffect, useMemo, useState } from "react";
-import { userColumns } from "./UserColumns";
-import {
-  GetUsersQuery,
-  UserWithAddress,
-} from "@/hooks/api/admin/useGetCustomers";
-import { UseQueryResult } from "@tanstack/react-query";
-import { IPageableResponse } from "@/types/pagination";
-import { Loader2 } from "lucide-react";
-import { usePagination } from "@/hooks/usePagination";
-import { usePathname } from "next/navigation";
 import Pagination from "@/components/Pagination";
 import {
   Select,
@@ -22,8 +11,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { debounce } from "lodash";
+import {
+  GetUsersQuery,
+  UserWithAddress,
+} from "@/hooks/api/admin/useGetCustomers";
+import { IPageableResponse } from "@/types/pagination";
 import { Role } from "@/types/user";
+import { UseQueryResult } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { usePathname } from "next/navigation";
+import React, { FC, useState } from "react";
+import { useDebounceValue } from "usehooks-ts";
+import { userColumns } from "./UserColumns";
 
 interface UserTableInterface {
   callback: (
@@ -37,6 +36,7 @@ const UserTable: FC<UserTableInterface> = ({ callback }) => {
   const [isVerified, setIsVerified] = useState("");
   const [role, setRole] = useState<Role | undefined>(undefined);
   const pathname = usePathname();
+  const [debouncedSearch] = useDebounceValue(searchValue, 300)
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
@@ -47,21 +47,13 @@ const UserTable: FC<UserTableInterface> = ({ callback }) => {
     take: 8,
     sortBy: "name",
     sortOrder: "asc",
-    search: searchValue,
+    search: debouncedSearch,
     isVerified,
     role,
   });
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value) => {
-        setSearchValue(value);
-      }, 300),
-    [setSearchValue],
-  );
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   const handleSelectIsVerified = (value: string) => {

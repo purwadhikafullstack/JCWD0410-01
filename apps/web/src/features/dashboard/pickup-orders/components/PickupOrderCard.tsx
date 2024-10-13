@@ -39,7 +39,7 @@ const PickupOrderCard: React.FC<PickupOrderCardProps> = ({
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <p>Customer:</p>
+            <p>Liaison:</p>
             <p className="line-clamp-2 max-w-[16ch] break-all">{customer}</p>
           </div>
           <div className="flex items-center justify-between">

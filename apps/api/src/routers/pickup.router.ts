@@ -2,6 +2,7 @@ import { PickupController } from '@/controllers/pickup.controller';
 import { verifyToken } from '@/lib/verifyToken';
 import { adminsGuard } from '@/middleware/adminsGuard';
 import { driverGuard } from '@/middleware/driverGuard';
+import { validateUpdatePickup } from '@/validators/pickup.validator';
 import { Router } from 'express';
 
 export class PickupRouter {
@@ -36,6 +37,7 @@ export class PickupRouter {
       '/drivers',
       verifyToken,
       driverGuard,
+      validateUpdatePickup,
       this.pickupController.updatePickupDriver,
     );
   }

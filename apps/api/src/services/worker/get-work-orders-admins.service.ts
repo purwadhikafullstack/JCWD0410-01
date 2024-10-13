@@ -1,6 +1,5 @@
 import prisma from '@/prisma';
-import { Prisma, Role, User } from '@prisma/client';
-import e from 'cors';
+import { Prisma } from '@prisma/client';
 
 interface GetWorkOrdersAdminsInterface {
   page: number;
