@@ -44,7 +44,7 @@ const DashboardDeliveryOrdersAdminsPage = () => {
     initializeWithValue: false,
   });
 
-  const { data: outlets } = useGetOutlets({ take: 10 });
+  const { data: outlets } = useGetOutlets({ take: 12 });
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);

@@ -64,7 +64,7 @@ const DashboardEarningsPage = () => {
     setFilterYear(value);
   };
 
-  const { data: outlets } = useGetOutlets({ take: 10 });
+  const { data: outlets } = useGetOutlets({ take: 12 });
 
   const result = new Intl.NumberFormat("id-ID", {
     style: "currency",

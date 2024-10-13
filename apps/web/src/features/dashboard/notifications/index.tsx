@@ -67,7 +67,7 @@ const DashboardNotificationPage = () => {
   return (
     <>
       {pathname === "/notifications" ? "" : <DashboardHeader />}
-      <div className={`text-md md: mx-auto h-full bg-white p-4`}>
+      <div className={`text-md md: mx-auto h-full max-w-7xl bg-white p-4`}>
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Notifications</CardTitle>
