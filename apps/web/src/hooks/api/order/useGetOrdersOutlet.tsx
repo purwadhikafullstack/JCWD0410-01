@@ -1,10 +1,8 @@
 'use client'
 
 import useAxios from "@/hooks/useAxios";
-import { Notification } from "@/types/notification";
 import { Order, OrderStatus } from "@/types/order";
 import { IPageableResponse, IPaginationQueries } from "@/types/pagination";
-import { User_Notification } from "@/types/user-notification";
 import { useQuery } from "@tanstack/react-query";
 
 export interface OrdersPaginationQueries extends IPaginationQueries {

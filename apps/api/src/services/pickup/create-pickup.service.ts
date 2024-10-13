@@ -26,47 +26,10 @@ export const createPickupService = async (
       orderId,
     } = body;
 
-    if (!outletId) {
-      throw new Error(
-        'Wajib ada pickupOutletId, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!latitude) {
-      throw new Error(
-        'Wajib ada pickupLatitude, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!longitude) {
-      throw new Error(
-        'Wajib ada pickupLongitude, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!fee) {
-      throw new Error(
-        'Wajib ada pickupFee, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!addressId) {
-      throw new Error(
-        'Wajib ada pickupAddressId, ini placeholder, pindah ke validator',
-      );
-    }
-
-    if (!status) {
-      throw new Error(
-        'Wajib ada pickupStatus, ini placeholder, pindah ke validator',
-      );
-    }
-
     const count =
       (await tx.pickup_Order.count({
         where: {
           userId: customerId,
-          // NOT: { status: 'ONSITE' },
         },
       })) + 1;
     const pickupNumber =

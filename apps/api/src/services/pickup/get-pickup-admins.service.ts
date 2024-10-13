@@ -1,5 +1,5 @@
 import prisma from '@/prisma';
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 interface GetPickupInterface {
   page: number;
@@ -78,11 +78,6 @@ export const getPickupAdminsService = async (
     const total = await prisma.pickup_Order.count({
       where: whereClause,
     });
-
-    // const usersWithoutPassword = deliveryOrders.filter((deliveryOrder) => {
-    //   const { password, ...userWithoutPassword } = user;
-    //   return userWithoutPassword;
-    // });
 
     return {
       data: pickupOrders,

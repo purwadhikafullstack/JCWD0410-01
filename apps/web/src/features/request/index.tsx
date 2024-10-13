@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import haversine from "haversine-distance";
 import useCreateUserOrder from "@/hooks/api/order/useCreateUserOrder";
 import { SpinnerCircularFixed } from "spinners-react";
+import { CreateUserOrderSchema } from "./schemas/CreateUserOrderSchema";
 
 const RequestOrderPage = () => {
   const { mutateAsync: createOrder, isPending } = useCreateUserOrder();
@@ -70,7 +71,7 @@ const RequestOrderPage = () => {
       outletId: selectedOutletId,
       outletName: selectedOutletName,
     },
-    // validationSchema: CreateEventSchema,
+    validationSchema: CreateUserOrderSchema,
     onSubmit: async (values) => {
       await createOrder({
         pickupLatitude: String(values.pickupLatitude),

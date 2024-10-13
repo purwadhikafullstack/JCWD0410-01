@@ -30,17 +30,4 @@ export class NotificationController {
       next(error);
     }
   }
-
-  // async updatePickupDriver(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ) {
-  //   try {
-  //     const result = await updatePickupOrderDriverService(req.body, res.locals.user.id);
-  //     return res.status(200).send(result);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
 }

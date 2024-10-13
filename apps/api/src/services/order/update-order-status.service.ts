@@ -6,15 +6,6 @@ export const updateOrderStatusService = async (
   tx: Prisma.TransactionClient,
 ) => {
   try {
-    if (!status) {
-      throw new Error('Wajib ada status, ini placeholder, pindah ke validator');
-    }
-
-    if (!orderId) {
-      throw new Error(
-        'Wajib ada orderid, ini placeholder, pindah ke validator',
-      );
-    }
 
     const order = await tx.order.findFirst({
       where: { id: orderId, isDeleted: false },

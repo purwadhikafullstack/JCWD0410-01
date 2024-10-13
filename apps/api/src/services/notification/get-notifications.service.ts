@@ -1,5 +1,5 @@
 import prisma from '@/prisma';
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 interface GetNotificationsInterface {
   page: number;
@@ -22,7 +22,7 @@ export const getNotificationsService = async (
     });
 
     if (!user) {
-      throw new Error('User not found, ini placeholder, pindah ke validator');
+      throw new Error('User not found');
     }
 
     let whereClause: Prisma.User_NotificationWhereInput = {
@@ -67,11 +67,6 @@ export const getNotificationsService = async (
         });
 
     const total = userNotifications.length
-
-    // const usersWithoutPassword = deliveryOrders.filter((deliveryOrder) => {
-    //   const { password, ...userWithoutPassword } = user;
-    //   return userWithoutPassword;
-    // });
 
     return {
       data: userNotifications,

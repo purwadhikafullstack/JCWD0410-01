@@ -7,13 +7,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { UserWithAddress } from "@/hooks/api/admin/useGetCustomers";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
 import { CiUser } from "react-icons/ci";
 import { FaCircleXmark } from "react-icons/fa6";
 import { IoMdCheckmarkCircle } from "react-icons/io";
@@ -126,10 +124,6 @@ export const customersColumns: ColumnDef<UserWithAddress>[] = [
             >
               Copy Phone Number
             </DropdownMenuItem>
-            {/* <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/dashboard/users/${user.id}`}>View user</Link>
-            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       );

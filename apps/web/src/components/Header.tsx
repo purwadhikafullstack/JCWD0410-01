@@ -16,10 +16,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiUser } from "react-icons/ci";
 import {
+  LuAlertCircle,
   LuHistory,
   LuHome,
   LuLogOut,
   LuMenu,
+  LuPlaneLanding,
+  LuPlaneTakeoff,
   LuShoppingCart,
   LuUser2,
 } from "react-icons/lu";
@@ -131,10 +134,28 @@ export const Header = () => {
                     <p>Pesanan Saya</p>
                   </DropdownMenuItem>
                 </Link>
+                <Link href={`/pickup-orders`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuPlaneTakeoff />
+                    <p>Pickup orders</p>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/delivery-orders`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuPlaneLanding />
+                    <p>Delivery orders</p>
+                  </DropdownMenuItem>
+                </Link>
                 <Link href={`/request`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <LuShoppingCart />
                     <p>Buat Pesanan</p>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/notifications`}>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <LuAlertCircle />
+                    <p>Notifikasi</p>
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />

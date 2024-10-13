@@ -1,9 +1,5 @@
-import { MIDTRANS_CLIENT_KEY, MIDTRANS_SERVER_KEY } from '@/config';
-import { hashPassword } from '@/lib/bcrypt';
-import { cloudinaryUpload } from '@/lib/cloudinary';
 import prisma from '@/prisma';
-import { Prisma, User } from '@prisma/client';
-import { MidtransClient } from 'midtrans-node-client';
+import { Prisma } from '@prisma/client';
 import { createUserNotificationService } from '../notification/create-user-notification.service';
 
 interface ProcessOrderInterface {
@@ -108,26 +104,6 @@ export const processOrderService = async (
       await tx.user_Notification.create({
         data: { userId: order.userId, notificationId: 4 },
       });
-
-      // const count = (await tx.payment.count({ where: { orderId } })) + 1;
-      // const invoiceNumber = order.orderNumber + '-' + count;
-
-      // const snap = new MidtransClient.Snap({
-      //   isProduction: false,
-      //   clientKey: MIDTRANS_CLIENT_KEY,
-      //   serverKey: MIDTRANS_SERVER_KEY,
-      // });
-
-      // const payment = await tx.payment.create
-
-      // const payload = {
-      //   transaction_details: {
-      //     order_id: payment.invoiceNumber,
-      //     gross_amount: amount,
-      //   },
-      // };
-
-      // const transaction = await snap.createTransaction(payload);
 
       return {
         order: processedOrder,

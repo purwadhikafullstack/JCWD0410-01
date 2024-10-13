@@ -11,8 +11,10 @@ const loggedInRoutes = [
   "/profile",
   "/address",
   "/request",
-  "pickup-orders",
-  "orders",
+  "/pickup-orders",
+  "/delivery-orders",
+  "/orders",
+  "/notifications",
 ];
 
 const privateRoutes = ["/dashboard"];

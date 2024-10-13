@@ -21,10 +21,7 @@ export interface EmployeeStationExtension extends Employee_Station {
 
 export interface EmployeeExtension extends Employee {
   employeeStations: EmployeeStationExtension[];
-  // deliveryOrders: Delivery_Order[];
-  // pickupOrders: Pickup_Order[];
   outlet: Outlet;
-  // workOrders: WorkOrders[];
 }
 
 export interface UserWithEmployee extends User {

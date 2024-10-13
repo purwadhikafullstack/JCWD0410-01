@@ -27,7 +27,7 @@ import { Badge } from "@/components/ui/badge";
 const th = ["Nama", "Tipe", "Alamat", "Action"];
 
 const OutletDashboardPage = () => {
-  const isDesktop = useMediaQuery("(min-width: 640px)", {
+  const isDesktop = useMediaQuery("(min-width: 768px)", {
     initializeWithValue: false,
   });
   const router = useRouter();

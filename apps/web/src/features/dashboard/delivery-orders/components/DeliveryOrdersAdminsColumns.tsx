@@ -52,15 +52,4 @@ export const deliveryOrdersAdminsColumns: ColumnDef<Delivery_Order_Extension>[] 
       return <div>{createdAt}</div>;
     },
   },
-  // {
-  //   accessorKey: "updatedAt",
-  //   header: "Last updated",
-  //   cell: ({ row }) => {
-  //     const updatedAt = format(
-  //       new Date(row.getValue("updatedAt")),
-  //       "dd MMM yyyy, HH:mm:ss",
-  //     );
-  //     return <div>{updatedAt}</div>;
-  //   },
-  // },
 ];

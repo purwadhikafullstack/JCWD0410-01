@@ -3,7 +3,6 @@
 import useAxios from "@/hooks/useAxios";
 import { Delivery_Order } from "@/types/delivery-order";
 import { IPageableResponse, IPaginationQueries } from "@/types/pagination";
-import { Pickup_Order } from "@/types/pickup-order";
 import { useQuery } from "@tanstack/react-query";
 
 export interface DeliveryOrdersUsersPaginationQueries extends IPaginationQueries {

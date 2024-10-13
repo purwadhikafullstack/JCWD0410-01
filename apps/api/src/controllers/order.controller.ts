@@ -1,15 +1,15 @@
+import { confirmOrderDeliveryService } from '@/services/order/confirm-order-delivery.service';
 import { createUserOrderService } from '@/services/order/create-user-order.service';
+import { getOrderChartService } from '@/services/order/get-order-chart.service';
 import { getOrderUserService } from '@/services/order/get-order-user.service';
 import { getOrdersOutletService } from '@/services/order/get-orders-outlet.service';
 import { getOrdersUserService } from '@/services/order/get-orders-user.service';
 import { getOrdersService } from '@/services/order/get-orders.service';
 import { processOrderService } from '@/services/order/process-order.service';
-import { createPickupService } from '@/services/pickup/create-pickup.service';
 import { OrderStatus } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 
 export class OrderController {
-  // createUserOrderService mengandung createOrder, createPickup, createDelivery, createNotification dalam satu kesatuan
   async createUserOrder(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await createUserOrderService(req.body, res.locals.user.id);
@@ -89,6 +89,29 @@ export class OrderController {
   async getOrderUser(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await getOrderUserService(Number(req.params.id), res.locals.user.id);
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getOrderChart(req: Request, res: Response, next: NextFunction) {
+    try {
+      const query = {
+        filterMonth: req.query.filterMonth as string,
+        filterYear: req.query.filterYear as string,
+        outletId: parseInt(req.query.outletId as string) || 0,
+      };
+      const result = await getOrderChartService(query, res.locals.user.id);
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async confirmOrder(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await confirmOrderDeliveryService(req.body, res.locals.user.id);
       return res.status(200).send(result);
     } catch (error) {
       next(error);

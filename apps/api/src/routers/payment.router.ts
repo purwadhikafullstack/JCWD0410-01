@@ -1,7 +1,6 @@
-import { OrderController } from '@/controllers/order.controller';
 import { PaymentController } from '@/controllers/payment.controller';
 import { verifyToken } from '@/lib/verifyToken';
-import { adminsGuard } from '@/middleware/adminsGuard';
+import { validatePaymentSuccess, validateProcessPayment } from '@/validators/payment.validator';
 import { Router } from 'express';
 
 export class PaymentRouter {
@@ -18,11 +17,13 @@ export class PaymentRouter {
     this.router.post(
       '/process',
       verifyToken,
+      validateProcessPayment,
       this.paymentController.processPayment,
     );
     this.router.patch(
       '/success',
       verifyToken,
+      validatePaymentSuccess,
       this.paymentController.updatePaymentSuccess,
     );
   }

@@ -1,57 +1,15 @@
 "use client";
 
-import { UserWithAddress } from "@/hooks/api/admin/useGetCustomers";
-import { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
-import { IoMdCheckmarkCircle } from "react-icons/io";
-import { FaCircleXmark } from "react-icons/fa6";
-import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { Pickup_Order_Extension } from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
-import { format } from "date-fns";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import useUpdatePickupDriver from "@/hooks/api/pickup/useUpdatePickupDriver";
 import { GetOrders } from "@/hooks/api/order/useGetOrders";
-import { useRouter } from "next/navigation";
+import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import Link from "next/link";
 
 export const ordersAdminsColumns: ColumnDef<GetOrders>[] = [
-  // const formattedEndDate = format(
-  //   new Date(card.endDate),
-  //   "MMM dd, yyyy, HH:mm:ss",
-  // );
   {
     accessorKey: "orderNumber",
     header: "Order Number",
   },
-  // {
-  //   accessorKey: "address.address",
-  //   header: "Customer Address",
-  //   cell: ({ row }) => {
-  //     const address = String(row.original.address.address);
-  //     return (
-  //       <div className="line-clamp-2 max-w-[20ch] break-all">{address}</div>
-  //     );
-  //   },
-  // },
   {
     accessorKey: "orderStatus",
     header: "Order Status",
@@ -170,15 +128,9 @@ export const ordersAdminsColumns: ColumnDef<GetOrders>[] = [
       return (
         <div>
           {row.original.isPaid ? (
-            <span className="flex items-center text-green-500">
-              {/* <IoMdCheckmarkCircle className="mr-1" /> */}
-              Paid
-            </span>
+            <span className="flex items-center text-green-500">Paid</span>
           ) : (
-            <span className="flex items-center text-red-500">
-              {/* <IoMdCheckmarkCircle className="mr-1" />  */}
-              Unpaid
-            </span>
+            <span className="flex items-center text-red-500">Unpaid</span>
           )}
         </div>
       );
@@ -200,112 +152,20 @@ export const ordersAdminsColumns: ColumnDef<GetOrders>[] = [
     },
   },
   {
-    accessorKey: "requestAction",
-    header: "Action",
+    accessorKey: "process",
+    header: "Process",
     cell: ({ row }) => {
-      // const { mutateAsync } = useUpdatePickupDriver();
-      const router = useRouter();
       if (row.original.orderStatus === "ARRIVED_AT_OUTLET") {
-        return (
-          <div>
-            <AlertDialog>
-              <AlertDialogTrigger>
-                <span className="flex cursor-pointer items-center text-green-500">
-                  <IoMdCheckmarkCircle className="mr-1" /> Process order
-                </span>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Process order?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Click continue to head to process page.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => {
-                      router.push(`/dashboard/orders/${row.original.id}`);
-                    }}
-                  >
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        );
+        return <Link href={`/dashboard/orders/${row.original.id}`} className="text-blue-400">Process</Link>;
+      } else if (
+        row.original.orderStatus === "WAITING_FOR_PICKUP_DRIVER" ||
+        row.original.orderStatus === "PICKUP_ON_THE_WAY_TO_CUSTOMER" ||
+        row.original.orderStatus === "PICKUP_ON_THE_WAY_TO_OUTLET"
+      ) {
+        return <div>On the way</div>;
+      } else {
+        return <div>Processed</div>
       }
     },
   },
-  //   {
-  //     id: "actions",
-  //     cell: ({ row }) => {
-  //       const pickupOrder = row.original;
-
-  //       return (
-  //         <>
-  //           {/* <Dialog.Root bind:open={myOpen}>
-  // 	<!-- ... dialog stuff here -->
-  // </Dialog.Root> */}
-  //           <DropdownMenu>
-  //             <DropdownMenuTrigger asChild>
-  //               <Button variant="ghost" className="h-8 w-8 p-0">
-  //                 <span className="sr-only">Open menu</span>
-  //                 <MoreHorizontal className="h-4 w-4" />
-  //               </Button>
-  //             </DropdownMenuTrigger>
-  //             <DropdownMenuContent align="end">
-  //               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //               {pickupOrder.status === "WAITING_FOR_DRIVER" ? (
-  //                 <DropdownMenuItem
-  //                   onClick={() =>
-  //                     navigator.clipboard.writeText(pickupOrder.address.address)
-  //                   }
-  //                 >
-  //                   <AlertDialog>
-  //                     <AlertDialogTrigger>
-  //                       <span className="flex cursor-pointer items-center text-blue-400">
-  //                         Accept Request
-  //                       </span>
-  //                     </AlertDialogTrigger>
-  //                     <AlertDialogContent>
-  //                       <AlertDialogHeader>
-  //                         <AlertDialogTitle>
-  //                           Are you absolutely sure?
-  //                         </AlertDialogTitle>
-  //                         <AlertDialogDescription>
-  //                           This action cannot be undone. This will permanently
-  //                           delete your account and remove your data from our
-  //                           servers.
-  //                         </AlertDialogDescription>
-  //                       </AlertDialogHeader>
-  //                       <AlertDialogFooter>
-  //                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-  //                         <AlertDialogAction>Continue</AlertDialogAction>
-  //                       </AlertDialogFooter>
-  //                     </AlertDialogContent>
-  //                   </AlertDialog>
-  //                 </DropdownMenuItem>
-  //               ) : null}
-  //               <DropdownMenuItem
-  //                 onClick={() =>
-  //                   navigator.clipboard.writeText(pickupOrder.address.address)
-  //                 }
-  //               >
-  //                 Copy payment ID
-  //               </DropdownMenuItem>
-  //               <DropdownMenuSeparator />
-  //               <DropdownMenuItem>
-  //                 <Link href={`/dashboard/users/${pickupOrder.id}`}>
-  //                   View user
-  //                 </Link>
-  //               </DropdownMenuItem>
-  //               <DropdownMenuItem>View payment details</DropdownMenuItem>
-  //             </DropdownMenuContent>
-  //           </DropdownMenu>
-  //         </>
-  //       );
-  //     },
-  //   },
 ];

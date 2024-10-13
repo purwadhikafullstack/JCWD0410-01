@@ -3,18 +3,17 @@
 import useAxios from "@/hooks/useAxios";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 interface CreateUserOrderPayload {
-  pickupStatus: string; //string sementara, ganti jadi enum!
+  pickupStatus: string; 
   pickupLatitude: string;
   pickupLongitude: string;
   pickupFee: number;
   pickupAddressId: number;
   pickupAddress: string;
-  deliveryStatus: string; //string sementara, ganti jadi enum!
+  deliveryStatus: string;
   deliveryLatitude: string;
   deliveryLongitude: string;
   deliveryFee: number;

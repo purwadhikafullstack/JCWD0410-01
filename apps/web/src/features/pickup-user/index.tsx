@@ -1,8 +1,14 @@
 "use client";
 
-import DashboardHeader from "@/components/DashboardHeader";
 import { DataTable } from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -12,23 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetPickupOrdersDrivers from "@/hooks/api/pickup/useGetPickupOrdersDrivers";
-import { debounce } from "lodash";
+import useGetPickupOrdersUsers from "@/hooks/api/pickup/useGetPickupUser";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
-import useGetPickupOrdersAdmins from "@/hooks/api/pickup/useGetPickupOrdersAdmins";
-import useGetPickupOrdersUsers from "@/hooks/api/pickup/useGetPickupUser";
+import { useState } from "react";
+import { useDebounceValue, useMediaQuery } from "usehooks-ts";
+import PickupOrderCard from "../dashboard/pickup-orders/components/PickupOrderCard";
 import { pickupOrdersUsersColumns } from "./components/PickupUserColumns";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 const PickupOrdersUsersPage = () => {
   const session = useSession();
@@ -38,9 +35,10 @@ const PickupOrdersUsersPage = () => {
   const [status, setStatus] = useState<"ONGOING" | "HISTORY" | "ALL">("ALL");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortBy, setSortBy] = useState("createdAt");
-  // const [outletId, setOutletId] = useState("");
-
-  // const { data: outlets } = useGetOutlets({ take: 10 });
+  const [debouncedSearch] = useDebounceValue(searchValue, 300);
+  const isDesktop = useMediaQuery("(min-width: 768px)", {
+    initializeWithValue: false,
+  });
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
@@ -51,20 +49,12 @@ const PickupOrdersUsersPage = () => {
     take: 8,
     sortBy: sortBy,
     sortOrder: sortOrder,
-    search: searchValue,
+    search: debouncedSearch,
     status,
   });
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value) => {
-        setSearchValue(value);
-      }, 300),
-    [setSearchValue],
-  );
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   const handleSelectStatus = (value: "ONGOING" | "HISTORY" | "ALL") => {
@@ -79,16 +69,9 @@ const PickupOrdersUsersPage = () => {
     setSortBy(value);
   };
 
-  // const handleOutletId = (value: string) => {
-  //   setOutletId(value);
-  //   if (value === "0") {
-  //     setOutletId("");
-  //   }
-  // };
-
   return (
     <>
-      <div className="text-md md: mx-auto h-full bg-white p-4">
+      <div className="text-md md: mx-auto h-full max-w-7xl bg-white p-4">
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Pickup Orders</CardTitle>
@@ -149,21 +132,49 @@ const PickupOrdersUsersPage = () => {
             {isPending ? (
               <Loader2 className="mx-auto animate-spin" />
             ) : data?.data ? (
-              <>
-                <DataTable
-                  columns={pickupOrdersUsersColumns}
-                  data={data?.data!}
-                  meta={data.meta}
-                />
-                <div className="my-4 flex justify-center">
-                  <Pagination
-                    total={data?.meta?.total || 0}
-                    limit={data?.meta?.take || 0}
-                    onChangePage={onChangePage}
-                    page={page}
+              isDesktop ? (
+                <>
+                  <DataTable
+                    columns={pickupOrdersUsersColumns}
+                    data={data?.data!}
+                    meta={data.meta}
                   />
-                </div>
-              </>
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={page}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4">
+                    {data.data.map((order) => {
+                      return (
+                        <PickupOrderCard
+                          key={order.id}
+                          pickupNumber={order.pickupNumber}
+                          status={order.status}
+                          customer={order.employee.user.name!}
+                          customerAddress={order.address.address}
+                          outlet={order.outlet.name}
+                          timeOfOrder={order.createdAt}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={page}
+                    />
+                  </div>
+                </>
+              )
             ) : (
               <DataTable
                 columns={pickupOrdersUsersColumns}
