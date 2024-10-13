@@ -19,60 +19,62 @@ export const registerService = async (body: User) => {
       throw new Error('User already exist');
     }
 
-    const newUser = existingUser
-      ? null
-      : await prisma.user.create({
+    return await prisma.$transaction(async (prisma) => {
+      const newUser = existingUser
+        ? null
+        : await prisma.user.create({
+            data: {
+              email,
+            },
+          });
+
+      const token = sign({ email }, JWT_SECRET!, {
+        expiresIn: '60m',
+      });
+
+      if (existingUser) {
+        await prisma.user.update({
+          where: { id: existingUser.id },
           data: {
-            email,
+            token,
           },
         });
+      } else if (newUser) {
+        await prisma.user.update({
+          where: { id: newUser.id },
+          data: {
+            token,
+          },
+        });
+      }
 
-    const token = sign({ email }, JWT_SECRET!, {
-      expiresIn: '60m',
-    });
+      // const link = BASE_URL_FE + `/register/complete-registration/${token}/?email=hbhbhb`;
+      const link = BASE_URL_FE + `/register/complete-registration/${token}`;
 
-    if (existingUser) {
-      await prisma.user.update({
-        where: { id: existingUser.id },
-        data: {
-          token,
-        },
+      const emailTemplatePath = path.join(
+        __dirname,
+        '../../../templates/complete-register.hbs',
+      );
+
+      const emailTemplateSource = fs.readFileSync(emailTemplatePath, 'utf-8');
+
+      const template = Handlebars.compile(emailTemplateSource);
+      const htmlToSend = template({
+        link: link,
+        year: new Date().getFullYear(),
       });
-    } else if (newUser) {
-      await prisma.user.update({
-        where: { id: newUser.id },
-        data: {
-          token,
-        },
+
+      await transporter.sendMail({
+        to: email,
+        subject: 'Verify Your Email - FreshNest Laundry',
+        html: htmlToSend,
       });
-    }
 
-    // const link = BASE_URL_FE + `/register/complete-registration/${token}/?email=hbhbhb`;
-    const link = BASE_URL_FE + `/register/complete-registration/${token}`;
-
-    const emailTemplatePath = path.join(
-      __dirname,
-      '../../../templates/complete-register.hbs',
-    );
-
-    const emailTemplateSource = fs.readFileSync(emailTemplatePath, 'utf-8');
-
-    const template = Handlebars.compile(emailTemplateSource);
-    const htmlToSend = template({
-      link: link,
-      year: new Date().getFullYear(),
+      return {
+        newUser,
+        message: 'Register Success',
+      };
     });
-
-    await transporter.sendMail({
-      to: email,
-      subject: 'Verify Your Email - FreshNest Laundry',
-      html: htmlToSend,
-    });
-
-    return {
-      newUser,
-      message: 'Register Success',
-    };
   } catch (error) {
     throw error;
   }

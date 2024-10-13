@@ -44,7 +44,7 @@ const Price = () => {
                 </ul> */}
               </CardDescription>
               <h2 className="text-right text-xl font-semibold text-[#37bae3]">
-                Rp 10.000/kg
+                Rp 4.000/kg
               </h2>
             </CardHeader>
           </Card>
@@ -70,7 +70,7 @@ const Price = () => {
                 Anda bersama FreshNest Laundry selalu memuaskan.
               </CardDescription>
               <h2 className="text-right text-xl font-semibold text-[#37bae3]">
-                Rp 5.000/km
+                Rp 3.000/km
               </h2>
             </CardHeader>
           </Card>

@@ -25,6 +25,7 @@ import React, { useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import { notificationsColumns } from "./components/NotificationsColumns";
 import Pagination from "@/components/Pagination";
+import NotificationHeader from "./components/NotificationHeaders";
 
 const DashboardNotificationPage = () => {
   const session = useSession();

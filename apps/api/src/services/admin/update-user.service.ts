@@ -63,10 +63,6 @@ export const updateUserService = async (
         body.outletId = undefined;
         body.stationId = undefined;
 
-        console.log(
-          `ini password baru: ${password}, ini password lama: ${body.oldPassword}`,
-        );
-
         if (password && body.oldPassword) {
           const compare = await comparePassword(
             body.oldPassword,
@@ -98,7 +94,7 @@ export const updateUserService = async (
           if (outletId) {
             await prisma.employee.update({
               where: {
-                id: user.employee?.id,
+                id: employee.id,
               },
               data: {
                 outletId: Number(outletId),
@@ -129,13 +125,12 @@ export const updateUserService = async (
         return {
           message: 'Update employee success',
           stationId,
-          employee,
           role,
         };
       },
       {
-        maxWait: 10000, // Increase the waiting time before starting the transaction to 10 seconds
-        timeout: 10000, // Increase the transaction timeout to 10 seconds
+        maxWait: 10000,
+        timeout: 10000,
       },
     );
   } catch (error) {
