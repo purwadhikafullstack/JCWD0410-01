@@ -39,6 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         user.id = data.data.id;
         user.name = data.data.name;
+        user.isVerified = data.data.isVerified;
         user.profilePicture = data.data.profilePicture;
         user.role = data.data.role;
         user.provider = data.data.provider;
