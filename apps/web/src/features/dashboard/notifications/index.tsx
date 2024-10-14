@@ -22,10 +22,11 @@ import useGetNotifications from "@/hooks/api/notifications/useGetNotifications";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useDebounceValue } from "usehooks-ts";
+import { useDebounceValue, useMediaQuery } from "usehooks-ts";
 import { notificationsColumns } from "./components/NotificationsColumns";
 import Pagination from "@/components/Pagination";
 import NotificationHeader from "./components/NotificationHeaders";
+import NotificationCard from "./components/NotificationCard";
 
 const DashboardNotificationPage = () => {
   const session = useSession();
@@ -34,6 +35,9 @@ const DashboardNotificationPage = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortBy, setSortBy] = useState("createdAt");
   const [debouncedSearch] = useDebounceValue(searchValue, 500);
+  const isDesktop = useMediaQuery("(min-width: 768px)", {
+    initializeWithValue: false,
+  });
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
@@ -67,8 +71,16 @@ const DashboardNotificationPage = () => {
   }
   return (
     <>
-      {pathname === "/notifications" ? "" : <DashboardHeader />}
-      <div className={`text-md md: mx-auto h-full max-w-7xl bg-white p-4`}>
+      {pathname === "/notifications" ? "" : <>
+      <DashboardHeader />
+      <div className="px-6">
+            <div className="flex h-16 items-center justify-between rounded-md bg-[#e5f3f6] p-4 shadow">
+              <h3 className="text-xl font-semibold text-[#37bae3]">Notifications</h3>
+            </div>
+          </div>
+      </>
+      }
+      <div className={`text-md md: mx-auto h-full max-w-7xl bg-white p-6`}>
         <Card className="shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Notifications</CardTitle>
@@ -116,11 +128,28 @@ const DashboardNotificationPage = () => {
             {isPending ? (
               <div>Data fetching</div>
             ) : data?.data ? (
-              <DataTable
-                columns={notificationsColumns}
-                data={data.data}
-                meta={data.meta}
-              />
+              isDesktop ? (
+                <DataTable
+                  columns={notificationsColumns}
+                  data={data.data}
+                  meta={data.meta}
+                />
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4">
+                    {data.data.map((order) => {
+                      return (
+                        <NotificationCard
+                          key={order.id}
+                          title={order.notification.title}
+                          message={order.notification.message}
+                          timeOfOrder={order.createdAt}
+                        />
+                      );
+                    })}
+                  </div>
+                </>
+              )
             ) : (
               <DataTable
                 columns={notificationsColumns}

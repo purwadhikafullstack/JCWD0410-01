@@ -124,14 +124,25 @@ const DashboardUsersEmployeesPage = () => {
     session.data?.user.role === "OUTLET_ADMIN" ? (
     <>
       <DashboardHeader />
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Users</CardTitle>
-          <CardDescription>List of users</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <UsersHeader />
-          <div className="text-md md: mx-auto h-full p-6">
+      <div className="px-6">
+        <div className="flex h-16 items-center justify-between rounded-md bg-[#e5f3f6] p-4 shadow">
+          <h3 className="text-xl font-semibold text-[#37bae3]">Employees</h3>
+          <button
+            onClick={() => router.push("/dashboard/users/employees/create")}
+            className="md rounded-2xl bg-white px-2 py-1 text-center font-semibold text-[#38b9e3] shadow md:px-3 md:py-2"
+            hidden={session.data.user.role !== "ADMIN"}
+          >
+            Create Employee
+          </button>
+        </div>
+      </div>
+      <div className="text-md md: mx-auto h-full bg-white p-6">
+        <Card className="shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-xl">Users</CardTitle>
+            <CardDescription>List of users</CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="mb-4 grid grid-cols-1 justify-between gap-4 md:grid-cols-5">
               <div className="text-sm">
                 <input
@@ -250,9 +261,9 @@ const DashboardUsersEmployeesPage = () => {
                 meta={{ page: 1, take: 8, total: 0 }}
               />
             )}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </>
   ) : (
     <>
