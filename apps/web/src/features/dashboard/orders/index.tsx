@@ -24,8 +24,8 @@ import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
 import { orderStatus, OrderStatus } from "@/types/order";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useDebounceValue, useMediaQuery } from "usehooks-ts";
 import { ordersAdminsColumns } from "./components/OrdersAdminsColumns";
 import OrderCard from "./components/OrdersCard";
@@ -36,50 +36,71 @@ const DashboardOrdersPage = () => {
   const isDesktop = useMediaQuery("(min-width: 768px)", {
     initializeWithValue: false,
   });
-  const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
-  const [status, setStatus] = useState<OrderStatus | "ALL">("ALL");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [sortBy, setSortBy] = useState("createdAt");
-  const [outletId, setOutletId] = useState("");
-  const [debouncedSearch] = useDebounceValue(searchValue, 300);
+  const [debouncedSearch] = useDebounceValue(searchValue, 500);
 
   const { data: outlets } = useGetOutlets({ take: 12 });
 
-  const onChangePage = ({ selected }: { selected: number }) => {
-    setPage(selected + 1);
-  };
+  const queryParams = useSearchParams();
+
+  const [searchParams, setSearchParams] = useState({
+    page: Number(queryParams.get("page")) || 1,
+    sortBy: queryParams.get("sortBy") || "createdAt",
+    sortOrder: (queryParams.get("sortOrder") as "asc" | "desc") || "desc",
+    search: queryParams.get("search") || "",
+    status: (queryParams.get("status") as OrderStatus | "ALL") || "ALL",
+    outletId: queryParams.get("outletId") || "",
+  });
 
   const { data, isPending, refetch } = useGetOrders({
-    page,
+    page: searchParams.page,
     take: 8,
-    sortBy: sortBy,
-    sortOrder: sortOrder,
-    search: debouncedSearch,
-    status,
-    outletId,
+    sortBy: searchParams.sortBy,
+    sortOrder: searchParams.sortOrder,
+    search: searchParams.search,
+    status: searchParams.status,
+    outletId: searchParams.outletId,
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
 
+  const onChangePage = ({ selected }: { selected: number }) => {
+    setSearchParams({ ...searchParams, page: selected + 1 });
+  };
+
   const handleSelectStatus = (value: OrderStatus | "ALL") => {
-    setStatus(value);
+    setSearchParams({ ...searchParams, status: value });
   };
 
   const handleSortOrder = (value: "asc" | "desc") => {
-    setSortOrder(value);
+    setSearchParams({ ...searchParams, sortOrder: value });
   };
 
   const handleSortBy = (value: string) => {
-    setSortBy(value);
+    setSearchParams({ ...searchParams, sortBy: value });
   };
 
+  useEffect(() => {
+    setSearchParams({ ...searchParams, search: debouncedSearch });
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    const query = new URLSearchParams({
+      ...searchParams,
+      page: String(searchParams.page),
+    }).toString();
+
+    router.push(`/dashboard/orders?${query}`);
+    refetch();
+  }, [searchParams]);
+
   const handleOutletId = (value: string) => {
-    setOutletId(value);
     if (value === "0") {
-      setOutletId("");
+      setSearchParams({ ...searchParams, outletId: "" });
+    } else {
+      setSearchParams({ ...searchParams, outletId: value });
     }
   };
 
@@ -195,7 +216,7 @@ const DashboardOrdersPage = () => {
                           total={data?.meta?.total || 0}
                           limit={data?.meta?.take || 0}
                           onChangePage={onChangePage}
-                          page={page}
+                          page={searchParams.page}
                         />
                       </div>
                     </>
@@ -222,7 +243,7 @@ const DashboardOrdersPage = () => {
                           total={data?.meta?.total || 0}
                           limit={data?.meta?.take || 0}
                           onChangePage={onChangePage}
-                          page={page}
+                          page={searchParams.page}
                         />
                       </div>
                     </>

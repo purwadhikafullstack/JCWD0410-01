@@ -33,7 +33,7 @@ const DashboardNotificationPage = () => {
   const [searchValue, setSearchValue] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [sortBy, setSortBy] = useState("createdAt");
-  const [debouncedSearch] = useDebounceValue(searchValue, 300);
+  const [debouncedSearch] = useDebounceValue(searchValue, 500);
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
