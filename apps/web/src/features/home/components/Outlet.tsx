@@ -25,7 +25,7 @@ const Outlet = () => {
             <h3 className="text-4xl font-semibold">
               Serving You Wherever You Are
             </h3>
-            <Link href="/outlet-kami" className="flex items-center">
+            <Link href="/outlets" className="flex items-center">
               <Button
                 variant="outline"
                 className="flex w-fit items-center gap-2 border-[#37bae3] text-[#37bae3]"
