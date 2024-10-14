@@ -115,10 +115,15 @@ const DashboardOrdersPage = () => {
     return (
       <>
         <DashboardHeader />
-        <div className="text-md md: mx-auto h-full px-6">
+        <div className="px-6">
+            <div className="flex h-16 items-center justify-between rounded-md bg-[#e5f3f6] p-4 shadow">
+              <h3 className="text-xl font-semibold text-[#37bae3]">Orders</h3>
+            </div>
+          </div>
+        <div className="text-md md: mx-auto h-full p-6">
           <Card className="shadow-sm">
             <CardHeader>
-              <CardTitle className="text-xl">Orders</CardTitle>
+              <CardTitle className="text-xl">List of orders</CardTitle>
               <CardDescription>List of orders</CardDescription>
             </CardHeader>
             <CardContent>

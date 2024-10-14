@@ -92,7 +92,7 @@ const DashboardDeliveryOrdersAdminsPage = () => {
       page: String(searchParams.page),
     }).toString();
 
-    router.push(`/dashboard/orders?${query}`);
+    router.push(`/dashboard/delivery-orders?${query}`);
     refetch();
   }, [searchParams]);
 
@@ -107,10 +107,15 @@ const DashboardDeliveryOrdersAdminsPage = () => {
   return (
     <>
       <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4">
+      <div className="px-6">
+            <div className="flex h-16 items-center justify-between rounded-md bg-[#e5f3f6] p-4 shadow">
+              <h3 className="text-xl font-semibold text-[#37bae3]">Delivery Orders</h3>
+            </div>
+          </div>
+      <div className="text-md md: mx-auto h-full bg-white p-6">
         <Card className="shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Delivery orders</CardTitle>
+            <CardTitle className="text-xl">List of delivery orders</CardTitle>
             <CardDescription>List of delivery orders</CardDescription>
           </CardHeader>
           <CardContent>

@@ -29,7 +29,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import DeliveryOrderCard from "../components/DeliveryOrderCard";
 
 const DashboardDeliveryOrdersDriversPage = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearch] = useDebounceValue(searchValue, 500);
   const isDesktop = useMediaQuery("(min-width: 768px)", {
@@ -43,7 +43,9 @@ const DashboardDeliveryOrdersDriversPage = () => {
     sortBy: queryParams.get("sortBy") || "createdAt",
     sortOrder: (queryParams.get("sortOrder") as "asc" | "desc") || "desc",
     search: queryParams.get("search") || "",
-    status: (queryParams.get("status") as "ONGOING" | "REQUEST" | "HISTORY") || "REQUEST",
+    status:
+      (queryParams.get("status") as "ONGOING" | "REQUEST" | "HISTORY") ||
+      "REQUEST",
   });
 
   const { data, isPending, refetch } = useGetDeliveryOrdersDrivers({
@@ -92,10 +94,17 @@ const DashboardDeliveryOrdersDriversPage = () => {
   return (
     <>
       <DashboardHeader />
-      <div className="text-md md: mx-auto h-full bg-white p-4">
+      <div className="px-6">
+        <div className="flex h-16 items-center justify-between rounded-md bg-[#e5f3f6] p-4 shadow">
+          <h3 className="text-xl font-semibold text-[#37bae3]">
+            Delivery Orders
+          </h3>
+        </div>
+      </div>
+      <div className="text-md md: mx-auto h-full bg-white p-6">
         <Card className="shadow-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Delivery Orders</CardTitle>
+            <CardTitle className="text-xl">List of delivery Orders</CardTitle>
             <CardDescription>List of delivery orders</CardDescription>
           </CardHeader>
           <CardContent>

@@ -292,12 +292,6 @@ const RequestOrderPage = () => {
                                 <span className="ml-2 rounded-xl bg-blue-500 p-1 text-center text-xs">
                                   Delivery: {deliveryDistance} km
                                 </span>
-                                {/* <span className="ml-2 rounded-xl bg-blue-500 p-1 text-center text-xs">
-                                  Total:{" "}
-                                  {Number(pickupDistance) +
-                                    Number(deliveryDistance)}{" "}
-                                  km
-                                </span> */}
                                 {distanceLimit ? (
                                   <span className="ml-2 text-red-600">
                                     Maximum distance is 10km
