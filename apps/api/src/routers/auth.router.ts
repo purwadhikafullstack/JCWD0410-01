@@ -1,6 +1,6 @@
 import { AuthController } from '@/controllers/auth.controller';
-import { getEmailFromToken } from '@/lib/getEmailFromToken';
-import { verifyToken } from '@/lib/verifyToken';
+import { getEmailFromToken } from '@/lib/VerifyTokenEmail';
+import { verifyTokenForgotPassword } from '@/lib/verifyTokenForgotPassword';
 import {
   validateCompleteRegistration,
   validateEmail,
@@ -44,7 +44,7 @@ export class AuthRouter {
     );
     this.router.patch(
       '/reset-password',
-      verifyToken,
+      verifyTokenForgotPassword,
       validateResetPassword,
       this.authController.resetPassword,
     );

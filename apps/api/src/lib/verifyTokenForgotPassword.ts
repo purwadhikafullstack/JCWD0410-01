@@ -1,12 +1,14 @@
-import { JWT_SECRET } from '@/config';
+import { JWT_SECRET_EMAIL, JWT_SECRET_PASSWORD } from '@/config';
+import { Role } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import { TokenExpiredError, verify } from 'jsonwebtoken';
 
 interface PayloadToken {
-  email: string;
+  id: number;
+  role: Role;
 }
 
-export const getEmailFromToken = (
+export const verifyTokenForgotPassword = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -19,7 +21,7 @@ export const getEmailFromToken = (
     });
   }
 
-  verify(token, JWT_SECRET!, (err, payload) => {
+  verify(token, JWT_SECRET_PASSWORD!, (err, payload) => {
     if (err) {
       if (err instanceof TokenExpiredError) {
         return res.status(403).send({ message: 'token expired' });

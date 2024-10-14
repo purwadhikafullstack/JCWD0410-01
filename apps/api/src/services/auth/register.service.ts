@@ -1,4 +1,4 @@
-import { BASE_URL_FE, JWT_SECRET } from '@/config';
+import { BASE_URL_FE, JWT_SECRET, JWT_SECRET_EMAIL } from '@/config';
 import { transporter } from '@/lib/nodemailer';
 import prisma from '@/prisma';
 import { User } from '@prisma/client';
@@ -28,7 +28,7 @@ export const registerService = async (body: User) => {
             },
           });
 
-      const token = sign({ email }, JWT_SECRET!, {
+      const token = sign({ email }, JWT_SECRET_EMAIL!, {
         expiresIn: '60m',
       });
 
@@ -73,6 +73,7 @@ export const registerService = async (body: User) => {
       return {
         newUser,
         message: 'Register Success',
+        token,
       };
     });
   } catch (error) {
