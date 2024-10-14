@@ -1,4 +1,4 @@
-import { BASE_URL_FE, JWT_SECRET } from '@/config';
+import { BASE_URL_FE, JWT_SECRET_PASSWORD } from '@/config';
 import { transporter } from '@/lib/nodemailer';
 import prisma from '@/prisma';
 import { sign } from 'jsonwebtoken';
@@ -16,7 +16,7 @@ export const forgotPasswordService = async (email: string) => {
       throw new Error('Invalid email address');
     }
 
-    const token = sign({ id: user.id }, JWT_SECRET!, {
+    const token = sign({ id: user.id }, JWT_SECRET_PASSWORD!, {
       expiresIn: '30m',
     });
 
@@ -50,7 +50,8 @@ export const forgotPasswordService = async (email: string) => {
     });
 
     return {
-      message: 'Send email success',
+      message: 'Update profile success',
+      token,
     };
   } catch (error) {
     throw error;

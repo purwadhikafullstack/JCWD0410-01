@@ -250,6 +250,7 @@ export const Header = () => {
                   <Link href="/orders">My Orders</Link>
                   <Link href="/pickup-orders">Pickup Orders</Link>
                   <Link href="/delivery-orders">Delivery Orders</Link>
+                  <Link href="/notifications">Notifications</Link>
 
                   <hr />
                 </div>

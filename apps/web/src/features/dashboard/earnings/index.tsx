@@ -32,6 +32,7 @@ import { getDaysInMonth } from "date-fns";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import ChartEvents from "./components/ChartEvents";
+import { Loader2 } from "lucide-react";
 
 ChartJS.register(
   LineElement,
@@ -85,6 +86,21 @@ const DashboardEarningsPage = () => {
     }
   };
 
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   if (!session.data) {
     return <DashboardHeader />;
   }
@@ -97,6 +113,7 @@ const DashboardEarningsPage = () => {
       return (
         <>
           <DashboardHeader />
+          <Loader2 className="mx-auto" />
         </>
       );
     }
@@ -104,13 +121,19 @@ const DashboardEarningsPage = () => {
       return (
         <>
           <DashboardHeader />
-          <div className="text-md md: mx-auto h-full px-6">
+          <div className="px-6">
+            <div className="flex h-16 items-center justify-between rounded-md bg-[#e5f3f6] p-4 shadow">
+              <h3 className="text-xl font-semibold text-[#37bae3]">Earnings</h3>
+            </div>
+          </div>
+          <div className="text-md md: mx-auto h-full p-6">
             <Card className="shadow-sm">
               <CardHeader>
-                <CardTitle className="text-xl">Earnings</CardTitle>
+                <CardTitle className="text-xl">
+                  {months[Number(filterMonth) - 1]}
+                </CardTitle>
                 <CardDescription className="flex justify-between">
-                  <div>Earning data</div>
-                  <div>All time total: {result.format(data.totalIncome)}</div>
+                  <div>Total: {result.format(data.totalIncome)}</div>
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -120,7 +143,7 @@ const DashboardEarningsPage = () => {
                   <Select
                     name="month"
                     onValueChange={handleChangeFilterMonth}
-                    defaultValue={`${now.getMonth() + 1}`}
+                    defaultValue={filterMonth}
                   >
                     <SelectTrigger className="min-w-40">
                       <SelectValue placeholder="Month" />

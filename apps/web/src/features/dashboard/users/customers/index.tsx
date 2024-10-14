@@ -98,92 +98,96 @@ const DashboardUsersCustomersPage = () => {
   return session.data?.user.role === "ADMIN" ? (
     <>
       <DashboardHeader />
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Users</CardTitle>
-          <CardDescription>List of users</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <UsersHeader />
-          <div className="text-md md: mx-auto h-full p-6">
-            <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
-              <div className="mb-2 text-sm">
-                <input
-                  className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:text-sm"
-                  placeholder="Search value"
-                  type="text"
-                  name="search"
-                  value={searchValue}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <Select onValueChange={handleSortBy}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Sort by</SelectLabel>
-                    <SelectItem value="name">Name</SelectItem>
-                    <SelectItem value="email">Email</SelectItem>
-                    <SelectItem value="phoneNumber">Phone Number</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Select onValueChange={handleSortOrder}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort Order" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Sort order</SelectLabel>
-                    <SelectItem value="asc">Ascending</SelectItem>
-                    <SelectItem value="desc">Descending</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Select onValueChange={handleSelectIsVerified}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Verification" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Status</SelectLabel>
-                    <SelectItem value="ALL">All Status</SelectItem>
-                    <SelectItem value="VERIFIED">Verified</SelectItem>
-                    <SelectItem value="UNVERIFIED">Unverified</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-            {isPending ? (
-              <Loader2 className="mx-auto animate-spin" />
-            ) : data?.data ? (
-              <>
-                <DataTable
-                  columns={customersColumns}
-                  data={data?.data!}
-                  meta={data.meta}
-                />
-                <div className="my-4 flex justify-center">
-                  <Pagination
-                    total={data?.meta?.total || 0}
-                    limit={data?.meta?.take || 0}
-                    onChangePage={onChangePage}
-                    page={searchParams.page}
+      <div className="px-6">
+        <div className="flex h-16 items-center justify-between rounded-md bg-[#e5f3f6] p-4 shadow">
+          <h3 className="text-xl font-semibold text-[#37bae3]">Customers</h3>
+        </div>
+      </div>
+      <div className="text-md md: mx-auto h-full bg-white p-6">
+        <Card className="shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-xl">Users</CardTitle>
+            <CardDescription>List of users</CardDescription>
+          </CardHeader>
+          <CardContent>
+              <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
+                <div className="mb-2 text-sm">
+                  <input
+                    className="focus:border-color1 block w-full rounded-md border-[1px] border-neutral-300 py-[9px] pl-3 pr-3 shadow-sm placeholder:text-sm placeholder:text-black focus:bg-white focus:outline-none md:text-sm"
+                    placeholder="Search value"
+                    type="text"
+                    name="search"
+                    value={searchValue}
+                    onChange={handleInputChange}
                   />
                 </div>
-              </>
-            ) : (
-              <DataTable
-                columns={customersColumns}
-                data={[]}
-                meta={{ page: 1, take: 8, total: 0 }}
-              />
-            )}
-          </div>
-        </CardContent>
-      </Card>
+                <Select onValueChange={handleSortBy}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sort By" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Sort by</SelectLabel>
+                      <SelectItem value="name">Name</SelectItem>
+                      <SelectItem value="email">Email</SelectItem>
+                      <SelectItem value="phoneNumber">Phone Number</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <Select onValueChange={handleSortOrder}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sort Order" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Sort order</SelectLabel>
+                      <SelectItem value="asc">Ascending</SelectItem>
+                      <SelectItem value="desc">Descending</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <Select onValueChange={handleSelectIsVerified}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Verification" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Status</SelectLabel>
+                      <SelectItem value="ALL">All Status</SelectItem>
+                      <SelectItem value="VERIFIED">Verified</SelectItem>
+                      <SelectItem value="UNVERIFIED">Unverified</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              {isPending ? (
+                <Loader2 className="mx-auto animate-spin" />
+              ) : data?.data ? (
+                <>
+                  <DataTable
+                    columns={customersColumns}
+                    data={data?.data!}
+                    meta={data.meta}
+                  />
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={searchParams.page}
+                    />
+                  </div>
+                </>
+              ) : (
+                <DataTable
+                  columns={customersColumns}
+                  data={[]}
+                  meta={{ page: 1, take: 8, total: 0 }}
+                />
+              )}
+          </CardContent>
+        </Card>
+      </div>
     </>
   ) : (
     <>
