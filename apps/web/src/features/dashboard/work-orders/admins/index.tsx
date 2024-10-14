@@ -23,61 +23,89 @@ import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
 import useGetWorkOrdersAdmins from "@/hooks/api/work/useGetWorkOrdersAdmins";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useDebounceValue } from "usehooks-ts";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDebounceValue, useMediaQuery } from "usehooks-ts";
 import { workOrderAdminsColumns } from "../components/WorkOrdersAdminsColumns";
+import WorkOrderCard from "@/components/WorkOrderCard";
 
 const DashboardWorkOrdersAdminsPage = () => {
   const session = useSession();
   const router = useRouter();
-  const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
-  const [isVerified, setIsVerified] = useState("");
-  const [status, setStatus] = useState<"ONGOING" | "REQUEST" | "HISTORY" | "ALL">(
-    "ALL",
-  );
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [sortBy, setSortBy] = useState("createdAt");
-  const [outletId, setOutletId] = useState("");
   const { data: outlets } = useGetOutlets({ take: 10 });
-  const [debouncedSearch] = useDebounceValue(searchValue, 300)
+  const [debouncedSearch] = useDebounceValue(searchValue, 500);
+  const isDesktop = useMediaQuery("(min-width: 768px)", {
+    initializeWithValue: false,
+  });
 
+  const queryParams = useSearchParams();
 
-  const onChangePage = ({ selected }: { selected: number }) => {
-    setPage(selected + 1);
-  };
+  const [searchParams, setSearchParams] = useState({
+    page: Number(queryParams.get("page")) || 1,
+    sortBy: queryParams.get("sortBy") || "createdAt",
+    sortOrder: (queryParams.get("sortOrder") as "asc" | "desc") || "desc",
+    search: queryParams.get("search") || "",
+    status:
+      (queryParams.get("status") as
+        | "ONGOING"
+        | "HISTORY"
+        | "REQUEST"
+        | "ALL") || "ALL",
+    outletId: queryParams.get("outletId") || "",
+  });
 
   const { data, isPending, refetch } = useGetWorkOrdersAdmins({
-    page,
+    page: searchParams.page,
     take: 8,
-    sortBy: sortBy,
-    sortOrder: sortOrder,
-    search: debouncedSearch,
-    status,
-    outletId,
+    sortBy: searchParams.sortBy,
+    sortOrder: searchParams.sortOrder,
+    search: searchParams.search,
+    status: searchParams.status,
+    outletId: searchParams.outletId,
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
 
-  const handleSelectStatus = (value: "ONGOING" | "REQUEST" | "HISTORY" | "ALL") => {
-    setStatus(value);
+  const onChangePage = ({ selected }: { selected: number }) => {
+    setSearchParams({ ...searchParams, page: selected + 1 });
+  };
+
+  const handleSelectStatus = (
+    value: "ONGOING" | "HISTORY" | "REQUEST" | "ALL",
+  ) => {
+    setSearchParams({ ...searchParams, status: value });
   };
 
   const handleSortOrder = (value: "asc" | "desc") => {
-    setSortOrder(value);
+    setSearchParams({ ...searchParams, sortOrder: value });
   };
 
   const handleSortBy = (value: string) => {
-    setSortBy(value);
+    setSearchParams({ ...searchParams, sortBy: value });
   };
 
+  useEffect(() => {
+    setSearchParams({ ...searchParams, search: debouncedSearch });
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    const query = new URLSearchParams({
+      ...searchParams,
+      page: String(searchParams.page),
+    }).toString();
+
+    router.push(`/dashboard/work-orders?${query}`);
+    refetch();
+  }, [searchParams]);
+
   const handleOutletId = (value: string) => {
-    setOutletId(value);
     if (value === "0") {
-      setOutletId("");
+      setSearchParams({ ...searchParams, outletId: "" });
+    } else {
+      setSearchParams({ ...searchParams, outletId: value });
     }
   };
 
@@ -142,44 +170,70 @@ const DashboardWorkOrdersAdminsPage = () => {
                 </SelectContent>
               </Select>
               {session.data?.user.role === "ADMIN" ? (
-                  <Select onValueChange={handleOutletId}>
-                    <SelectTrigger className="md:w-[200px]">
-                      <SelectValue placeholder="Outlet" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Outlet</SelectLabel>
-                        <SelectItem value="0">ALL</SelectItem>
-                        {outlets?.data.map((outlet) => {
-                          return (
-                            <SelectItem value={String(outlet.id)} key={outlet.id}>
-                              {outlet.name}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                ) : null}
+                <Select onValueChange={handleOutletId}>
+                  <SelectTrigger className="md:w-[200px]">
+                    <SelectValue placeholder="Outlet" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Outlet</SelectLabel>
+                      <SelectItem value="0">ALL</SelectItem>
+                      {outlets?.data.map((outlet) => {
+                        return (
+                          <SelectItem value={String(outlet.id)} key={outlet.id}>
+                            {outlet.name}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              ) : null}
             </div>
             {isPending ? (
               <Loader2 className="mx-auto animate-spin" />
             ) : data?.data ? (
-              <>
-                <DataTable
-                  columns={workOrderAdminsColumns}
-                  data={data?.data!}
-                  meta={data.meta}
-                />
-                <div className="my-4 flex justify-center">
-                  <Pagination
-                    total={data?.meta?.total || 0}
-                    limit={data?.meta?.take || 0}
-                    onChangePage={onChangePage}
-                    page={page}
+              isDesktop ? (
+                <>
+                  <DataTable
+                    columns={workOrderAdminsColumns}
+                    data={data?.data!}
+                    meta={data.meta}
                   />
-                </div>
-              </>
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={searchParams.page}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4">
+                    {data.data.map((order) => {
+                      return (
+                        <WorkOrderCard
+                          key={order.id}
+                          orderNumber={order.order.orderNumber}
+                          status={order.status}
+                          timeOfOrder={order.createdAt}
+                          stationId={order.stationId}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="my-4 flex justify-center">
+                    <Pagination
+                      total={data?.meta?.total || 0}
+                      limit={data?.meta?.take || 0}
+                      onChangePage={onChangePage}
+                      page={searchParams.page}
+                    />
+                  </div>
+                </>
+              )
             ) : (
               <DataTable
                 columns={workOrderAdminsColumns}

@@ -23,65 +23,84 @@ import useGetDeliveryOrdersAdmins from "@/hooks/api/delivery/useGetDeliveryAdmin
 import useGetOutlets from "@/hooks/api/outlet/useGetOutlets";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useDebounceValue, useMediaQuery } from "usehooks-ts";
 import PickupOrderCard from "../../pickup-orders/components/PickupOrderCard";
 import { deliveryOrdersAdminsColumns } from "../components/DeliveryOrdersAdminsColumns";
+import PickupOrderCardUser from "@/components/PickupOrderCardUser";
 
 const DashboardDeliveryOrdersAdminsPage = () => {
   const session = useSession();
-  const [page, setPage] = useState(1);
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
-  const [status, setStatus] = useState<
-    "ONGOING" | "REQUEST" | "HISTORY" | "ALL"
-  >("ALL");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [sortBy, setSortBy] = useState("createdAt");
-  const [outletId, setOutletId] = useState("");
-  const [debouncedSearch] = useDebounceValue(searchValue, 300);
+  const [debouncedSearch] = useDebounceValue(searchValue, 500);
   const isDesktop = useMediaQuery("(min-width: 768px)", {
     initializeWithValue: false,
   });
 
   const { data: outlets } = useGetOutlets({ take: 12 });
 
-  const onChangePage = ({ selected }: { selected: number }) => {
-    setPage(selected + 1);
-  };
+  const queryParams = useSearchParams();
+
+  const [searchParams, setSearchParams] = useState({
+    page: Number(queryParams.get("page")) || 1,
+    sortBy: queryParams.get("sortBy") || "createdAt",
+    sortOrder: (queryParams.get("sortOrder") as "asc" | "desc") || "desc",
+    search: queryParams.get("search") || "",
+    status: (queryParams.get("status") as "ONGOING" | "REQUEST" | "HISTORY" | "ALL") || "ALL",
+    outletId: queryParams.get("outletId") || "",
+  });
 
   const { data, isPending, refetch } = useGetDeliveryOrdersAdmins({
-    page,
+    page: searchParams.page,
     take: 8,
-    sortBy: sortBy,
-    sortOrder: sortOrder,
-    search: debouncedSearch,
-    status,
-    outletId,
+    sortBy: searchParams.sortBy,
+    sortOrder: searchParams.sortOrder,
+    search: searchParams.search,
+    status: searchParams.status,
+    outletId: searchParams.outletId,
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
 
-  const handleSelectStatus = (
-    value: "ONGOING" | "REQUEST" | "HISTORY" | "ALL",
-  ) => {
-    setStatus(value);
+  const onChangePage = ({ selected }: { selected: number }) => {
+    setSearchParams({ ...searchParams, page: selected + 1 });
+  };
+
+  const handleSelectStatus = (value: "ONGOING"| "REQUEST" |"HISTORY" | "ALL") => {
+    setSearchParams({ ...searchParams, status: value });
   };
 
   const handleSortOrder = (value: "asc" | "desc") => {
-    setSortOrder(value);
+    setSearchParams({ ...searchParams, sortOrder: value });
   };
 
   const handleSortBy = (value: string) => {
-    setSortBy(value);
+    setSearchParams({ ...searchParams, sortBy: value });
   };
 
+  useEffect(() => {
+    setSearchParams({ ...searchParams, search: debouncedSearch });
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    const query = new URLSearchParams({
+      ...searchParams,
+      page: String(searchParams.page),
+    }).toString();
+
+    router.push(`/dashboard/orders?${query}`);
+    refetch();
+  }, [searchParams]);
+
   const handleOutletId = (value: string) => {
-    setOutletId(value);
     if (value === "0") {
-      setOutletId("");
+      setSearchParams({ ...searchParams, outletId: "" });
+    } else {
+      setSearchParams({ ...searchParams, outletId: value });
     }
   };
 
@@ -140,8 +159,8 @@ const DashboardDeliveryOrdersAdminsPage = () => {
                   <SelectGroup>
                     <SelectLabel>Status</SelectLabel>
                     <SelectItem value="ALL">ALL</SelectItem>
-                    <SelectItem value="REQUEST">Requesting Pickup</SelectItem>
-                    <SelectItem value="ONGOING">Ongoing Pickup</SelectItem>
+                    <SelectItem value="REQUEST">Requesting Delivery</SelectItem>
+                    <SelectItem value="ONGOING">Ongoing Delivery</SelectItem>
                     <SelectItem value="HISTORY">History</SelectItem>
                   </SelectGroup>
                 </SelectContent>
@@ -182,7 +201,7 @@ const DashboardDeliveryOrdersAdminsPage = () => {
                       total={data?.meta?.total || 0}
                       limit={data?.meta?.take || 0}
                       onChangePage={onChangePage}
-                      page={page}
+                      page={searchParams.page}
                     />
                   </div>
                 </>
@@ -191,7 +210,7 @@ const DashboardDeliveryOrdersAdminsPage = () => {
                   <div className="flex flex-col gap-4">
                     {data.data.map((order) => {
                       return (
-                        <PickupOrderCard
+                        <PickupOrderCardUser
                           key={order.id}
                           pickupNumber={order.deliveryNumber}
                           status={order.status}
@@ -208,7 +227,7 @@ const DashboardDeliveryOrdersAdminsPage = () => {
                       total={data?.meta?.total || 0}
                       limit={data?.meta?.take || 0}
                       onChangePage={onChangePage}
-                      page={page}
+                      page={searchParams.page}
                     />
                   </div>
                 </>
