@@ -12,6 +12,8 @@ config({ path: resolve(__dirname, `../${envFile}`) });
 export const PORT = process.env.PORT || 8000;
 export const DATABASE_URL = process.env.DATABASE_URL || '';
 export const JWT_SECRET = process.env.JWT_SECRET;
+export const JWT_SECRET_PASSWORD = process.env.JWT_SECRET_PASSWORD;
+export const JWT_SECRET_EMAIL = process.env.JWT_SECRET_EMAIL;
 export const BASE_URL_FE = process.env.BASE_URL_FE;
 export const GMAIL_EMAIL = process.env.GMAIL_EMAIL;
 export const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
