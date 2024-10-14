@@ -75,7 +75,6 @@ const OrderDetailPage = () => {
   const handlePayment = async () => {
     try {
       const payment = await processPayment({ orderId: Number(id) });
-      console.log(payment);
       if (payment) {
         if (window.snap) {
           window.snap.pay(`${payment.snapToken}`, {

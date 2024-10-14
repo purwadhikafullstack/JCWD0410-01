@@ -21,54 +21,72 @@ import {
 } from "@/components/ui/select";
 import useGetWorkOrdersWorker from "@/hooks/api/work/useGetWorkOrdersWorker";
 import { Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useDebounceValue } from "usehooks-ts";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDebounceValue, useMediaQuery } from "usehooks-ts";
 import { workOrderWorkerColumns } from "../components/WorkOrdersWorkerColumns";
+import WorkOrderCardWorker from "../components/WorkOrderCardWorker";
 
 const DashboardWorkOrdersWorkerPage = () => {
-  const session = useSession();
   const router = useRouter();
-  const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
-  const [isVerified, setIsVerified] = useState("");
-  const [status, setStatus] = useState<"ONGOING" | "REQUEST" | "HISTORY">(
-    "REQUEST",
-  );
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [sortBy, setSortBy] = useState("createdAt");
-  const [outletId, setOutletId] = useState(0);
-  const [debouncedSearch] = useDebounceValue(searchValue, 300)
+  const [debouncedSearch] = useDebounceValue(searchValue, 500);
+  const isDesktop = useMediaQuery("(min-width: 768px)", {
+    initializeWithValue: false,
+  });
 
-  const onChangePage = ({ selected }: { selected: number }) => {
-    setPage(selected + 1);
-  };
+  const queryParams = useSearchParams();
+
+  const [searchParams, setSearchParams] = useState({
+    page: Number(queryParams.get("page")) || 1,
+    sortBy: queryParams.get("sortBy") || "createdAt",
+    sortOrder: (queryParams.get("sortOrder") as "asc" | "desc") || "desc",
+    search: queryParams.get("search") || "",
+    status: (queryParams.get("status") as 'ONGOING' | 'HISTORY' | "REQUEST") || "REQUEST",
+  });
 
   const { data, isPending, refetch } = useGetWorkOrdersWorker({
-    page,
+    page: searchParams.page,
     take: 8,
-    sortBy: sortBy,
-    sortOrder: sortOrder,
-    search: debouncedSearch,
-    status,
+    sortBy: searchParams.sortBy,
+    sortOrder: searchParams.sortOrder,
+    search: searchParams.search,
+    status: searchParams.status,
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
 
-  const handleSelectStatus = (value: "ONGOING" | "REQUEST" | "HISTORY") => {
-    setStatus(value);
+  const onChangePage = ({ selected }: { selected: number }) => {
+    setSearchParams({ ...searchParams, page: selected + 1 });
+  };
+
+  const handleSelectStatus = (value: "ONGOING" | "HISTORY" | "REQUEST") => {
+    setSearchParams({ ...searchParams, status: value });
   };
 
   const handleSortOrder = (value: "asc" | "desc") => {
-    setSortOrder(value);
+    setSearchParams({ ...searchParams, sortOrder: value });
   };
 
   const handleSortBy = (value: string) => {
-    setSortBy(value);
+    setSearchParams({ ...searchParams, sortBy: value });
   };
+
+  useEffect(() => {
+    setSearchParams({ ...searchParams, search: debouncedSearch });
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    const query = new URLSearchParams({
+      ...searchParams,
+      page: String(searchParams.page),
+    }).toString();
+
+    router.push(`/dashboard/work-orders?${query}`);
+    refetch();
+  }, [searchParams]);
 
   return (
     <>
@@ -132,7 +150,7 @@ const DashboardWorkOrdersWorkerPage = () => {
             </div>
             {isPending ? (
               <Loader2 className="mx-auto animate-spin" />
-            ) : data?.data ? (
+            ) : data?.data ? isDesktop ? (
               <>
                 <DataTable
                   columns={workOrderWorkerColumns}
@@ -144,7 +162,32 @@ const DashboardWorkOrdersWorkerPage = () => {
                     total={data?.meta?.total || 0}
                     limit={data?.meta?.take || 0}
                     onChangePage={onChangePage}
-                    page={page}
+                    page={searchParams.page}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col gap-4">
+                  {data.data.map((order) => {
+                    return (
+                      <WorkOrderCardWorker
+                        key={order.id}
+                        id={order.id}
+                        orderNumber={order.order.orderNumber}
+                        status={order.status}
+                        timeOfOrder={order.createdAt}
+                        stationId={order.stationId}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="my-4 flex justify-center">
+                  <Pagination
+                    total={data?.meta?.total || 0}
+                    limit={data?.meta?.take || 0}
+                    onChangePage={onChangePage}
+                    page={searchParams.page}
                   />
                 </div>
               </>

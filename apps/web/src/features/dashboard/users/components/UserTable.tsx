@@ -36,7 +36,7 @@ const UserTable: FC<UserTableInterface> = ({ callback }) => {
   const [isVerified, setIsVerified] = useState("");
   const [role, setRole] = useState<Role | undefined>(undefined);
   const pathname = usePathname();
-  const [debouncedSearch] = useDebounceValue(searchValue, 300)
+  const [debouncedSearch] = useDebounceValue(searchValue, 500)
 
   const onChangePage = ({ selected }: { selected: number }) => {
     setPage(selected + 1);

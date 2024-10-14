@@ -13,12 +13,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import useUpdateDeliveryDriver from "@/hooks/api/delivery/useUpdateDeliveryDriver";
 import useUpdatePickupDriver from "@/hooks/api/pickup/useUpdatePickupDriver";
 import { format } from "date-fns";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 
-interface PickupOrderCardProps {
-  pickupNumber: string;
+interface DeliveryOrderCardProps {
+  deliveryNumber: string;
   status: string;
   customer: string;
   customerAddress: string;
@@ -27,8 +28,8 @@ interface PickupOrderCardProps {
   id: number;
 }
 
-const PickupOrderCard: React.FC<PickupOrderCardProps> = ({
-  pickupNumber,
+const DeliveryOrderCard: React.FC<DeliveryOrderCardProps> = ({
+  deliveryNumber,
   status,
   customer,
   customerAddress,
@@ -36,19 +37,19 @@ const PickupOrderCard: React.FC<PickupOrderCardProps> = ({
   timeOfOrder,
   id,
 }) => {
+  const { mutateAsync } = useUpdateDeliveryDriver();
   const result = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
     maximumFractionDigits: 0,
   });
 
-  const { mutateAsync } = useUpdatePickupDriver();
   const createdAt = format(new Date(timeOfOrder), "dd MMM yyyy, HH:mm:ss");
 
   return (
     <Card>
       <div className="flex flex-row items-center justify-between bg-[#e5f3f6] p-4">
-        <span className="font-semibold">{pickupNumber}</span>
+        <span className="font-semibold">{deliveryNumber}</span>
         <Badge>{outlet}</Badge>
       </div>
       <div className="space-y-2 p-4">
@@ -73,12 +74,80 @@ const PickupOrderCard: React.FC<PickupOrderCardProps> = ({
         </div>
         <div className="rounded-md bg-neutral-100 p-2 text-center">
           {status === "ON_THE_WAY_TO_CUSTOMER" ? (
+            <>
+              <div>
+                <AlertDialog>
+                  <AlertDialogTrigger>
+                    <span className="flex cursor-pointer items-center text-green-500">
+                      <IoMdCheckmarkCircle className="mr-1" /> Finish deliver
+                    </span>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Finalize delivery?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Once confirmed, you can see the order in History tab.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => {
+                          mutateAsync({
+                            id: Number(id),
+                            status: "FINISH",
+                          });
+                          window.location.reload();
+                        }}
+                      >
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </>
+          ) : status === "WAITING_FOR_DRIVER" ? (
+            <div>
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <span className="flex cursor-pointer items-center text-green-500">
+                    <IoMdCheckmarkCircle className="mr-1" /> Claim deliver
+                  </span>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Do you want to accept this request?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Once confirmed, you can see the order in Ongoing tab.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        mutateAsync({
+                          id: Number(id),
+                          status: "ACCEPT",
+                        });
+                        window.location.reload();
+                      }}
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          ) : status === "ON_THE_WAY_TO_OUTLET" ? (
             <div className="flex justify-around">
               <div>
                 <AlertDialog>
                   <AlertDialogTrigger>
                     <span className="flex cursor-pointer items-center text-green-500">
-                      <IoMdCheckmarkCircle className="mr-1" /> Picked Item
+                      <IoMdCheckmarkCircle className="mr-1" /> Picked up item
                     </span>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -95,7 +164,7 @@ const PickupOrderCard: React.FC<PickupOrderCardProps> = ({
                         onClick={() => {
                           mutateAsync({
                             id: Number(id),
-                            status: "PICKUP",
+                            status: "DELIVER",
                           });
                           window.location.reload();
                         }}
@@ -138,72 +207,6 @@ const PickupOrderCard: React.FC<PickupOrderCardProps> = ({
                 </AlertDialog>
               </div>
             </div>
-          ) : status === "WAITING_FOR_DRIVER" ? (
-            <div>
-              <AlertDialog>
-                <AlertDialogTrigger>
-                  <span className="flex cursor-pointer items-center text-green-500">
-                    <IoMdCheckmarkCircle className="mr-1" /> Claim pickup
-                  </span>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Do you want to accept this request?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Once confirmed, you can see the order in Ongoing tab.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => {
-                        mutateAsync({
-                          id: Number(id),
-                          status: "ACCEPT",
-                        });
-                        window.location.reload();
-                      }}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
-          ) : status === "ON_THE_WAY_TO_OUTLET" ? (
-            <div>
-              <AlertDialog>
-                <AlertDialogTrigger>
-                  <span className="flex cursor-pointer items-center text-green-500">
-                    <IoMdCheckmarkCircle className="mr-1" /> Finish pickup
-                  </span>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Finalize pickup?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Once confirmed, you can see the order in History tab.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => {
-                        mutateAsync({
-                          id: Number(id),
-                          status: "FINISH",
-                        });
-                        window.location.reload();
-                      }}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
           ) : null}
         </div>
       </div>
@@ -211,4 +214,4 @@ const PickupOrderCard: React.FC<PickupOrderCardProps> = ({
   );
 };
 
-export default PickupOrderCard;
+export default DeliveryOrderCard;
