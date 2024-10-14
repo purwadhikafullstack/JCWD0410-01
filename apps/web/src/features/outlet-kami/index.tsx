@@ -40,14 +40,13 @@ const OutletPage = () => {
         <div className="mx-auto max-w-7xl space-y-10 px-6 py-10 md:py-20">
           <div className="grid grid-cols-1 items-center justify-between gap-10 md:grid-cols-2">
             <h1 className="pb-2 text-3xl font-semibold text-[#37bae3] md:text-4xl">
-              Temukan Outlet FreshNest Laundry Terdekat
+              Find Your Nearest FreshNest Laundry Outlet
             </h1>
             <p className="text-neutral-500">
-              Kami memiliki jaringan outlet FreshNest Laundry yang tersebar di
-              berbagai lokasi untuk memudahkan Anda mengakses layanan kami.
-              Setiap outlet kami dilengkapi dengan teknologi canggih dan tim
-              profesional yang siap memberikan layanan laundry berkualitas
-              tinggi.
+              We have a network of FreshNest Laundry outlets spread across
+              various locations to make it easy for you to access our services.
+              Each of our outlets is equipped with advanced technology and a
+              professional team ready to provide high-quality laundry services.
             </p>
           </div>
         </div>

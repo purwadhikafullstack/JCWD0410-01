@@ -1,18 +1,19 @@
 "use client";
 
-import Branch from "./components/Branch";
-import Jumbotron from "./components/Jumbotron";
+import HeroSection from "./components/HeroSection";
+import Outlet from "./components/Outlet";
 import Promo from "./components/Promo";
-import HowItWorks from "./components/Reason";
 import Review from "./components/Review";
+import Services from "./components/Services";
 
 const HomePage = () => {
   return (
     <div>
-      <Jumbotron />
-      <HowItWorks />
+      <HeroSection />
+      <Services />
+      <Outlet />
       <Promo />
-      <Branch />
+
       <Review />
     </div>
   );

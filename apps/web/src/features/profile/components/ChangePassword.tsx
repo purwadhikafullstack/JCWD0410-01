@@ -36,19 +36,19 @@ const ChangePassword = () => {
     <>
       <Card className="shadow">
         <CardHeader>
-          <CardTitle className="text-xl">Ubah Password</CardTitle>
+          <CardTitle className="text-xl">Change Password</CardTitle>
           <CardDescription>
-            Amankan akun Anda dengan mengganti kata sandi secara berkala untuk
-            perlindungan tambahan.
+            Secure your account by changing your password regularly for added
+            protection.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-6">
             <FormInput
               name="oldPassword"
-              label="Password Lama"
+              label="Current Password"
               type="password"
-              placeholder="Masukkan Password Lama"
+              placeholder="Enter current password"
               value={formik.values.oldPassword}
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
@@ -60,9 +60,9 @@ const ChangePassword = () => {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <FormInput
                 name="password"
-                label="Password Baru"
+                label="New Password"
                 type="password"
-                placeholder="Masukkan Password Baru"
+                placeholder="Enter new password"
                 value={formik.values.password}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -72,9 +72,9 @@ const ChangePassword = () => {
 
               <FormInput
                 name="confirmPassword"
-                label="Konfirmasi Password"
+                label="Confirm Password"
                 type="password"
-                placeholder="Konfirmasi Password"
+                placeholder="Enter Confirmation Password"
                 value={formik.values.confirmPassword}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
@@ -87,9 +87,9 @@ const ChangePassword = () => {
             </div>
             <AlertDialogDemo
               classname="bg-[#37bae3] text-sm px-4 py-2 text-white rounded-md"
-              action="Ubah Password"
-              title="Apakah Anda Yakin?"
-              description="Tindakan ini akan mengganti password akun Anda. Pastikan untuk mengingat password baru agar tetap dapat mengakses akun Anda dengan aman."
+              action="Submit"
+              title="Are you sure?"
+              description="This action will change your account password. Make sure to remember your new password to securely maintain access to your account."
               onclick={handleConfirmSubmit}
               disabled={isPending}
             />

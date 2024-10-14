@@ -4,7 +4,9 @@ import React from "react";
 const Services = () => {
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
-      <h2 className="text-center text-3xl font-bold text-[#37bae3]">Layanan</h2>
+      <h2 className="text-center text-3xl font-bold text-[#37bae3]">
+        Services
+      </h2>
       <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
         <div className="flex flex-col items-center gap-2 rounded-md border-[1px] border-[#37bae3] p-4">
           <div className="relative h-28 w-28 overflow-hidden">

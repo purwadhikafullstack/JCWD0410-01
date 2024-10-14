@@ -89,8 +89,6 @@ const UpdateEmployeePage: FC<UpdateEmployeeProps> = ({ userId }) => {
             : undefined,
       };
 
-      console.log(updatedValues);
-
       await updateEmployee(updatedValues);
     },
     enableReinitialize: true,

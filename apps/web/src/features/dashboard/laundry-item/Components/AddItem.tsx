@@ -31,23 +31,21 @@ const AddItem = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-1 rounded-full" type="button">
-          <FaPlus /> Tambah <p className="hidden md:inline-block">Item</p>
+          <FaPlus /> Add <p className="hidden md:inline-block">Item</p>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Tambah Item</DialogTitle>
-          <DialogDescription>
-            Silakan tambahkan item laundry baru
-          </DialogDescription>
+          <DialogTitle>Add Item</DialogTitle>
+          <DialogDescription>Please add a new laundry item.</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <FormInput
             name="name"
-            label="Nama"
+            label="Item Name"
             type="text"
-            placeholder="Masukkan nama item"
+            placeholder="Enter new item"
             value={formik.values.name}
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
