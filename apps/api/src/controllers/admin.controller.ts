@@ -37,6 +37,7 @@ export class AdminController {
         take: parseInt(req.query.take as string) || 3,
         sortOrder: (req.query.sortOrder as string) || 'asc',
         sortBy: (req.query.sortBy as string) || 'createdAt',
+        search: (req.query.search as string) || '',
         email: (req.query.email as string) || '',
         name: (req.query.name as string) || '',
         phone: (req.query.phone as string) || '',
