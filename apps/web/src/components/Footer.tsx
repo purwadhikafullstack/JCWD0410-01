@@ -33,7 +33,7 @@ export const Footer = () => {
                 className="object-contain"
               />
             </Link>
-            <p>Bersih, Cepat, dan Terpercaya untuk Setiap Cucian Anda</p>
+            <p>Clean, Fast, and Reliable for Every Wash</p>
             <div className="flex items-center gap-2 text-xl text-neutral-600">
               <FaTwitter />
               <FaInstagram />
@@ -41,10 +41,10 @@ export const Footer = () => {
           </div>
           <div className="flex flex-col gap-4">
             <p className="font-semibold text-black">Company</p>
-            <p>Tentang Kami</p>
-            <p>Kontak Kami</p>
-            <p>Syarat dan Ketentuan</p>
-            <p>Kebijakan Privasi</p>
+            <p>About Us</p>
+            <p>Contact Us</p>
+            <p>Terms and Conditions</p>
+            <p>Privacy Policy</p>
           </div>
           <div className="flex flex-col gap-4">
             <p className="font-semibold text-black">Layanan</p>
@@ -52,14 +52,6 @@ export const Footer = () => {
             <p>Dry Cleaning</p>
             <p>Ironing and Pressing</p>
             <p>Pick Up and Delivery</p>
-          </div>
-          <div className="flex flex-col gap-4">
-            <p className="font-semibold text-black">Lokasi Outlet</p>
-            <p>Jakarta Timur</p>
-            <p>Jakarta Barat</p>
-            <p>Jakarta Selatan</p>
-            <p>Jakarta Utara</p>
-            <p>Jakarta Pusat</p>
           </div>
           <div className="flex flex-col gap-4">
             <p className="font-semibold text-black">More</p>

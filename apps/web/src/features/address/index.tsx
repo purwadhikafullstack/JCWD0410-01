@@ -33,12 +33,12 @@ const AddressPage = () => {
   return (
     <div className="mx-auto min-h-screen max-w-7xl space-y-6 px-6 py-10">
       <div className="flex items-center justify-between">
-        <p className="text-lg font-semibold">Alamat Saya</p>
+        <p className="text-lg font-semibold">My Address</p>
         <Link href="/address/add-address">
           <Button className="flex items-center gap-1">
             <FaPlus />{" "}
             <p>
-              Tambah <span className="hidden md:inline-block">Alamat Baru</span>
+              Add <span className="hidden md:inline-block">Address</span>
             </p>
           </Button>
         </Link>
@@ -47,10 +47,10 @@ const AddressPage = () => {
         <div className="flex min-h-[350px] flex-col justify-center gap-8 rounded-md border-[1px] text-center md:min-h-[500px]">
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">
-              Belum ada alamat yang terdaftar
+              No addresses registered yet.
             </h2>
             <p className="text-neutral-600">
-              Tambahkan alamat Anda untuk mulai membuat pesanan.
+              Add your address to start placing orders.
             </p>
           </div>
         </div>
@@ -65,7 +65,7 @@ const AddressPage = () => {
                 <div className="flex items-center justify-between border-b-[1px] bg-[#e5f3f6] p-3">
                   <div className="flex items-center gap-1">
                     <p className="font-semibold">{address.name}</p>
-                    {address.isPrimary ? <p>| Utama</p> : ""}
+                    {address.isPrimary ? <p>| Primary</p> : ""}
                   </div>
                 </div>
                 <div className="flex flex-col justify-between gap-2 p-4 md:flex-row">
@@ -79,13 +79,13 @@ const AddressPage = () => {
                         href={`/address/update-address/${address.id}`}
                         className="text-sm text-[#37bae3]"
                       >
-                        Ubah
+                        Edit
                       </Link>
                       <AlertDialogDemo
                         classname="text-[#37bae3] text-sm"
-                        action="Hapus"
-                        title="Apakah Anda yakin?"
-                        description="Tindakan ini tidak dapat dibatalkan. Ini akan menghapus alamat secara permanen dari akun Anda dan menghilangkan data terkait dari server kami."
+                        action="Delete"
+                        title="Are you sure?"
+                        description="This action cannot be undone. It will permanently delete the address from your account and remove related data from our servers"
                         onclick={() => handleDeleteAddress(address.id)}
                         disabled={isPending}
                       />
@@ -96,7 +96,7 @@ const AddressPage = () => {
                       disabled={address.isPrimary ? true : false}
                       onClick={() => handleSetPrimary(address.id)}
                     >
-                      Atur sebagai utama
+                      Set as primary
                     </Button>
                   </div>
                 </div>

@@ -51,7 +51,7 @@ const LaundryItemPage = () => {
   }
 
   if (!data) {
-    return <h1>Item tidak ditemukan</h1>;
+    return <h1>Item not found</h1>;
   }
 
   return (
@@ -67,7 +67,7 @@ const LaundryItemPage = () => {
             <TableCaption>Total item: {data.meta.total}</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead className="px-4">Nama</TableHead>
+                <TableHead className="px-4">Name</TableHead>
                 <TableHead className="px-4">Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -81,9 +81,9 @@ const LaundryItemPage = () => {
                     <EditItem laundryItemId={item.id} />
                     <AlertDialogDemo
                       classname="bg-red-500 text-white px-4 py-2 rounded-md"
-                      action="Hapus"
-                      title="Apakah Anda yakin?"
-                      description="Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data outlet secara permanen dari database."
+                      action="Delete"
+                      title="Are you sure?"
+                      description="This action cannot be undone. It will permanently delete the outlet data from the database."
                       onclick={() => handleDeleteLaundryItem(item.id)}
                       disabled={pendingDelete}
                     />

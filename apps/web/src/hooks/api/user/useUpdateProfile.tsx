@@ -8,9 +8,9 @@ import useAxios from "@/hooks/useAxios";
 import { getSession, signIn, useSession } from "next-auth/react";
 
 interface UpdateProfilePayload {
-  profilePicture: File | string;
-  name: string;
-  phoneNumber: string;
+  profilePicture?: File | string;
+  name?: string;
+  phoneNumber?: string;
 }
 
 const useUpdateProfile = () => {
@@ -21,9 +21,18 @@ const useUpdateProfile = () => {
     mutationFn: async (payload: UpdateProfilePayload) => {
       const updateProfileForm = new FormData();
 
-      updateProfileForm.append("profilePicture", payload.profilePicture);
-      updateProfileForm.append("name", payload.name);
-      updateProfileForm.append("phoneNumber", payload.phoneNumber);
+      if (payload.profilePicture !== undefined) {
+        updateProfileForm.append("profilePicture", payload.profilePicture);
+      }
+      if (payload.name !== undefined) {
+        updateProfileForm.append("name", payload.name);
+      }
+      if (payload.phoneNumber !== undefined) {
+        updateProfileForm.append("phoneNumber", payload.phoneNumber);
+      }
+      // updateProfileForm.append("profilePicture", payload.profilePicture);
+      // updateProfileForm.append("name", payload.name);
+      // updateProfileForm.append("phoneNumber", payload.phoneNumber);
 
       // Sending payload as JSON directly
       const { data } = await axiosInstance.patch(

@@ -31,10 +31,10 @@ const ChangeEmail = () => {
     <>
       <Card className="shadow">
         <CardHeader>
-          <CardTitle className="text-xl">Ubah Email</CardTitle>
+          <CardTitle className="text-xl">Change Email</CardTitle>
           <CardDescription>
-            Ganti alamat email Anda untuk meningkatkan keamanan dan memastikan
-            komunikasi yang lancar.
+            Update your email address to enhance security and ensure smooth
+            communication.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -58,7 +58,7 @@ const ChangeEmail = () => {
                   <p className="text-sm">Loading</p>
                 </div>
               ) : (
-                "Ubah Email"
+                "Submit"
               )}
             </Button>
           </form>

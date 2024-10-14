@@ -16,24 +16,43 @@ import { ChangeEvent, FC, useRef, useState } from "react";
 import { SpinnerCircularFixed } from "spinners-react";
 import { UpdateProfileSchema } from "../schemas/UpdateProfile";
 import FormInput from "@/components/FormInput";
+import { log } from "util";
 
 interface UpdateProfileProps {
+  profilePicture?: string;
   name: string;
   phoneNumber: string;
 }
 
-const UpdateProfile: FC<UpdateProfileProps> = ({ name, phoneNumber }) => {
+const UpdateProfile: FC<UpdateProfileProps> = ({
+  profilePicture,
+  phoneNumber,
+  name,
+}) => {
   const { mutateAsync: updateProfile, isPending } = useUpdateProfile();
 
   const formik = useFormik({
     initialValues: {
-      profilePicture: "",
+      profilePicture,
       name,
       phoneNumber,
     },
     // validationSchema: UpdateProfileSchema,
     onSubmit: async (values) => {
-      await updateProfile(values);
+      const updatedValues = {
+        profilePicture:
+          values.profilePicture !== profilePicture
+            ? values.profilePicture
+            : undefined,
+
+        name: values.name !== name ? values.name : undefined,
+        phoneNumber:
+          values.phoneNumber !== phoneNumber ? values.phoneNumber : undefined,
+      };
+
+      console.log(updatedValues);
+
+      await updateProfile(updatedValues);
     },
   });
 
@@ -59,10 +78,10 @@ const UpdateProfile: FC<UpdateProfileProps> = ({ name, phoneNumber }) => {
   return (
     <Card className="shadow">
       <CardHeader>
-        <CardTitle className="text-xl">Ubah Profile</CardTitle>
+        <CardTitle className="text-xl">Edit Profile</CardTitle>
         <CardDescription>
-          Perbarui informasi profil Anda untuk memastikan data Anda selalu
-          akurat dan terkini.
+          Update your profile information to ensure your data is always accurate
+          and up-to-date.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -131,7 +150,7 @@ const UpdateProfile: FC<UpdateProfileProps> = ({ name, phoneNumber }) => {
                 <p className="text-sm">Loading</p>
               </div>
             ) : (
-              "Simpan Perubahan"
+              "Save Changes"
             )}
           </Button>
         </form>

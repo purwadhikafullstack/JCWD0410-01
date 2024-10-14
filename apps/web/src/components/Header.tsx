@@ -73,18 +73,20 @@ export const Header = () => {
   return (
     <div className="sticky top-0 z-10 bg-white shadow transition-shadow duration-300 ease-in-out">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
-        <Link href="/" className="relative hidden h-14 w-32 md:inline-block">
-          <Image
-            src="/logo2.svg"
-            alt="FreshNest Laundry Logo"
-            fill
-            className="object-contain"
-          />
-        </Link>
-        <div className="hidden items-center gap-8 text-sm font-medium text-neutral-600 md:flex">
-          <Link href="/outlet-kami">Outlet Kami</Link>
-          <Link href="/layanan-kami">Layanan & Harga</Link>
-          <Link href="/request">Buat Pesanan</Link>
+        <div className="flex items-center gap-14">
+          <Link href="/" className="relative hidden h-14 w-32 md:inline-block">
+            <Image
+              src="/logo2.svg"
+              alt="FreshNest Laundry Logo"
+              fill
+              className="object-contain"
+            />
+          </Link>
+          <div className="hidden items-center gap-8 text-sm text-neutral-600 md:flex">
+            <Link href="/outlets">Our Outlets</Link>
+            <Link href="/services">Services and Pricing</Link>
+            <Link href="/request">Place Order</Link>
+          </div>
         </div>
 
         {session?.user.id ? (
@@ -92,7 +94,7 @@ export const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none">
                 <div className="flex items-center gap-3">
-                  <div className="text-sm font-medium">{session.user.name}</div>
+                  <div className="text-sm">{session.user.name}</div>
                   <Avatar>
                     <AvatarImage
                       src={session.user.profilePicture}
@@ -119,19 +121,19 @@ export const Header = () => {
                 <Link href={`/profile`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <LuUser2 />
-                    <p>Profile Saya</p>
+                    <p>My Profile</p>
                   </DropdownMenuItem>
                 </Link>
                 <Link href={`/address`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <LuHome />
-                    <p>Alamat Saya</p>
+                    <p>Saved Addresses</p>
                   </DropdownMenuItem>
                 </Link>
                 <Link href={`/orders`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <LuHistory />
-                    <p>Pesanan Saya</p>
+                    <p>My Orders</p>
                   </DropdownMenuItem>
                 </Link>
                 <Link href={`/pickup-orders`}>
@@ -149,13 +151,13 @@ export const Header = () => {
                 <Link href={`/request`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <LuShoppingCart />
-                    <p>Buat Pesanan</p>
+                    <p>Place Order</p>
                   </DropdownMenuItem>
                 </Link>
                 <Link href={`/notifications`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <LuAlertCircle />
-                    <p>Notifikasi</p>
+                    <p>Notification</p>
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
@@ -244,17 +246,19 @@ export const Header = () => {
                   </Link>
 
                   <hr />
-                  <Link href="/address">Alamat Saya</Link>
-                  <Link href="/orders">Pesanan Saya</Link>
+                  <Link href="/address">Saved Addresses</Link>
+                  <Link href="/orders">My Orders</Link>
+                  <Link href="/pickup-orders">Pickup Orders</Link>
+                  <Link href="/delivery-orders">Delivery Orders</Link>
 
                   <hr />
                 </div>
               )}
 
               <div className="flex flex-col gap-4 text-neutral-600">
-                <Link href="/outlet-kami"> Outlet Kami</Link>
-                <Link href="/layanan-kami">Layanan & Harga</Link>
-                <Link href="/request">Buat Pesanan</Link>
+                <Link href="/outlets"> Our Outlets</Link>
+                <Link href="/services">Services and Pricing</Link>
+                <Link href="/request">Place Order</Link>
               </div>
 
               <hr />
