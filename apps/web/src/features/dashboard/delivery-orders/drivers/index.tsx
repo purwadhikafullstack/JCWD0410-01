@@ -27,8 +27,6 @@ import PickupOrderCard from "../../pickup-orders/components/PickupOrderCard";
 import { deliveryOrdersDriversColumns } from "../components/DeliveryOrdersDriversColumns";
 import { useRouter, useSearchParams } from "next/navigation";
 import DeliveryOrderCard from "../components/DeliveryOrderCard";
-import { useRouter, useSearchParams } from "next/navigation";
-import DeliveryOrderCard from "../components/DeliveryOrderCard";
 
 const DashboardDeliveryOrdersDriversPage = () => {
   const router = useRouter();
