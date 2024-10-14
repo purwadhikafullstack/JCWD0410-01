@@ -30,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={quicksand.className}>
+      <body className={inter.className}>
         <NextAuthProvider>
           <ReactQueryProvider>
             <Header />

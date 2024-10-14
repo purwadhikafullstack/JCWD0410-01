@@ -24,7 +24,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const th = ["Nama", "Tipe", "Alamat", "Action"];
+const th = ["Name", "Tyoe", "Address", "Action"];
 
 const OutletDashboardPage = () => {
   const isDesktop = useMediaQuery("(min-width: 768px)", {
@@ -60,7 +60,7 @@ const OutletDashboardPage = () => {
   }
 
   if (!data) {
-    return <h1>Outlet tidak ditemukan</h1>;
+    return <h1>Outlet not found</h1>;
   }
 
   return (
@@ -72,16 +72,14 @@ const OutletDashboardPage = () => {
           <Link href="/dashboard/outlet/tambah-outlet">
             <Button className="flex items-center gap-1 rounded-full">
               <FaPlus />
-              Tambah <p className="hidden md:inline-block"> Outlet</p>
+              Add <p className="hidden md:inline-block"> Outlet</p>
             </Button>
           </Link>
         </div>
         {isDesktop ? (
           <section className="rounded-md bg-white py-2 shadow">
             <Table>
-              <TableCaption>
-                Total outlet saat ini: {data.meta.total}
-              </TableCaption>
+              <TableCaption>Total outlet : {data.meta.total}</TableCaption>
               <TableHeader>
                 <TableRow>
                   {th.map((item, index) => {
@@ -112,8 +110,8 @@ const OutletDashboardPage = () => {
                       <AlertDialogDemo
                         classname="bg-red-500 text-white px-4 py-2 rounded-md"
                         action={"Hapus"}
-                        title="Apakah Anda yakin?"
-                        description="Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data outlet secara permanen dari database."
+                        title="Are you sure?"
+                        description="This action cannot be undone. It will permanently delete the outlet data from the database."
                         onclick={() => handleDeleteOutlet(outlet.id)}
                         disabled={pendingDelete}
                       />
@@ -139,9 +137,9 @@ const OutletDashboardPage = () => {
                     </Link>
                     <AlertDialogDemo
                       classname="bg-red-500 text-white px-4 py-1.5 rounded-md"
-                      action={"Hapus"}
-                      title="Apakah Anda yakin?"
-                      description="Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data outlet secara permanen dari database."
+                      action={"Delete"}
+                      title="Are you sure?"
+                      description="This action cannot be undone. It will permanently delete the outlet data from the database."
                       onclick={() => handleDeleteOutlet(outlet.id)}
                       disabled={pendingDelete}
                     />

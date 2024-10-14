@@ -44,10 +44,10 @@ const ProfileDetailPage = () => {
             )}
           </div>
           <p>{data?.email}</p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <FaClock />
             <p>
-              Bergabung sejak{" "}
+              Join since{" "}
               {data?.createdAt && new Date(data.createdAt).getFullYear()}
             </p>
           </div>
@@ -57,6 +57,7 @@ const ProfileDetailPage = () => {
       <div className="col-span-1 space-y-10 md:col-span-2">
         {!isPending && (
           <UpdateProfile
+            profilePicture={data?.profilePicture}
             name={data?.name!}
             phoneNumber={data?.phoneNumber ? data.phoneNumber : ""}
           />

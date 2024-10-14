@@ -9,15 +9,25 @@ export const updateProfileService = async (
   body: Partial<User>,
   file?: Express.Multer.File,
 ) => {
-  delete body.profilePicture;
-
   try {
     const user = await prisma.user.findFirst({
-      where: { id: userId, isDeleted: false, role: 'CUSTOMER' },
+      where: { id: userId, isDeleted: false },
     });
 
     if (!user) {
       throw new Error('User not found');
+    }
+
+    if (body.phoneNumber) {
+      const existingPhoneNumber = await prisma.user.findFirst({
+        where: {
+          phoneNumber: body.phoneNumber,
+        },
+      });
+
+      if (existingPhoneNumber) {
+        throw new Error('This phone number is already in use.');
+      }
     }
 
     if (file) {

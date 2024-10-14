@@ -46,14 +46,16 @@ const EditItem: FC<EditItemProps> = ({ laundryItemId }) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Item</DialogTitle>
-          <DialogDescription>Perbarui informasi item laundry</DialogDescription>
+          <DialogDescription>
+            Update laundry item information.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <FormInput
             name="name"
-            label="Nama"
+            label="Name"
             type="text"
-            placeholder="Masukkan nama item"
+            // placeholder="Masukkan nama item"
             value={formik.values.name}
             onBlur={formik.handleBlur}
             onChange={formik.handleChange}
