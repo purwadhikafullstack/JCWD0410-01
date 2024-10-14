@@ -6,6 +6,7 @@ interface GetEmployeesInterface {
   take: number;
   sortBy: string;
   sortOrder: string;
+  search?: string;
   email?: string;
   name?: string;
   phone?: string;
@@ -24,6 +25,7 @@ export const getEmployeesService = async (
       take,
       sortBy,
       sortOrder,
+      search,
       email,
       name,
       phone,
@@ -81,6 +83,14 @@ export const getEmployeesService = async (
 
     if (isVerified === 'UNVERIFIED') {
       whereClause.isVerified = false;
+    }
+
+    if (search) {
+      whereClause.OR = [
+        { email: { contains: search } },
+        { name: { contains: search } },
+        { phoneNumber: { contains: search } },
+      ];
     }
 
     const users = await prisma.user.findMany({

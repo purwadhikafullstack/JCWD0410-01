@@ -10,7 +10,7 @@ export function LayoutGridDemo() {
   );
 }
 
-const SkeletonOne = () => {
+const SkeletonFour = () => {
   return (
     <div>
       <p className="text-xl font-bold text-white md:text-4xl">
@@ -26,7 +26,7 @@ const SkeletonOne = () => {
   );
 };
 
-const SkeletonTwo = () => {
+const SkeletonOne = () => {
   return (
     <div>
       <p className="text-xl font-bold text-white md:text-4xl">Washing</p>
@@ -40,7 +40,7 @@ const SkeletonTwo = () => {
   );
 };
 
-const SkeletonThree = () => {
+const SkeletonTwo = () => {
   return (
     <div>
       <p className="text-xl font-bold text-white md:text-4xl">Ironing</p>
@@ -53,7 +53,7 @@ const SkeletonThree = () => {
   );
 };
 
-const SkeletonFour = () => {
+const SkeletonThree = () => {
   return (
     <div>
       <p className="text-xl font-bold text-white md:text-4xl">Packing</p>
